@@ -1,0 +1,147 @@
+ <% @ict_vpn = IctVpn.where(:user_id => current_user.id).order.page(params[:page]).per(5)%>
+  <div id="div_ajax" >
+    <%if @ict_vpn && !@ict_vpn.empty?%>
+      <%@ict_vpn.each do |ict_vpn|%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>User Name</b>
+            </div>
+            <div class="m-c2">
+              <% @name = RequisitionType.find_by_id(ict_vpn.requisition_type_id)%>
+              <% @user = User.find_by_id(ict_vpn.user_id) %>
+              <%= @user.username%>
+            </div>
+            <div class="m-c3">
+              <% if ict_vpn.status == "New"%><b><font color='#FFA500'><%= "#{ict_vpn.status}" %></font></b><% elsif ict_vpn.status == "Approved" || ict_vpn.status == "Processed"  %>  <b><font color='#329C20'><%= "#{ict_vpn.status}" %> </font></b><% elsif ict_vpn.status == "Declined" || ict_vpn.status == "Returned"  %>  <b><font color='red'><%= "#{ict_vpn.status}" %> </font></b><% end %>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Type of Facility</b>
+            </div>
+            <div class="m-c2">
+              <%= @name.name%>
+            </div>
+             <% time = Setting.find_by_id(1) %>
+            <%if time.present?%>
+              <% temp = time.timeline.strftime("%H:%M:%S")%>
+              <%dt = DateTime.parse(temp)%>
+              <% seconds = dt.hour * 3600 + dt.min * 60 %>
+
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id && ict_vpn.created_at > (Time.now-seconds) %>
+                  <span class="in-box">
+                    <% if ict_vpn.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_ict_vpns_path(:id => ict_vpn.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id && ict_vpn.created_at > (Time.now-2*seconds)%>
+                  <span class="in-box">
+                    <% if ict_vpn.status == "New" %>
+                      <% val = (ict_vpn.created_at > (Time.now-seconds))  %>
+                      <% if !val.present? %>
+                        <b><font color="#336699"><%= link_to "Approve",approval_ict_vpns_path(:id => ict_vpn.id), :class=>"btn2 in-btn2"%></b>
+                      <%end%>
+                    <%end%>
+                  </span>
+                <% elsif ict_vpn.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve",approval_ict_vpns_path(:id => ict_vpn.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if ict_vpn.status == "Approved" && ict_vpn.forward_to == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process",approval_ict_vpns_path(:id => ict_vpn.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%else%>
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if ict_vpn.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_ict_vpns_path(:id => ict_vpn.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if ict_vpn.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_ict_vpns_path(:id => ict_vpn.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif ict_vpn.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve",approval_ict_vpns_path(:id => ict_vpn.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if ict_vpn.status == "Approved" && ict_vpn.forward_to == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process",approval_ict_vpns_path(:id => ict_vpn.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%end%>
+          </div>
+
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c2">
+              <font color="red" size="3"><b>&nbsp;<%= ict_vpn.id %>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info", ict_vpn_path(:id => ict_vpn.id), :method=>:get%></font></b>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Date of Application</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= ict_vpn.created_at.strftime("%a %d %b %Y %I:%M %p")%></font>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>From Date</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= ict_vpn.from_date.to_datetime.strftime("%a %d %b %Y %I:%M %p")%>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>To Date</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= ict_vpn.to_date.to_datetime.strftime("%a %d %b %Y %I:%M %p")%>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <h2 class="b-head"></h2>
+
+      <%end%> <div class="manage-user-rows box"><br/><br/>
+        <%= paginate @ict_vpn %></div>
+      <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>

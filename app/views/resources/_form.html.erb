@@ -1,0 +1,43 @@
+<script type="text/javascript">
+  $().ready(function(){
+<%if @resource.resource_type.nil? || @resource.resource_type=="others"%>
+      $("#resource_resource_type_others").click();
+<%elsif @resource.resource_type=="ict"%>
+      $("#resource_resource_type_ict").click();
+<%elsif @resource.resource_type=="transport"%>
+      $("#resource_resource_type_transport").click();
+<%elsif @resource.resource_type=="room_booking"%>
+      $("#resource_resource_type_room_booking").click();
+<%end%>
+  })
+</script>
+<%= form_for(@resource) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="form-sec">
+    <div class="form-sec-row">
+      <label class="text">Resource Type <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.radio_button :resource_type, 'ict', :checked=>@resource.resource_type=='ict' ? true : false%> <%= f.label :resource_type, "ICT" %>
+        <%= f.radio_button :resource_type, 'transport', :checked=>@resource.resource_type=='transport' ? true : false%> <%= f.label :resource_type, "Transport" %>
+        <%= f.radio_button :resource_type, 'room_booking', :checked=>@resource.resource_type=='room_booking' ? true : false%> <%= f.label :resource_type, "Room Booking" %>
+        <%= f.radio_button :resource_type, 'others', :checked=>@resource.resource_type=='others' || @resource.resource_type.nil? ? true : false%> <%= f.label :resource_type, "Others" %>
+      </span>
+    </div>
+    <div id="show_ict" style="display:none;" >
+      <%=render :partial=>'resources/resource_ict'%>
+    </div>
+    <div id="show_room" style="display:none;" >
+      <%=render :partial=>'resources/resource_room'%>
+    </div>
+    <div id="show_transport" style="display:none;">
+      <%=render :partial=>'resources/resource_transport'%>
+    </div>
+    <div id="show_others">
+      <%=render :partial=>'resources/resource_others'%>
+    </div>
+    <div id="show_ict" style="display:none;">
+      <%=render :partial=>'resources/resource_ict'%>
+    </div>
+  </div>
+<%end%>

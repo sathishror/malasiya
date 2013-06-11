@@ -1,0 +1,48 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Department Users</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1">
+  <%#*<div class="form-sec-row">%>
+  <%#= label_tag :department_id,raw("Department"), :class=>"text"%>
+  <%#*<span class="in-box">%>
+  <%#=select(:user_list,:department_id, Department.where("agency_id =? and is_active=?",1,1).collect {|p| [ p.name, p.id ] },:selected => @department_id ,:prompt => "PLEASE SELECT") %>
+  <%#*</span>%>
+  <%#*</div>   %>
+      </div>
+      <%=hidden_field_tag :transfer_user_department_id, ""%>
+    </div>
+
+  <%end%>
+  <div class="manage-user box">
+
+    <div id="div_ajax">
+      <%@users.each do |user|%>
+  <%#if user.role_id==3%>
+        <div class="manage-user-row box" >
+          <div class="mu-c1">
+            <%=link_to image_tag("../images/img_user1.jpg", :width=>"60", :height=>"60"), user_path(:id=>user.id), :title=>"The Melaka  State Office of Land and Mines"%>
+          </div>
+          <div class="mu-c2">
+            <p class="head1">
+              <b><%=user.full_name%></b><br/>
+              <%=user.ic_number%><br/>
+              <b><%=user.email%></b>
+            </p>
+          </div>
+          <div class="mu-c3">
+            <%if user.status=="Active"%>
+              <%=  link_to image_tag("../images/deactive.jpg", :width=>"14", :height=>"14")+"Deactive" , update_status_users_path(:id=>user.id,:status=>"Deactivate",:department_id=>params[:department_id]), :confirm => 'Do you want to really deactivate this user?', :method=>:post, :title=>"Deactive" %>
+            <%elsif user.status=="Deactive" || user.status.nil?%>
+              <%=  link_to image_tag("../images/active.jpg", :width=>"14", :height=>"14")+"Activate" , update_status_users_path(:id=>user.id,:status=>"Activate",:department_id=>params[:department_id]), :confirm => 'Do you want to really Activate this user?', :method=>:post, :title=>"Activate" %>
+            <%end%>
+            <%=  link_to image_tag("../images/delete.jpg", :width=>"14", :height=>"14")+"Delete", user_path(user), :confirm => 'Do you want to Proceed?', :method =>:delete , :title=>"Delete" %>
+          </div>
+        </div>
+  <%#end%>
+      <%end%>
+    </div>
+
+  </div>
+</div>

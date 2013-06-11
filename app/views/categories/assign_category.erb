@@ -1,0 +1,64 @@
+<div class="CenterNav">
+  <%= form_for(@category, :as => :user,  :url =>  update_category_categories_path(:id => @department_id), :method=>:post) do |f| %>
+    <%=f.error_messages%>
+    <div class="clearfix">&nbsp;</div> <br />
+    <h2 class="b-head"> Map Category</h2>
+    <div class="form-sec">
+      <%= hidden_field_tag  :created_by, (current_user.id)%>
+      <%if @category.department_id%>
+        <div class="form-sec-row">
+          <%department_name = Department.find_by_id(@category.department_id)%>
+          <%agency_name = Agency.find(department_name.agency_id)%>
+          <label class="text">Agency Name</label>
+          <span class="in-box">
+            <%=agency_name.name%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Department Name</label>
+          <span class="in-box">
+            <%=department_name.name%>
+          </span>
+        </div>
+      <%else%>
+        <div class="form-sec-row">
+          <%= label_tag "users_agency", raw("Agency"), :class=>"text" %>
+          <span class="in-box">
+            <% if current_user.is_super_admin? %>
+              <%= select("users","agency",  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+            <%else%>
+              <%department=Department.find(current_department)%>
+              <%agency = Agency.find(department.agency_id) %>
+              <%= select("users","agency_id",  Agency.find_all_by_id(department.agency_id).collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+
+            <%end%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag "department_id", raw("Department"), :class=>"text"%>
+          <span class="in-box">
+            <% if current_user.is_super_admin? %>
+              <%= select("resource_category","department_id",Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A DEPARTMENT") %>
+            <%else%>
+              <%= select("resource_category","department_id", current_user.departments.active.collect {|p| [ p.name, p.id ] },:prompt => "SELECT A DEPARTMENT") %>
+            <%end%>
+          </span>
+        </div>
+      <%end%>
+      <div class="form-sec-row">
+        <label class="text">Category Name</label>
+        <span class="in-box">
+          <%= select("resource_category","resource_category_id",Category.active.collect {|p| [ p.name, p.id ] },:prompt => "SELECT A CATEGORY") %>
+        </span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">&nbsp;</label>
+        <span class="in-box">
+          <%= f.submit raw('Map Category'),:class=>"btn2"%>
+        </span>
+      </div>
+    </div>
+
+  <%end%>
+</div>

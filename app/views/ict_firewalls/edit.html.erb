@@ -1,0 +1,181 @@
+<%= form_for @ict_firewall do |f|%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <h2 class="b-head">ICT Firewall Approval</h2>
+    <%= hidden_field_tag :id,(@ict_firewall.id)  %>
+    <div class="form-sec">
+
+      <font color="#369" size="3"><br/><b><u>User Details :-</u><br/><br/></b></font>
+      <% @user_name = User.find(@ict_firewall.user_id) %>
+
+      <div class="form-sec-row">
+        <label class="text">First Name</label>
+        <span class="in-box">
+          <%= @user_name.first_name %></span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">Last Name</label>
+        <span class="in-box">
+          <%= @user_name.last_name %></span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">Contact Mobile</label>
+        <span class="in-box">
+          <%= @user_name.contact_mobile  %></span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">IC Number</label>
+        <span class="in-box">
+          <%= @user_name.ic_number %></span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">E - Mail</label>
+        <span class="in-box">
+          <%= @user_name.email %></span>
+      </div>
+
+
+      <h2 class="b-head"></h2>
+      <div class="form-sec-row">
+        <label class="text">Ticket No</label>
+        <span class="in-box"><font color="red"><b>&nbsp;<%= @ict_firewall.id %>/<%=Time.now.year%></span>
+              </div>
+
+              <div class="form-sec-row">
+                <label class="text">Date of Application</label>
+                <span class="in-box"><%= @ict_firewall.created_at.strftime("%a %d %b %Y %I:%M %p")%></span>
+              </div>
+              </div>
+
+              <h2 class="b-head"></h2>
+
+              <div class="form-sec-row">
+                <label class="text">Source Ip</label>
+                <span class="in-box">
+                  <%= @ict_firewall.source_ip %>
+                </span>
+              </div>
+
+              <div class="form-sec-row">
+                <label class="text">Destination Ip</label>
+                <span class="in-box">
+                  <%= @ict_firewall.destination_ip %>
+                </span>
+              </div>
+
+              <div class="form-sec-row">
+                <label class="text">Requested From Date</label>
+                <span class="in-box">
+                  <%=  @ict_firewall.requested_from_date.strftime("%d-%m-%Y %H:%M %p") %>
+                </span>
+              </div>
+
+              <div class="form-sec-row">
+                <label class="text">Requested to Date</label>
+                <span class="in-box">
+                  <%=  @ict_firewall.requested_to_date.strftime("%d-%m-%Y %H:%M %p") %>
+                </span>
+              </div>
+
+              <div class="form-sec-row">
+                <label class="text">Justification</label>
+                <span class="in-box">
+                  <%= @ict_firewall.justification %>
+                </span>
+              </div>
+
+              <div class="form-sec-row">
+                <label class="text">Status</label>
+                <span class="in-box">
+                  <%= @ict_firewall.status %>
+                </span>
+              </div>
+
+              <div class="form-sec-row">
+                <label class="text">Booking Status<span style=color:red>*</span></label>
+                <%if @ict_firewall.status == 'New'%>
+                  <span class="in-box">
+                    <%= select_tag :approve_status,"<option>Approved</option><option>Declined</option>".html_safe %>
+                  </span>
+                <%elsif @ict_firewall.status == 'Approved'%>
+                  <span class="in-box">
+                    <%= select_tag :approve_status,"<option>Processed</option><option>Declined</option>".html_safe %>
+                  </span>
+                <%end%>
+              </div>
+
+              <% if (@ict_firewall.status != "Approved") %>
+                <div class="form-sec-row">
+                  <label class="text">Forward To</label>
+                  <span class="in-box">
+                    <%= select("forward","to", @users.collect {|p| [ p.first_name, p.id ] }, :prompt => "SELECT A USER") %>
+                  </span>
+                </div>
+
+                <div class="form-sec-row">
+                  <label class="text">Remarks</label>
+                  <span class="in-box">
+                    <%= text_area_tag 'remarks',nil,:rows => 3 %>
+                  </span>
+                </div>
+              <%end%>
+
+              <div class="form-sec-row">
+                <label class="text">Service Information</label>
+                <span class="in-box">
+                </span>
+              </div>
+
+              <div class="form-sec-row">
+                <table width="520" border="0" class="app-table" cellspacing="0" cellpadding="0" align="center" color="#329C20">                <tr>
+                    <th color="#329C20" width="5%"><b>No</b></th>
+
+                    <th width="15%"><b>Service Name</b></th>
+                    <th width="20%"><b>One Way</b></th>
+                    <th width="25%"><b>Action</b></th>
+                  </tr>
+                  <% services = @ict_firewall.ict_firewall_services %>
+                  <% services.each do |ict_firewall_service| %>
+
+                    <tr>
+                      <td>1</td>
+                      <td><b>&nbsp;<%=FacilityIctService.find(ict_firewall_service.id).port%></b></td>
+                      <td><b>&nbsp;<%= ict_firewall_service.one_way? ? 'One Way' : 'Two Way' %></b></td>
+                      <% if @ict_firewall.status == "New" %>
+                        <td> <%= f.radio_button :status, 'Approve',:checked=>true %> <%= f.label :approve_status, "Approve" %>
+                          <%= f.radio_button :status, 'Not Approve'%> <%= f.label :approve_status, "Not Approve" %></td>
+                      <%else%>
+                        <td><b>&nbsp;<%= ict_firewall_service.approved? ? 'Approved' : 'Not Approved' %></b></td>
+                      <%end%>
+                    </tr>
+                  <%end%>
+                </table>
+              </div>
+
+              <div class="form-sec-row2">
+                <label class="text">&nbsp;</label>
+                <span class="in-box2">
+                  <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+                  <%= f.submit "Submit", :class=>"btn1 mr2", :onclick=>'return validate_ict_request_approval_form();'%>
+                </span>
+              </div>
+              </div>
+            <%end%>
+
+
+
+
+            <script>
+              function validate_ict_request_approval_form()
+              {
+                if ($("#forward_to").val() == "" && $("#approve_status").val() == "Approved")
+                {
+                  alert("Select a InCharge Person");
+                  return false;
+                }
+              }
+            </script>

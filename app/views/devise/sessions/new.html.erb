@@ -1,0 +1,63 @@
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+<%#=f.error_message%>
+  <div class="landing-con">
+    <div class="banner">
+      <span class="cor-tl"></span>
+      <span class="cor-tr"></span>
+      <span class="cor-bl"></span>
+      <span class="cor-br"></span>
+      <div id="slides">
+        <div class="slides_container">
+          <div class="slide">
+            <%=image_tag("banner1.png", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+          <div class="slide">
+            <%=image_tag("banner2.jpg", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+          <div class="slide">
+            <%=image_tag("banner3.jpg", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+          <div class="slide">
+            <%=image_tag("banner4.jpg", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+          <div class="slide">
+            <%=image_tag("banner5.jpg", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="login-ban">
+      <div class="ban-tr">
+        <div class="ban-tl"></div>
+        <div class="ban-tc"></div>
+      </div>
+      <div class="ban-m">
+        <h1>Welcome to Melaka Intranet Portal</h1>
+        <h3>" The Corridor for Effective Communication "</h3>
+        <div class="footer-land">
+          <p class="formRow t-left">
+            <%= f.label :ic_number, :class=>"ui-watermark-label-pass"%>
+            <span class="shadow-input">
+              <%= f.text_field :ic_number, :class=>"pass"%>
+            </span>
+          </p>
+          <p class="formRow t-left">
+            <%= f.label :password, :class=>"ui-watermark-label-pass"%>
+            <span class="shadow-input">
+              <%= f.password_field :password, :class=>"pass"%>
+            </span>
+          </p>
+          <%= f.submit "Log In", :class => "btn1" %>
+          <div class="clear"></div>
+          <p class="loggedin">
+            <%= f.check_box :remember_me %><%= f.label :remember_me,"Keep me logged in" %>
+          </p>
+          <p class="forgot-row">
+            <%= link_to "Forgot your password?", new_user_password_path,:title=>title="Forgot Your Password?" %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clear"></div>
+<%end%>

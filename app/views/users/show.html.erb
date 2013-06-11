@@ -1,0 +1,334 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <h2>Step 1 of 5 - Update User Profile</h2><br/>
+
+    <div class="form-sec-row-out">
+      <label class="text">Name</label>
+      <span class="in-box">
+        <%= @users.username %></span>
+    </div>
+    <div class="form-sec-row-out">
+      <label class="text">IC Number</label>
+      <span class="in-box">
+        <%= @users.ic_number %></span>
+    </div>
+
+    <div class="form-sec-row-out">
+      <label class="text">Marital Status</label>
+      <span class="in-box">
+        <%= @users.marital_status %></span>
+    </div>
+    <div class="form-sec-row-out">
+      <label class="text">Gender</label>
+      <span class="in-box">
+        <%= @users.gender %></span>
+    </div>
+    <div class="form-sec-row-out">
+      <label class="text">Address</label>
+      <span class="in-box">
+        <%= @users.address %></span>
+    </div>
+    <div class="form-sec-row-out">
+      <label class="text">Postal Code</label>
+      <span class="in-box">
+        <%= @users.zipcode %></span>
+    </div>
+    <div class="form-sec-row-out">
+      <label class="text">City</label>
+      <span class="in-box">
+        <%= @users.city %></span>
+    </div>
+    <% users_state = State.find_by_id(@users.state) %>
+      <div class="form-sec-row-out">
+        <label class="text">State</label>
+        <span class="in-box">
+          <%= users_state.name %></span>
+      </div>
+
+    <div class="form-sec-row-out">
+      <label class="text">HP Number</label>
+      <span class="in-box">
+        <%= @users.hp_number %></span>
+    </div>
+
+    <div class="form-sec-row-out">
+      <label class="text">Date of Birth</label>
+      <span class="in-box">
+        <%= @users.date_of_birth %></span>
+    </div>
+    <div class="form-sec-row-out">
+      <label class="text">Total Children/Dependent</label>
+      <span class="in-box">
+        <%= @users.child %></span>
+    </div>     <h2 class="b-head"></h2><br/> 
+    <a id="showhidetrigger" ><b>Show / Hide Info - Step 2 of 5</b></a><br/>
+    <div id="showhidetarget">
+      <h2>Step 2 of 5 - Update User Profile</h2>
+      <div class="form-sec-row-out">
+        <label class="text">Level of Service</label>
+        <span class="in-box">
+          <%= @service_level.stage %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Classification of Service</label>
+        <span class="in-box">
+          <%= @classification.title %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Service Standards</label>
+        <span class="in-box">
+          <%= @standard.name %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Appointment</label>
+        <span class="in-box">
+          <%= @appointment.name %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Grade </label>
+        <span class="in-box">
+          <%= @service.grade_id %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Position </label>
+        <span class="in-box">
+          <%= @service.position %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Salary Scale</label>
+        <span class="in-box">
+          <%salary_scale =  @service.salary_scale1, @service.salary_scale2 %>
+          <%= salary_scale %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Email </label>
+        <span class="in-box">
+          <%= @service.email %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Destination State </label>
+        <span class="in-box">
+          <%= @state.name %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">City </label>
+        <span class="in-box">
+          <%= @service.city %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Postal Code </label>
+        <span class="in-box">
+          <%= @service.postal_code %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Office Address</label>
+        <span class="in-box">
+          <%= @service.office_address %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Office Number</label>
+        <span class="in-box">
+          <%= @service.office_number %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Office Fax</label>
+        <span class="in-box">
+          <%= @service.office_fax %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Date of First Appointment of Public Service </label>
+        <span class="in-box">
+          <%= @service.first_appointment_to_public_service %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text"> Date of First Appointment of the Present Post </label>
+        <span class="in-box">
+          <%= @service.first_appointment_to_present_position %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">  Date of Promotion to Present Grade </label>
+        <span class="in-box">
+          <%= @service.promotion_to_present_grade %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">   Confirmation Date </label>
+        <span class="in-box">
+          <%= @service.confirmation_date %></span>
+      </div>
+    </div>     <h2 class="b-head"></h2><br/>
+    <a id="showhidetriggerstep3" ><b>Show / Hide Info - Step 3 of 5</b></a><br/>
+    <div id="showhidetargetstep3">
+      <h2>Step 3 of 5 - Head of Department Information and Emergency Reference</h2><br/>
+      <b><u>Head of Department Details :-</u></b><br/><br/>
+       <div class="form-sec-row-out">
+         <label class="text">Name </label>
+        <span class="in-box">
+         <%= current_user.departments.first.name%>
+        </span>
+      </div>
+    <div class="form-sec-row-out">
+      <label class="text">Position Title</label>
+        <span class="in-box">
+        </span>
+      </div>
+      <div class="form-sec-row-out">
+       <label class="text">E - Mail</label>
+        <span class="in-box">       
+        </span>
+      </div><br/>
+      <b><u>Emergency Reference Details :-</u></b><br/>
+      <br/>
+      <div class="form-sec-row-out">
+        <label class="text">Name</label>
+        <span class="in-box">
+          <%= @emergency_references.name %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Address</label>
+        <span class="in-box">
+           <%= @emergency_references.address %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Telephone No</label>
+        <span class="in-box">
+           <%= @emergency_references.phone_no %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Relationship</label>
+        <span class="in-box">
+          <%= @emergency_references.relation %></span>
+      </div>      
+    </div>
+
+    <h2 class="b-head"></h2><br/>
+    <a id="showhidetriggerstep4" ><b>Show / Hide Info - Step 4 of 5</b></a><br/>
+    <div id="showhidetargetstep4">
+      <h2>Step 4 of 5 - Declaration Property</h2>
+      <div class="form-sec-row-out">
+        <label class="text">Year</label>
+        <span class="in-box">
+          <%= @declaration_properties.property_year %></span>
+      </div>
+      <div class="form-sec-row-out">
+      <% if @declaration_properties.property_file.present? %>
+        <label class="text">Attachment</label>
+        <% image = @declaration_properties.property_file.url(:profile).split(".").last %>
+        <% if image == "gif" || image == "jpg" || image == "jpeg" || image == "png" %>
+          <span class="in-box">
+            <%=image_tag(@declaration_properties.property_file.url,:title=>@declaration_properties.property_file)%>
+          <%else%>
+            <% file = (@declaration_properties.property_file).url.split("/").last %>
+            <b>&nbsp;<%= link_to file, download_attachments_users_path(:id=>@declaration_properties.id) if @declaration_properties.property_file?  %></b>
+          </span>
+        <%end%>
+      <%end%>
+    </div>
+    </div>
+
+
+    <h2 class="b-head"></h2><br/>
+    <a id="showhidetriggerstep5" ><b>Show / Hide Info - Step 5 of 5</b></a><br/>
+    <div id="showhidetargetstep5">
+      <h2>Step 5 of 5 - Out Station Request</h2>
+
+      <div class="form-sec-row-out">
+        <label class="text">Destination</label>
+        <span class="in-box">
+          <% if @outstations.is_out_of_state == true %>Out of State <% else %>Out of Country
+          <%end%></span>
+      </div>
+    <div class="form-sec-row-out">
+        <label class="text">Type</label>
+        <span class="in-box">
+<% if @outstations.is_official == true %>Official<% else %>Non-Official / Personal
+          <%end%></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Place Name</label>
+        <span class="in-box">
+          <%= @outstations.placename %></span>
+      </div>  <% if @outstations.is_out_of_state == true %>
+      <% outstations_state = State.find_by_id(@outstations.state) %>
+      <div class="form-sec-row-out">
+        <label class="text">State</label>
+        <span class="in-box">
+          <%= outstations_state.name %></span>
+      </div><%else%>
+      <div class="form-sec-row-out">
+        <label class="text">Country</label>
+        <span class="in-box">
+          <%= @outstations.country %></span>
+      </div><%end%>
+      <div class="form-sec-row-out">
+        <label class="text">From Date</label>
+        <span class="in-box">
+          <%= @outstations.from_date %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">To Date</label>
+        <span class="in-box">
+        <%=  @outstations.to_date %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Purpose</label>
+        <span class="in-box">
+          <%= @outstations.purpose %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Total Expenditure</label>
+        <span class="in-box">
+          <%= @outstations.total_expenditure %></span>
+      </div>
+      <div class="form-sec-row-out">
+        <label class="text">Cause Spending</label>
+        <span class="in-box">
+          <%= @outstations.cause_spending %></span>
+      </div>
+     <div class="form-sec-row-out">
+      <% if @outstations.attachment.present? %>
+        <label class="text">Attachment</label>
+        <% image = @outstations.attachment.url(:profile).split(".").last %>
+        <% if image == "gif" || image == "jpg" || image == "jpeg" || image == "png" %>
+          <span class="in-box">
+            <%=image_tag(@outstations.attachment.url,:title=>@outstations.attachment)%>
+          <%else%>
+            <% file = (@outstations.attachment).url.split("/").last %>
+            <b>&nbsp;<%= link_to file, download_attachments_path(:id=>@outstations.id) if @outstations.attachment?  %></b>
+          </span>
+        <%end%>
+      <%end%>
+    </div>
+    </div>
+
+    <h2 class="b-head"></h2>
+  </div>  
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#showhidetarget').hide();
+
+    $('a#showhidetrigger').click(function () {
+      $('#showhidetarget').toggle(400);
+    });
+     $('#showhidetargetstep3').hide();
+
+$('a#showhidetriggerstep3').click(function () {
+      $('#showhidetargetstep3').toggle(400);
+    });
+
+ $('#showhidetargetstep4').hide();
+
+    $('a#showhidetriggerstep4').click(function () {
+      $('#showhidetargetstep4').toggle(400);
+    });
+     $('#showhidetargetstep5').hide();
+
+    $('a#showhidetriggerstep5').click(function () {
+      $('#showhidetargetstep5').toggle(400);
+    });
+
+  });
+</script>

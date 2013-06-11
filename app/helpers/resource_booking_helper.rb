@@ -1,0 +1,2 @@
+module ResourceBookingHelper
+end

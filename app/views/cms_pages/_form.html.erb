@@ -1,0 +1,30 @@
+<%= form_for(@cms_page) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="form-sec-row">
+    <%= f.label :title,raw("Title"), :class=>"text"%>
+    <span class="in-box">
+      <%= f.text_field :title %>
+    </span>
+  </div>
+  <%#*<div class="form-sec-row">%>
+  <%#= f.label :attachement,raw("Attachement"), :class=>"text"%>
+  <%#*<span class="in-box">%>
+  <%#= f.file_field :attachement %>
+  <div class="form-sec-row"><br/>
+    <%= f.label :content,raw("Description"), :class=>"text"%><br /><br />
+    <span class="in-box"> <%= tinymce(:cms_page, :content) %></span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text"> <%= f.label :location,raw("Location"), :class=>"text"%></label>
+    <span class="in-box">
+      <%footer_options=["header","footer"]%>
+      <%=f.select(:location, options_for_select(footer_options,@cms_page.location))%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">&nbsp;</label>
+    <span class="in-box"><%= f.submit  :class=>"btn2", :value=>@cms_page.new_record? ? "Create" : "Update"%></span>
+  </div>
+  <div class="clear"></div>
+<% end %>

@@ -1,0 +1,75 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Manage Units</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/units/new" title="Create Unit"><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Unit</a></div>
+    </div>
+
+    <div class="form-sec-row">
+      <%= label_tag "id_agency", raw("Agency"), :class=>"text" %>
+      <span class="in-box">
+        <%= select("id","agency",  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+      <br/><br/>
+      </span>
+   
+      <%= label_tag :department_id,raw("Department"), :class=>"text"%>
+      <span class="in-box">
+        <%=select(:standard1,:department_id, Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A DEPARTMENT") %>
+      </span>
+    </div>
+    <%=hidden_field_tag :department_id, ""%>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @units && !@units.empty?%>
+      <% if params[:department_id].present? %>
+        <%@units.each do |unit|%>
+          <div class="manage-user box">
+            <div class="manage-user-row box">
+              <div class="mu-c1">
+              </div>
+              <div class="mu-c2">
+                <p class="head1"><%= unit.name%></p>
+              </div>
+              <div class="mu-c3">
+                  <%= link_to image_tag("../images/edit.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Edit", :action=>'edit', :id=>unit.id.to_i%>
+                <%if unit.is_active?%>
+                  <%= link_to image_tag("../images/deactive.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Deactivate", update_status_units_path(:id=>unit.id, :status=>"Deactivate",:department_id=>params[:department_id]), :confirm => 'Do you want to really deactivate this unit?', :method=>:post, :title=>"Deactive" %>
+                <%else%>
+                  <%= link_to  image_tag("../images/active.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Activate",  update_status_units_path(:id=>unit.id,:status=>"Activate",:department_id=>params[:department_id]), :confirm => 'Do you want to really Activate this unit?', :method=>:post, :title=>"Activate"%>
+                <%end%>
+                
+              </div>
+            </div>
+            <div class="clear"></div>
+          </div>
+        <%end%>
+      <%else%>
+       <%@units.each do |unit|%>
+          <div class="manage-user box">
+            <div class="manage-user-row box">
+              <div class="mu-c1">
+              </div>
+              <div class="mu-c2">
+                <p class="head1"><%= unit.name%></p>
+              </div>
+              <div class="mu-c3">
+                  <%= link_to image_tag("../images/edit.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Edit", :action=>'edit', :id=>unit.id.to_i%>
+                <%if unit.is_active?%>
+                  <%= link_to image_tag("../images/deactive.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Deactivate", update_status_units_path(:id=>unit.id, :status=>"Deactivate",:department_id=>params[:department_id]), :confirm => 'Do you want to really deactivate this unit?', :method=>:post, :title=>"Deactive" %>
+                <%else%>
+                  <%= link_to  image_tag("../images/active.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Activate",  update_status_units_path(:id=>unit.id,:status=>"Activate",:department_id=>params[:department_id]), :confirm => 'Do you want to really Activate this unit?', :method=>:post, :title=>"Activate"%>
+                <%end%>
+                <%#= link_to image_tag("../images/delete.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Delete", unit_path(:id=>unit.id,:department_id=>params[:department_id]), :method=>:delete, :confirm => "Are you sure want to delete?" %>
+              </div>
+            </div>             
+          </div>  
+        <%end%>
+      <%end%>
+    <%else%>
+      No Units Available
+    <%end%>
+<%#*<div><%= paginate @units %>
+  </div><div class="manage-user-rows box"><br/><br/>
+<%= paginate @units %></div>
+</div>

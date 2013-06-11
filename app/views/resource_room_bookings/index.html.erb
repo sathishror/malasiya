@@ -1,0 +1,109 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">List Room Bookings</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/resource_room_bookings/new" title="Create Resource Room Booking"><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Resource Room Booking</a></div>
+
+    </div>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @resource_room_bookings && !@resource_room_bookings.empty?%>
+      <%@resource_room_bookings.each do |resource|%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Name</b>
+            </div>
+            <div class="m-c2">
+              <% @user = User.find_by_id(resource.user_id) %>
+              <%= @user.username %>
+            </div>
+            <div class="m-c3">
+              <% if resource.status == "New"%><b><font color='#FFA500'><%= "#{resource.status}" %></font></b><% elsif resource.status == "Approved" || resource.status == "Processed"  %>  <b><font color='#329C20'><%= "#{resource.status}" %> </font></b><% elsif resource.status == "Declined" || resource.status == "Returned"  %>  <b><font color='red'><%= "#{resource.status}" %> </font></b><% end %>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Room Name</b>
+            </div>
+            <div class="m-c2">
+              <% @name = SubCategory.find_by_id(resource.sub_category_id)%>
+              <%=@name.name%>
+            </div>
+            <div class="m-c3">
+              <div class="form-sec-row">
+                <% if resource.status == "Processed" && resource.user_id = current_user.id%>
+                  <div id="hide_check_box_<%= resource.id %>">
+                    <% if !resource.user_returned_status? %>
+                      <label class="text"> Is Returnable?</label>
+                      <span class="in-box">
+                        <%= check_box_tag "user_returned_status[#{resource.id}]","",false,:onchange=>"toreturnroomresource(this.id,#{resource.id})" %>
+                      </span>
+                    <%end%>
+                  </div>
+                <%end%>
+              </div>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+             <div id="room_box_<%= resource.id %>" style="display:none;">
+                <%= "You have successfully returned resource" %>
+              </div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c2">
+              <font color="red"><b>&nbsp;<%=resource.id%>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info",resource_room_booking_path(:id => resource.id), :method=>:get%></font></b>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>From Date</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= resource.requested_from_date.to_datetime.strftime("%d-%m-%Y %H:%M %p")%>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>To Date</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= resource.requested_to_date.to_datetime.strftime("%d-%m-%Y %H:%M %p")%>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Date of Application</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= resource.created_at.localtime.strftime("%d-%m-%Y %H:%M %p")%>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+          <h2 class="b-head"></h2>
+
+
+
+        </div>
+      <%end%>
+    <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>

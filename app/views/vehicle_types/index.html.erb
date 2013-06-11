@@ -1,0 +1,24 @@
+<div class="CenterNav">
+  <h2 class="b-head">Manage Vehicle Types</h2>
+  <div class="create-user">
+    <div class="cu-c1"><a href="/vehicle_types/new" title="Create Vehicle Type"><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Vehicle Type</a></div>
+
+  </div>
+  <div id="div_ajax" >
+    <%if @vehicle_types && !@vehicle_types.empty?%>
+      <%  @vehicle_types.each do |vehicle_type|%>
+        <div class="manage-user box">
+          <div class="manage-user-row box">
+            <div class="mu-c1">
+            </div>
+            <div class="mu-c2">
+              <p class="head1">
+                <b><%= vehicle_type.name %></b><br/></p>
+            </div>
+          </div>
+        </div>
+      <%end%>
+    <%end%>
+  </div>
+</div>
+

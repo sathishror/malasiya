@@ -1,0 +1,6 @@
+<%headers=CmsPage.where(:location=>"header")%>
+<%if headers && !headers.empty?%>
+  <%headers.each do |header|%>
+    <li><%=link_to header.title, cms_page_path(:id=>header.id), :title=>header.title%></li>
+  <%end%>
+<%end%>

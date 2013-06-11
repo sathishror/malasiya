@@ -1,0 +1,10 @@
+development:
+  server: "http://localhost:3000"
+  secret_token: "52f1b620c022e1cce1642b5a9c77cecd4ee62bb0626248bdc81b10cd63c2cf238417af31b49e9c31f8b5af80a755a2f88d33b372852fef2c4caffb3c907462f5"
+test:
+  server: "http://localhost:3000"
+  secret_token: "52f1b620c022e1cce1642b5a9c77cecd4ee62bb0626248bdc81b10cd63c2cf238417af31b49e9c31f8b5af80a755a2f88d33b372852fef2c4caffb3c907462f5"
+#production:
+#  server: "http://example.com/faye"
+#  secret_token: "40c091ef10a2c72005ff298760a0371fdea98fcd499b07d1fec8d660bbb5d76d"
+#  signature_expiration: 3600 # one hour

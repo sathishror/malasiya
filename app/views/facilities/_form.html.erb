@@ -1,0 +1,24 @@
+<%= form_for(@facility) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <div class="form-sec-row">
+      <label class="text">Resource Type <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.radio_button :resource_type, 'ict'%> <%= f.label :resource_type, "ICT" %>
+        <%= f.radio_button :resource_type, 'transport'%> <%= f.label :resource_type, "Transport" %>
+        <%= f.radio_button :resource_type, 'room_booking'%> <%= f.label :resource_type, "Room Booking" %>
+        <%= f.radio_button :resource_type, 'others' ,:checked=>true%> <%= f.label :resource_type, "Others" %>
+      </span>
+    </div>
+    <div id="room_facility" style="display:none;">
+      <%=render :partial=>'facilities/facility_room'%>
+    </div>
+    <div id="transport_facility" style="display:none;">
+      <%=render :partial=>'facilities/facility_transport'%>
+    </div>
+    <div id="other_facility" >
+      <%=render :partial=>'facilities/facility_other'%>
+    </div>
+  </div>
+<%end%>

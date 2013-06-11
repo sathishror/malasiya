@@ -1,0 +1,55 @@
+<%= form_for(@approve, :url=>update_resource_approver_resources_path) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <h2 class="b-head">Approver</h2>
+
+    <%= hidden_field_tag :department_id, (current_department) %>
+    <%= hidden_field_tag :admin_id, (current_user.id) %>
+
+    <div class="form-sec-row">
+      <label class="text">First Approver<span style=color:red>*</span></label>
+      <span class="in-box">
+        <% if @first.present? %>
+          <%= select("approver1","id", @users.collect {|p| [ p.first_name, p.id ] },:selected => @first.id, :prompt => "SELECT A USER") %>      </span>
+      <%else%>
+          <%= select("approver1","id", @users.collect {|p| [ p.first_name, p.id ] },:prompt => "SELECT A USER") %>      </span>
+        <%end%>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">Is Active</label>
+      <span class="in-box">
+        <%= check_box "active1","id", :checked => true %>
+      </span>
+    </div>
+
+    <div class="manage-user-row box">
+
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">Second Approver<span style=color:red>*</span></label>
+      <span class="in-box">
+        <% if @second.present? %>
+          <%= select("approver2","id", @users.collect {|p| [ p.first_name, p.id ] },:selected => @second.id, :prompt => "SELECT A USER") %>      </span>
+      <%else%>
+          <%= select("approver2","id", @users.collect {|p| [ p.first_name, p.id ] },:prompt => "SELECT A USER") %>      </span>
+        <%end%>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">Is Active</label>
+      <span class="in-box">
+        <%= check_box "active2","id", :checked => true %>
+      </span>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :value=>'Create', :class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+<%end%>

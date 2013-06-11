@@ -1,0 +1,38 @@
+<%= form_for(@room) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <div class="form-sec">
+      <div class="form-sec-row">
+        <label class="text">Name<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.text_field :name, :size => 10%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Location<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.text_field :location%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Extension No<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.text_field :extension_no%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Is Active</label>
+        <span class="in-box">
+          <%= f.check_box :is_active%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">&nbsp;</label>
+        <span class="in-box">
+          <%= f.submit :value=>@room.new_record? ? "Create" : "Update", :class=>"btn2"%>
+        </span>
+      </div>
+    </div>
+  </div>
+<%end%>

@@ -1,0 +1,34 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Manage Facility Ict Agencies</h2>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @facility_ict_software && !@facility_ict_software.empty?%>
+        <%@facility_ict_software.each do |ict_software|%>
+          <div class="manage-user box">
+            <div class="manage-user-row box">
+              <div class="mu-c1">
+              </div>
+              <div class="mu-c2">
+                <p class="head1"><%=ict_software.name%></p>
+              </div>
+              <div class="mu-c3">
+                <%= link_to image_tag("../images/edit.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Edit", :action=>'edit', :id=>ict_software.id.to_i%>
+                <%if ict_software.is_active %>
+                  <%= link_to image_tag("../images/deactive.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Deactivate", update_status_facility_ict_softwares_path(:id=>ict_software.id, :status=>"Deactivate"), :confirm => 'Do you want to really deactivate this agency?', :method=>:post, :title=>"Deactive" %>
+                <%else%>
+                  <%= link_to  image_tag("../images/active.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Activate",  update_status_facility_ict_softwares_path(:id=>ict_software.id,:status=>"Activate"), :confirm => 'Do you want to really Activate this agency?', :method=>:post, :title=>"Activate"%>
+                <%end%>
+
+              </div>
+            </div>
+
+          </div>
+        <%end%><div class="manage-user-rows box"><br/><br/>
+<%#= paginate @agencies %></div>
+    <%else%>
+      No Agencies Available
+    <%end%>
+<%#*<div><%= paginate @units %>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="CenterNav">
+<%= form_for(@property_file,  :url => declaration_property_users_path, :html => {:multipart => true}, :method=>:post) do |f| %>
+  <div class="form-sec">
+    <%=f.error_messages%>
+    <div class="clearfix">&nbsp;</div>
+   <table><tr><td><b><font color="#858585">Step 1 -></font></b></td><td><font color="#858585">Step 2-></font></td><td><font color="#858585">Step 3-></font></td><td><h4><b><font color="#336699">Step 4-></font></b></h4></td><td><font color="#858585">Step 5</font></td></tr></table>
+    <h2>Declaration Property</h2>
+
+    <%= hidden_field_tag :user_id,current_user.id %>
+
+
+    <div class="form-sec-row">
+      <label class="text">Year <span style=color:red>*</span></label>
+      <span class="in-box5">
+        <%= select_year(Date.today, :start_year => 2010, :end_year => 2020)%>
+      </span>
+    </div>
+
+
+    <div class="form-sec-row">
+      <label class="text">Upload File <span style=color:red></span></label>
+      <span class="in-box">
+        <%=f.file_field :property_file %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Upload File 1<span style=color:red></span></label>
+      <span class="in-box">
+        <%=f.file_field :property_file1 %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Upload File 2<span style=color:red></span></label>
+      <span class="in-box">
+        <%=f.file_field :property_file2 %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Upload File 3<span style=color:red></span></label>
+      <span class="in-box">
+        <%=f.file_field :property_file3 %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Upload File 4<span style=color:red></span></label>
+      <span class="in-box">
+        <%=f.file_field :property_file4 %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :class=>"btn2",:value=>'Create'%>
+      </span>
+    </div>
+
+  </div>
+<%end%>
+  <div class="form-sec-row"> <label class="text">&nbsp;</label>
+     <%=link_to "Go to Step 5", new_outstation_path %>
+  </div>
+<%i =1%>
+  <div class="form-sec-row">
+    <%#*<label class="text">Year</label>%>
+  <%#=file.property_year%>
+  </div>
+<div class="form-sec-row">
+<%@property_file = DeclarationProperty.find_all_by_user_id(current_user.id)%>
+<%if @property_file %>
+<%@property_file.each do |file| %>
+                    <% image = file.property_file.url(:profile).split(".").last %>
+                  
+                      <span class="in-box">
+                       
+                       
+             <% file_url = (file.property_file).url.split("/").last %>
+            <b>&nbsp;<%= link_to file_url, download_attachments_users_path(:id=>file.id) if file.property_file  %></b>
+            
+             <%if !file.property_file1%>
+             <% file_url1 = (file.property_file1).url.split("/").last %>
+            <b>&nbsp;<%= link_to file_url1, download_attachments_users_path(:id=>file.id) if file.property_file1  %></b>
+            <%end%>
+             <%if !file.property_file2%>
+            <% file_url2 = (file.property_file2).url.split("/").last %>
+            <b>&nbsp;<%= link_to file_url2, download_attachments_users_path(:id=>file.id) if file.property_file2  %></b>
+            <%end%>
+             <%if file && !file.property_file3%>
+            <% file_url3 = (file.property_file3).url.split("/").last %>
+            <b>&nbsp;<%= link_to file_url3, download_attachments_users_path(:id=>file.id) if file.property_file3  %></b>
+            <%end%>
+             <%if !file.property_file4%>
+            <% file_url4 = (file.property_file4).url.split("/").last %>
+            <b>&nbsp;<%= link_to file_url4, download_attachments_users_path(:id=>file.id) if file.property_file4  %></b>
+            <%end%>
+                      </span>
+                  <%end%>
+  <%end%>
+  
+</div>
+  
+</div>

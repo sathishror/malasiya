@@ -1,0 +1,85 @@
+<div class="CenterNav">
+  <h2 class="b-head">Requisition ICT Firewall</h2>
+  <% if current_user.is_department_user? %>
+  <div class="create-user">
+    <div class="cu-c1"><a href="/ict_network_points/list_to_select_ict" title="Create Requisition for ICT "><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Requisition for ICT</a></div>
+  </div>
+  <%end%>
+
+  <div id="div_ajax" >
+    <%if @ict_firewalls && !@ict_firewalls.empty?%>
+      <%@ict_firewalls.each do |resource|%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Name</b>
+            </div>
+            <div class="m-c-second">
+              <%= User.find(resource.user_id).username   %>
+            </div>
+            <div class="m-c3">
+              <% if resource.status == "New"%><b><font color='#FFA500'><%= "#{resource.status}" %></font></b><% elsif resource.status == "Approved" || resource.status == "Processed"  %>  <b><font color='#329C20'><%= "#{resource.status}" %> </font></b><% elsif resource.status == "Declined" || resource.status == "Returned"  %>  <b><font color='red'><%= "#{resource.status}" %> </font></b><% end %>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Type of Facility</b>
+            </div>
+            <div class="m-c-second">
+              <% name = RequisitionType.find_by_id(resource.requisition_type_id) %>
+              <%=name.name%>
+            </div>
+            <div class="m-c3">
+              <%if resource.status == "New"%>
+
+                <% if current_user.is_department_admin? || current_user.is_super_admin? %>
+                  <span class="in-box">
+                    <%= link_to "Approve",  edit_ict_firewall_path(:id => resource.id), :class=>"btn2 in-btn2"%>
+                  </span>
+                <%end%>
+              <%elsif resource.incharge_person == current_user.id %>
+                <%if resource.status == "Approved"%>
+                  <span class="in-box">
+                    <%= link_to "Process",  edit_ict_firewall_path(:id => resource.id), :class=>"btn2 in-btn2"%>
+                  </span>
+                <%end%>
+
+              <%end%>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c-second">
+              <font color="red"><b>&nbsp;<%=resource.id%>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info",ict_firewall_path(:id => resource.id), :method=>:get%></font></b>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Date of Application</b>
+            </div>
+            <div class="m-c-second">
+              &nbsp;<%= resource.created_at.strftime("%a %d %b %Y %I:%M %p")%></font>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+
+        </div>
+        <h2 class="b-head"></h2>
+
+      <%end%> <div class="manage-user-rows box"><br/><br/>
+  <%#= paginate @requisition %></div>
+      <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>
+

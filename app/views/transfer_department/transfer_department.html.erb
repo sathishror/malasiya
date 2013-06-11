@@ -1,0 +1,25 @@
+<%= form_for(@user, :as => :user,  :url => transfer_department_transfer_department_index_path(:id => @department_id), :method=>:post) do |f| %>
+  <%if !request.xhr?%>
+    <div class="CenterNav">
+      <h2 class="b-head">Transfer Department</h2>
+      <div class="create-user">From Department :<br/><br/>
+        <%=hidden_field_tag :department_id, ""%>
+        <div class="cu-c2">
+          <%= select(:standard,:department_id, Department.order('name').all.collect{ |s| [truncate(s.name, :length => 50), s.id] },:selected => @department_id ,:prompt => "SELECT A DEPARTMENT") %>
+        </div>
+      </div>
+      <div class="create-user">List of Existing Users :<br/><br/>
+        <%=hidden_field_tag :username %>
+        <div class="cu-c2">
+          <%= select(:standard,:username, User.order('username').all.collect{ |s| [truncate(s.username, :length => 50), s.id] },:selected => @username ,:prompt => "SELECT A USER") %>
+        </div>
+      </div>
+      <div class="create-user">To Department :<br/><br/>
+        <div class="cu-c2">
+          <%= select(:standard2,:department_id, Department.order('name').all.collect{ |s| [truncate(s.name, :length => 50), s.id] },:selected => @department_id ,:prompt => "SELECT A DEPARTMENT") %>
+        </div>
+      </div>
+    </div>
+    <%= f.submit raw('Transfer'), :class=>"btn2"%>
+  <%end%>
+<%end%>

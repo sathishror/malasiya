@@ -1,0 +1,2 @@
+module ResourceCategoriesHelper
+end

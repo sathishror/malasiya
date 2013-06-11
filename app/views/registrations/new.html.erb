@@ -1,0 +1,116 @@
+
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+  <!--BODY START-->
+  <div id="Body">
+    <div class="form-page">
+      <div class="form-sec">
+        <%=f.error_messages%>
+        <div class="clearfix">&nbsp;</div>
+        <h2>Sign up</h2>
+  <%#= f.hidden_field :is_admin,:value=> true%>
+  <%#=f.text_field :admin_signup, :value=>true%>
+        <div class="form-sec-row">
+          <%= f.label :first_name,raw("First Name"), :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :first_name, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :last_name,raw("Last Name"), :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :last_name, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Display Name</label>
+          <span class="in-box">
+            <%= f.text_field :username, :size => 30, :autofocus => true , :type=>"text"%>
+            <i>(This name will be used through out the site)</i>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Email <span style=color:red>*</span></label>
+          <span class="in-box">
+            <%= f.text_field :email, :size => 30, :autofocus => true, :type=>"text"%>
+          </span>
+        </div>
+
+        <div class="form-sec-row">
+          <label class="text">IC Number<span style=color:red>*</span></label>
+          <span class="in-box">
+           <input class="icnumber" type="number"  maxlength="6" size="6" name="num1">&nbsp;-
+           <input class="icnumber1" type="number"  maxlength="2" size="2" name="num2">&nbsp;-
+           <input class="icnumber2" type="number"  maxlength="4" size="4" name="num3">
+          
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :city, :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :city, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+
+        <div class="form-sec-row">
+          <label class="text">State<span style=color:red>*</span></label>
+          <span class="in-box">
+            <%= f.select(:state, State.all.collect {|p| [p.name.upcase, p.id]} ,:prompt => "SELECT YOUR STATE")%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :zipcode, :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :zipcode, :size => 5, :maxlength=>5, :autofocus => true%>
+          </span>
+        </div>
+      <div class="form-sec-row">
+        <%= label_tag  "users_role", raw("Role"), :class=>"text" %>
+        <span class="in-box">
+          <%= select("users","role", Role.where("name != 'Super Admin'").collect {|role| [role.name, role.id]},:prompt=>"SELECT A ROLE") %>
+        </span>
+      </div>
+        <div class="form-sec-row">
+          <%= label_tag "users_agency", raw("Agency"), :class=>"text" %>
+          <span class="in-box">
+            <%= select("users","agency",  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag "users_department", raw("Department"), :class=>"text"%>
+          <span class="in-box">
+            <%= select("users","department", Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A DEPARTMENT") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag "users_unit",raw("Unit"), :class=>"text"%>
+          <span class="in-box">
+            <%= select("users","unit", Unit.active.where("department_id=?", params[:department]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A UNIT") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Password <span style=color:red>*</span></label>
+          <span class="in-box">
+            <%= f.password_field :password, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Password confirmation <span style=color:red>*</span></label>
+          <span class="in-box">
+            <%= f.password_field :password_confirmation, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">&nbsp;</label>
+          <span class="in-box">
+            <%= f.submit "Sign up" ,:class=>"btn2"%>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <!--BODY END-->
+<%end%>
+
+
+

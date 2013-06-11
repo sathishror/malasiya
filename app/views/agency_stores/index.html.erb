@@ -1,0 +1,80 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Manage Agency Store</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/agency_stores/new" title="Create Transport Resource"><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Agency Store</a></div>
+
+    </div>
+    <div class="form-sec-row">
+      <%= label_tag :agency_id, raw("Agency"), :class=>"text" %>
+      <span class="in-box">
+
+        <%= select("list","agency",  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+
+      </span>
+    </div>
+  <%#*<div class="form-sec-row">%>
+  <%#*<label class="text">Select Category <span style=color:red>*</span></label>%>
+  <%#*<span class="in-box">%>
+
+  <%#=select("category","allid", options_from_collection_for_select(Category.active.all, 'id','name'),{:prompt=>"SELECT A CATEGORY"})%>
+
+  <%#*</span>%>
+  <%#*</div>%>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @stores && !@stores.empty?%>
+      <%@stores.each do |store|%>
+        <div class="manage-user box">
+          <div class="manage-user-row box">
+            <div class="mu-c2" width="45%">
+              <%resource = Resource.find_all_by_id(store.resource_id)%>
+              <%sub_category = SubCategory.find_all_by_id(store.sub_category_id)%>
+              <p class="head1">Resource Type :&nbsp;<%=store.resource_type%></p>
+              <%if store.category_id?%>
+                <%category = Category.find_all_by_id(store.category_id)%>
+              <p class="head1">Category:&nbsp;<%=category[0].name.camelize%></p>
+              <%end%>
+              <%if sub_category%>
+              <p class="head1">Sub Category:&nbsp;<%=sub_category[0].name.camelize%></p>
+              <%end%>
+              <%if store.resource_type == 'ICT'%>
+              <p class="head1">Serial No   :&nbsp;<%=store.serial_no%></p>
+              <%elsif store.resource_type == 'Room'%>
+               <p class="head1">Ext No   :&nbsp;<%=resource[0].resource_no%></p>
+               <%elsif store.resource_type == 'Transport'%>
+               <p class="head1">Reg No   :&nbsp;<%=resource[0].resource_no%></p>
+             <%elsif store.resource_type == 'Others'%>
+              <p class="head1">Resource Name   :&nbsp;<%=resource[0].resource_no%></p>
+              <%end%>
+             
+              <%if store.quantity?%>
+                <p class="head1">Quantity:&nbsp;<%=store.quantity%></p>
+              <%end%>
+              <%if store.uom?%>
+                <p class="head1">UOM:&nbsp;<%=store.uom%></p>
+              <%end%>
+              <%if store.driver_id?%>
+                <%driver = Driver.find_all_by_id(store.driver_id)%>
+                <p class="head1">Driver Name:&nbsp;<%=driver[0].name.camelize%></p>
+              <%end%>
+              <p class="head1">Status:&nbsp;<%if store.booked%><span style=color:#336699>Booked</span><%else%><span style=color:#336699>Available</span><%end%></p>
+    <%#end%>
+            </div>
+            <div class="mu-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+        </div>
+      <%end%>
+      <div class="manage-user-rows box">
+        <br/><br/>
+        <%= paginate @stores %></div>
+    <%else%>
+      No Resources Available in selected Agency Store.
+    <%end%>
+<%#*<div><%= paginate @units %>
+  </div>
+</div>

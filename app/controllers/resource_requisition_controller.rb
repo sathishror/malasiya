@@ -1,0 +1,2 @@
+class ResourceRequisitionController < ApplicationController
+end

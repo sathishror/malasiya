@@ -1,0 +1,4 @@
+development:
+  stalker_prefix: "dev"
+production:
+  stalker_prefix: "prod"

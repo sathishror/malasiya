@@ -1,0 +1,76 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">List Others Booking</h2>
+    
+    
+      
+  <%end%>
+  <div id="div_ajax" >
+    <%if @resource_bookings && !@resource_bookings.empty?%>
+      <%@resource_bookings.each do |resource|%>
+        <div class="manage-user box">
+          <div class="manage-user-row box">
+            <div class="mu-c1">
+            </div>
+           <div class="mu-c2">
+              <% resource_name = SubCategory.find_by_id(resource.sub_category_id)%>
+              <% @user = User.find_by_id(resource.user_id) %>
+              <p class="head1"><b>Name :<%= @user.first_name%></b></p>
+              <p class="head1"><b>Resource Name :<%= resource_name.name%>
+              <p class="head1"><b>Ticket No :<font color="#BB0802;">&nbsp;<%=resource.id%>/<%=Time.now.year%></font></b></p>
+              <p class="head1"><b>From Date:<%= resource.requested_from_date.to_datetime.strftime("%d-%m-%Y %H:%M %p")%></b></p>
+              <p class="head1"><b>To Date:<%= resource.requested_to_date.to_datetime.strftime("%d-%m-%Y %H:%M %p")%></b></p>
+              <p class="head1"><b>Booked Date:<%=resource.created_at.localtime.strftime("%d-%m-%Y %H:%M %p") %></b></p>
+            </div>
+             <div class="form-sec-row">
+                   <%#*<span class="in-box btn2 in-btn2">%>
+              <b><font color='#329C20'><%= "#{resource.status}" %></font></b>
+                   <%#*</span>%>
+            </div>
+
+            <div class="form-sec-row">
+              <% if resource.status == "Processed" && resource.user_id = current_user.id%>
+                <div id="hide_check_box_<%= resource.id %>">
+                  <% if !resource.user_returned_status? %>
+                    <label class="text"> Is Returnable?</label>
+                    <span class="in-box">
+                      <%= check_box_tag "user_returned_status[#{resource.id}]","",false,:onchange=>"toreturnresource(this.id,#{resource.id})" %>
+                    </span>
+                  <%end%>
+                </div>
+              <%end%>
+            </div>
+
+            <div id="room_box_<%= resource.id %>" style="display:none;">
+              <font color='#369'> <b><%= "You have successfully returned the Resource" %></b></font>
+            </div>
+
+            <% if resource.status == "Returned" || resource.user_returned_status?%>
+              <font color='#369'> <b><%= "You have successfully returned the Resource " %></b></font>
+            <%end%>
+
+            <div class="form-sec-row">
+              <% if current_user.is_department_admin? || current_user.is_super_admin? %>
+                <span class="in-box">
+                  <%= link_to "See Request Details",resource_booking_approval_resource_bookings_path(:id => resource.id), :class=>"btn2 in-btn2"%>
+                </span>
+              <%end%>
+            </div>
+
+            <div class="form-sec-row">
+              <span class="in-box">
+                <b><font color="#BB0802"><%= link_to "Show Request",resource_booking_path(:id => resource.id), :method=>:get%></font></b>
+              </span>
+            </div>
+            <div class="mu-c3">
+              <%= hidden_field_tag(:id, resource.id) %>
+            </div>
+          </div>
+          <div class="clear"></div>
+        </div>
+      <%end%>
+    <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>

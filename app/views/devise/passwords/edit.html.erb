@@ -1,0 +1,38 @@
+<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+  <!--BODY START-->
+  <div id="Body">
+    <div class="form-page">
+      <div class="form-sec">
+        <%=f.error_messages%>
+        <div class="clearfix">&nbsp;</div>
+        <h2>Change your password</h2>
+        <%= f.hidden_field :reset_password_token %>
+        <div class="form-sec-row">
+          <%= f.label :password, "New password" , :class=>"text"%>
+          <span class="in-box">
+            <%= f.password_field :password, :autofocus => true %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :password_confirmation, "Confirm new password" , :class=>"text"%>
+          <span class="in-box">
+            <%= f.password_field :password_confirmation %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">&nbsp;</label>
+          <span class="in-box">
+            <%= f.submit "Change my password", :class=>"btn2"%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">&nbsp;</label>
+          <span class="in-box">
+            <%= link_to "Sign in", new_session_path(resource_name) %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+<%end%>
+

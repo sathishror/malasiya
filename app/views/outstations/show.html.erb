@@ -1,0 +1,105 @@
+<div class="clearfix">&nbsp;
+  <div class="CenterNav">
+    <h2 class="b-head">OutStation Details</h2>
+
+    <% @user_name = User.find(@outstation.user_id) %>
+
+    <div class="form-sec-row">
+      <label class="text">First Name</label>
+      <span class="in-box">
+        <%= @user_name.first_name %></span>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">Last Name</label>
+      <span class="in-box">
+        <%= @user_name.last_name %></span>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">Contact Mobile</label>
+      <span class="in-box">
+        <%= @user_name.contact_mobile  %></span>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">IC Number</label>
+      <span class="in-box">
+        <%= @user_name.ic_number %></span>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">E - Mail</label>
+      <span class="in-box">
+        <%= @user_name.email %></span>
+    </div>
+
+    <h2 class="b-head"></h2>
+
+    <div class="form-sec-row">
+      <label class="text">Ticket No</label>
+      <span class="in-box"><font color="red"><b>&nbsp;<%= @outstation.id %>/<%=Time.now.year%></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">Date of Application</label>
+              <span class="in-box"><%= @outstation.created_at.strftime("%a %d %b %Y %I:%M %p")%></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">Out Station Type</label>
+              <span class="in-box">
+                <%= @outstation.is_out_of_state? ? 'Out of State' : 'Out of Country' %></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">Out Station Type</label>
+              <span class="in-box">
+                <%= @outstation.is_official ? 'Official' : 'Non-Official/Personal' %></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">Purpose</label>
+              <span class="in-box">
+                <%= @outstation.purpose %></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">Place Name</label>
+              <span class="in-box">
+                <%= @outstation.placename %></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">From Date</label>
+              <span class="in-box">
+                <%= @outstation.from_date %></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">To Date</label>
+              <span class="in-box">
+                <%= @outstation.to_date %></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">Total Expenditure</label>
+              <span class="in-box">
+                <%= @outstation.total_expenditure %></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">Cause Spending</label>
+              <span class="in-box">
+                <%= @outstation.cause_spending %></span>
+            </div>
+
+            <div class="form-sec-row">
+              <label class="text">Status</label>
+              <span class="in-box">
+                <% if @outstation.status == "New"%><b><font color='#FFA500'><%= "#{@outstation.status}" %></font></b> <% elsif @outstation.status == "Verified" || @outstation.status == "Recommended" || @outstation.status == "Approved" %>  <b><font color='#329C20'><%= "#{@outstation.status}" %> </font></b><% elsif @outstation.status == "Declined" || @outstation.status == "Returned" || @outstation.status == "Cancelled" %>  <b><font color='red'><%= "#{@outstation.status}" %> </font></b><% end %>
+              </span>
+            </div>
+
+            </div>
+            </div>

@@ -1,0 +1,21 @@
+<%= form_for(@ict_hardware_booking) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <%=f.hidden_field :facility_ict_id,:value=>"4" %>
+  <div class="form-sec-row"><br/>
+    <%= f.label :application_category,raw("Application Category"), :class=>"text"%>
+    <span class="in-box">
+      <%= f.radio_button :application_category, 'Individual', :checked=>@ict_hardware_booking && (@ict_hardware_booking.application_category=='Individual' || @ict_hardware_booking.application_category.blank?) ? true : false%> <%= f.label :application_category, "Individual" %>
+      <%= f.radio_button :application_category, 'Group', :checked=>@ict_hardware_booking && @ict_hardware_booking.application_category=='Group' ? true : false%> <%= f.label :application_category, "Group" %>
+    </span>
+  </div>
+  <%= f.fields_for :ict_hardware_booked_users do |builder| %>
+    <%= render "ict_hardware_booked_user_fields", :f => builder %>
+  <% end %>
+  <div id="div_ict_hardware_add_more" style="display:none;"><%= link_to_add_fields "Add User", f, :ict_hardware_booked_users %></div>
+  <div class="form-sec-row">
+    <label class="text">&nbsp;</label>
+    <span class="in-box"><%= f.submit  :class=>"btn2", :value=>@ict_hardware_booking.new_record? ? "Create" : "Update"%></span>
+  </div>
+  <div class="clear"></div>
+<% end %>

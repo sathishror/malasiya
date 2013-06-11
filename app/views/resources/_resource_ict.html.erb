@@ -1,0 +1,41 @@
+<%= form_for(@resource) do |f| %>
+  <div class="form-sec-row">
+    <label class="text">Resource Sub Category <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= select("resource_ict","sub_category_id",  options_from_collection_for_select(SubCategory.where("category_id = 8").active, 'id','name',@resource.sub_category_id ),:prompt=>"SELECT A SUB CATEGORY") %>
+    </span>
+  </div>
+  <%= f.hidden_field :category_id, :value=>"8" %>
+  <%= hidden_field_tag :resource_type, ("ict") %>
+
+  <div class="form-sec-row">
+    <label class="text">Name <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :name%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Description <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :description%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Brand Model <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :brand_model%>
+    </span>
+  </div>
+<div class="form-sec-row">
+    <label class="text">Is Serial Number Required</label>
+    <span class="in-box">
+      <%= f.check_box :is_facilty_avail%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">&nbsp;</label>
+    <span class="in-box">
+      <%= f.submit :class=>"btn2", :id=>"resource_ict", :value=>'Create'%>
+    </span>
+  </div>
+<%end%>

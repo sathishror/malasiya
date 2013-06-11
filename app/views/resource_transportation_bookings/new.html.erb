@@ -1,0 +1,12 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <% if ((@category && !@category.empty?) || current_user.is_super_admin?) %>
+      <%=render :partial=>"form" %>
+    <%else%>
+      <div class="form-sec">
+        <h2>Sorry... Transport Booking Facility is not Available for your Department...</h2>
+      </div>
+    <%end%>
+  </div>
+</div>

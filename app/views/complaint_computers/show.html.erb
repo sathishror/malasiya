@@ -1,0 +1,177 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <h2 class="b-head">Complaint / Issue Log - Computers Booking Details</h2>
+
+
+<%#=error_messages%>
+    <div class="clearfix">&nbsp;</div>
+<%#*<div class="CenterNav">%>
+
+    <div class="form-sec">
+<%# if @manager.present? %>
+      <font color="#369" size="3"><br/><b><u>Applicant Information :-</u><br/><br/></b></font>
+
+      <% @dept = Department.find_by_id(current_department) %>
+      <% @agency = Agency.find_by_id(@dept.agency_id) %>
+      <% @complaint_computer = ComplaintComputer.find_by_id(params[:id]) %>
+      <% @user = User.find_by_id(@complaint_computer.user_id) %>
+      <div class="form-sec-row">
+        <label class="text">Agency Name</label>
+        <span class="in-box"><%= @agency.name  %></span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Department Name</label>
+        <span class="in-box">
+          <%= @dept.name  %></span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">User Name</label>
+        <span class="in-box"><%= @user.username %></span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Contact Mobile</label>
+        <span class="in-box"><%= @user.contact_mobile  %></span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">IC Number</label>
+        <span class="in-box">
+          <%= @user.ic_number %></span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">E - Mail</label>
+        <span class="in-box">
+          <%= @user.email %></span>
+      </div>
+
+      <h2 class="b-head"></h2>
+
+      <div class="form-sec-row">
+        <label class="text">Ticket No</label>
+        <span class="in-box"><font color="red" size="3"><b>&nbsp;<%= @complaint_computer.id %>/<%=Time.now.year%></b></font></span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">Date of Application</label>
+        <span class="in-box"><%= @complaint_computer.created_at.strftime("%a %d %b %Y %I:%M %p")%></span>
+      </div>
+
+    </div>
+    <h2 class="b-head"></h2>
+
+    <div class="form-sec-row">
+      <label class="text">Type of Complaint</label>
+      <span class="in-box">
+        <%  @name = ComplaintType.find_by_id(@complaint_computer.complaint_type_id)%>
+        <%  @system_access_name = SystemAccess.find_by_id(@complaint_computer.system_access_id)%>
+        <%  @system_model_name = SystemModelType.find_by_id(@complaint_computer.system_model_type_id)%>
+        <%= @name.name%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Item / Type of System</label>
+      <span class="in-box">
+        <%= @system_access_name.name %></span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Model Item / System</label>
+      <span class="in-box">
+        <%= @system_model_name.name %></span>
+    </div>
+
+
+    <div class="form-sec-row">
+      <label class="text">Reason</label>
+      <span class="in-box">
+        <%= @complaint_computer.reason %></span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Serial No</label>
+      <span class="in-box">
+        <%= @complaint_computer.serial_no %></span>
+    </div>
+
+    <h2 class="b-head"></h2>
+    <% if @complaint_computer.status == "Approved" || @complaint_computer.status == "Processed" || @complaint_computer.status == "Declined"%>
+
+      <font color="#369" size="3"><br/><b><u>Officer Action :-</u><br/><br/></b></font>
+
+      <div class="form-sec-row">
+        <label class="text">Action to be Taken</label>
+        <span class="in-box">
+          <% if @complaint_computer.action_taken == false %>
+
+            Internal <% else %>
+            External
+          <%end%></span>
+      </div>
+
+      <% @vendor_name = Vendor.find_by_id(@complaint_computer.vendor_id) %>
+<% if @complaint_computer.action_taken == true && @complaint_computer.status == "Approved"%>
+
+          <div class="form-sec-row">
+            <label class="text">Vendor Name</label>
+            <span class="in-box">
+              <%= @vendor_name.name if @complaint_computer.vendor_id %></span>
+          </div>
+
+      <%end%>
+      <% if @complaint_computer.action_taken == true && @complaint_computer.status == "Processed"%>
+
+       <div class="form-sec-row">
+            <label class="text">Vendor Name</label>
+            <span class="in-box">
+              <%= @vendor_name.name if @complaint_computer.vendor_id %></span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Given Date</label>
+            <span class="in-box">
+
+              <%= @complaint_computer.given_date.to_datetime.strftime("%a %d %b %Y %I:%M %p") if @complaint_computer.given_date %></span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Receipt Date</label>
+            <span class="in-box">
+              <%= @complaint_computer.receipt_date.to_datetime.strftime("%a %d %b %Y %I:%M %p") if @complaint_computer.receipt_date%></span>
+          </div>
+
+          <div class="form-sec-row">
+            <label class="text">Comments</label>
+            <span class="in-box">
+              <%= @complaint_computer.comments if @complaint_computer.comments %></span>
+          </div>
+
+          <h2 class="b-head"></h2>
+
+      <%end%>
+        
+      <div class="form-sec-row">
+        <label class="text">Status</label>
+        <span class="in-box">
+          <% if @complaint_computer.status == "New"%><b><font color='#FFA500'><%= @complaint_computer.status %></b></font><% elsif @complaint_computer.status == "Approved" || @complaint_computer.status == "Processed"  %>  <b><font color='#329C20'><%= @complaint_computer.status %></b></font><% elsif @complaint_computer.status == "Declined" || @complaint_computer.status == "Returned"  %>  <b><font color='red'><%= @complaint_computer.status %></b></font><%end%></span>
+      </div>
+      <% name = User.find_by_id(@complaint_computer.forward_to) %>
+      <div class="form-sec-row">
+        <label class="text">Forward To</label>
+        <span class="in-box">
+          <%= name.username %>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Remarks</label>
+        <span class="in-box">
+          <%= @complaint_computer.remarks %></span>
+      </div>
+      <h2 class="b-head"></h2>
+    <%end%>
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+      </span>
+    </div>
+
+  </div>
+</div>

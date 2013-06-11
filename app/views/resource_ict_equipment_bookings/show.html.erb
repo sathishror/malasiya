@@ -1,0 +1,204 @@
+<div class="clearfix">&nbsp;</div>
+<div class="CenterNav">
+  <% if current_user.is_department_admin? %>
+    <h2 class="b-head">Resource Room Approval Request</h2>
+  <%else%>
+    <h2 class="b-head">Resource Room Process Request</h2>
+  <%end%>
+  <div class="manage-user box">
+    <div class="form-sec-row">
+      <label class="text heading_blue">User Details:</label>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Agency Name</label>
+      <span class="in-box">
+        <%= @resource_ict_equipment_booking.agency_store.agency.name%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Department Name</label>
+      <span class="in-box">
+        <%= @resource_ict_equipment_booking.department.name  %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">First Name</label>
+      <span class="in-box">
+        <%= @resource_ict_equipment_booking.user.first_name %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Last Name</label>
+      <span class="in-box">
+        <%= @resource_ict_equipment_booking.user.last_name %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">IC Number</label>
+      <span class="in-box">
+        <%= @resource_ict_equipment_booking.user.ic_number %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Email</label>
+      <span class="in-box">
+        <%= @resource_ict_equipment_booking.user.email %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text heading_blue">ICT Equipment Details:</label>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Ticket No</label>
+      <span class="in-box">
+        <b style="color:#BB0802;"><%=@resource_ict_equipment_booking.id%>/<%=Time.now.year%></b>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Date of Application</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.created_at.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Category Name</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.sub_category.name%>
+      </span>
+    </div>
+    <% @name = SubCategory.find(@resource_ict_equipment_booking.sub_category_id)%>
+    <%if @name%>
+      <div class="form-sec-row">
+        <label class="text">Resource Name</label>
+        <span class="in-box">
+          <%=@name.resources.first.name%>
+        </span>
+      </div>
+    <%end%>
+
+    <div class="form-sec-row">
+      <label class="text">Serial Number</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.agency_store.serial_no%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Requested From Date</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.requested_from_date.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Requested To Date</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.requested_to_date.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Meeting Start Time</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.meeting_start_time.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Meeting End Time</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.meeting_end_time.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+      </span>
+    </div>
+    <% if @resource_ict_equipment_booking.status == "Returned" %>
+      <div class="form-sec-row">
+        <label class="text">Return Date</label>
+        <span class="in-box">
+          <%=@resource_ict_equipment_booking.updated_at.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+        </span>
+      </div>
+    <%end%>
+    <div class="form-sec-row">
+      <label class="text">Officer Needed</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.need_officer ? "Yes" : "No"%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Purpose</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.purpose%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Remarks</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.notes%>
+      </span>
+    </div>
+    <% if @facility.present? %>
+      <div class="form-sec-row">
+        <label class="text heading_blue">Facility Details:</label>
+      </div>
+      <% @facility.each do |facility| %>
+        <div class="form-sec-row">
+          <label class="text">Facility Name</label>
+          <span class="in-box">
+            <%=facility.name%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Quantity</label>
+          <span class="in-box">
+            <%=facility.total_qty%>
+          </span>
+        </div>
+      <%end%>
+    <%end%>
+    <div class="form-sec-row">
+      <label class="text heading_blue">Status Details:</label>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Status</label>
+      <span class="in-box">
+         <% if @resource_ict_equipment_booking.status == "New"%><b><font color='#FFA500'><%=@resource_ict_equipment_booking.status%></font></b><% elsif @resource_ict_equipment_booking.status == "Approved" || @resource_ict_equipment_booking.status == "Processed"  %>  <b><font color='#329C20'><%=@resource_ict_equipment_booking.status%></font></b><% elsif @resource_ict_equipment_booking.status == "Declined" || @resource_ict_equipment_booking.status == "Returned"  %>  <b><font color='red'><%=@resource_ict_equipment_booking.status%></font></b><% end %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Approved Date</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.approved_date!=nil ? @resource_ict_equipment_booking.approved_date.strftime("%a %B %d, %Y %I:%M:%S %p") : "NA"%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Declined Date</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.declined_date!=nil ? @resource_ict_equipment_booking.declined_date.strftime("%a %B %d, %Y %I:%M:%S %p") : "NA"%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Returned Date</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.returned_date!=nil ? @resource_ict_equipment_booking.returned_date.strftime("%a %B %d, %Y %I:%M:%S %p") : "NA"%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Processed Date</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.processed_date!=nil ? @resource_ict_equipment_booking.processed_date.strftime("%a %B %d, %Y %I:%M:%S %p") : "NA"%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Acknowledged Date</label>
+      <span class="in-box">
+        <%=@resource_ict_equipment_booking.acknowledged_date!=nil ? @resource_ict_equipment_booking.acknowledged_date.strftime("%a %B %d, %Y %I:%M:%S %p") : "NA"%>
+      </span>
+    </div>
+
+  </div>
+  <div class="form-sec-row2">
+    <label class="text">&nbsp;</label>
+    <span class="in-box2">
+      <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+    </span>
+  </div>
+<%#else%>
+<%#= "No Resource Available" %>
+<%#end%>
+</div>

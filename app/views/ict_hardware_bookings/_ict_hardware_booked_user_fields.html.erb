@@ -1,0 +1,24 @@
+<div class="form-sec-row">
+  <%= f.label :user_id, raw("User"), :class=>"text"%>
+  <span class="in-box">
+    <%dept = Department.find(default_department)%>
+    <%users = dept.users%>
+    <%=f.select(:user_id, options_from_collection_for_select(users, 'id','username',@ict_hardware_booked_user && @ict_hardware_booked_user.user_id ? @ict_hardware_booked_user.user_id : nil),:prompt=>"Select a User")%>
+<%#=f.select(:user_id, options_from_collection_for_select(get_department_users, 'id','username',@ict_hardware_booked_user.user_id),:prompt=>"Select a User")%>
+  </span>
+</div>
+<div class="form-sec-row"><br/>
+  <%= f.label :is_replacement,raw("Application Type"), :class=>"text"%>
+  <span class="in-box">
+    <%= f.radio_button :is_replacement, 0, :checked=>@ict_hardware_booked_user && (@ict_hardware_booked_user.is_replacement.blank? || @ict_hardware_booked_user.is_replacement==false) ? true : false%> <%= f.label :is_replacement, "New" %>
+    <%= f.radio_button :is_replacement, 1, :checked=>@ict_hardware_booked_user && @ict_hardware_booked_user.is_replacement==true ? true : false%> <%= f.label :is_replacement, "Replacement" %>
+  </span>
+</div>
+<div class="form-sec-row"><br/>
+  <%= label_tag  "Hardwares","Hardwares", :class=>"text"%>
+  <span class="in-box">
+    <%= f.check_box :pc, :checked=>@ict_hardware_booked_user && (@ict_hardware_booked_user.pc?) ? true : false%> <%= f.label :pc, "PC" %>
+    <%= f.check_box :printer, :checked=>@ict_hardware_booked_user && @ict_hardware_booked_user.printer? ? true : false%> <%= f.label :printer, "Printer" %>
+    <%= f.check_box :scanner, :checked=>@ict_hardware_booked_user && @ict_hardware_booked_user.scanner? ? true : false%> <%= f.label :scanner, "Scanner" %>
+  </span>
+</div>

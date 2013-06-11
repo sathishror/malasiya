@@ -1,0 +1,89 @@
+<%= form_for(@resource_room_booking, :html => { :method => :post, :multipart => true }) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <%= hidden_field_tag :user_id, (current_user.id) %>
+    <%= hidden_field_tag :department_id, (current_department) %>
+    <% @dept = Department.find_by_id(current_department) %>
+    <% @agency = Agency.find_by_id(@dept.agency_id) %>
+    <div class="form-sec-row">
+      <label class="text">Agency Name<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= @agency.name  %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Department Name<span style=color:red>*</span></label>
+      <span class="in-box">
+          <%= @dept.name %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Sub Category <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.select(:sub_category_id,  SubCategory.where(:category_id => "6").active.collect {|category| [category.name, category.id]},:prompt=>"SELECT A SUB CATEGORY") %>
+      </span>
+    </div>
+
+  <%#*<div class="form-sec-row">%>
+  <%#*<label class="text">Resource Ex No <span style=color:red>*</span></label>%>
+  <%#*<span class="in-box">%>
+  <%#= f.select(:resource_id,  Resource.where(:resource_type => "room_booking").active.collect {|category| [category.resource_no, category.id]},:prompt=>"SELECT A RESOURCE NAME") %>
+  <%#*</span>%>
+  <%#*</div>%>
+
+    <div class="form-sec-row">
+      <%= label_tag :resource_id, raw("Room No"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.select(:resource_id, Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A RESOURCE") %>
+      </span>
+    </div>
+
+    <div id="list_facility">
+
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :room_attachment,raw("Upload File"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.file_field :room_attachment%>
+        <%= f.hidden_field :room_attachment_cache %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">From Date<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%=f.text_field :requested_from_date ,:value=>@resource_room_booking && @resource_room_booking.requested_from_date!=nil ? @resource_room_booking.requested_from_date : nil ,:readonly=>true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">To Date<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%=f.text_field :requested_to_date,:value=>@resource_room_booking && @resource_room_booking.requested_to_date!=nil ? @resource_room_booking.requested_to_date : nil ,:readonly=>true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Room Capacity<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%=f.text_field :room_capacity,:onkeypress=>"return isNumberKey(event);",:size => 10%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Purpose<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_area :purpose, :cols => "1", :rows => "1"%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Remarks<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_area :remarks, :cols => "10", :rows => "10"%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :value=>@resource_room_booking.new_record? ? "Create" : "Update", :class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+<%end%>

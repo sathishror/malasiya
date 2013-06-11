@@ -1,0 +1,53 @@
+<%= form_for(@complaint_computer, :html => { :method => :post, :multipart => true }) do |f| %>
+ <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <%#*<div class="CenterNav">%>
+
+  <div class="form-sec">
+  <%# if @manager.present? %>
+
+  </div>
+<br/>
+  <div class="form-sec-row">
+    <label class="text">Type of Complaint<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.select(:complaint_type_id, ComplaintType.all.collect {|p| [ p.name, p.id ] },:prompt => "Select Complaint Type", :style=> "width:132%;") %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Item / Type of System<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.select(:system_access_id, SystemAccess.where("complaint_type_id=?", params[:complaint_type_id]) {|p| [ p.name, p.id, p.complaint_type_id ] },:prompt => "Select Item / System Type", :style=> "width:132%;") %>
+    </span>
+  </div>
+    <div class="form-sec-row">
+    <label class="text">Model Item / System<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.select(:system_model_type_id, SystemModelType.where("system_access_id=?", params[:system_access_id]) {|p| [ p.name, p.id, p.system_access ] },:prompt => "Select Model Item / System ", :style=> "width:132%;") %>
+    </span>
+  </div>
+ 
+  <div class="form-sec-row">
+    <label class="text">Serial No <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :serial_no%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Reason<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_area :reason, :rows =>4%></span>
+    <div>
+
+    </div>
+  </div>
+  <div class="form-sec-row">
+    <div class="CenterNav">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :value=>'Save', :class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+  <%#*</div>%>
+<%end%>

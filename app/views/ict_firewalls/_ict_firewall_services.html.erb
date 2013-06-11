@@ -1,0 +1,35 @@
+<div id="new_selection_id_<%= params[:val]%>">
+  <div class="form-sec-row">
+    <label class="text">Service Name<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= select("ict_facility_service", "#{params[:val]}", FacilityIctService.find(:all,:conditions=>["is_active = true"]).collect {|ict_facility| [ict_facility.port, ict_facility.id]},:prompt=>"SELECT A ICT SERVICE TYPE") %>
+    </span>
+  </div>
+
+  <div class="form-sec-row">
+    <label class="text">Type<span style=color:red>*</span></label>
+    <span class="in-box">
+	  <%= radio_button_tag "one_way_#{params[:val]}", "one_way", :checked=>true %> <%= label :one_way, "One Way" %>&nbsp;&nbsp;
+	  <%= radio_button_tag "one_way_#{params[:val]}", "two_way" %> <%= label :two_way, "Two Way" %> </span>  
+    </span>
+  </div>
+
+  <a onclick= 'delete_boxes(<%= params[:val]%>)' ><b>Delete</b></a>
+</div>
+
+<script type="text/javascript">
+  //$(document).ready(function(){
+  //  $("#delete-selection-box").click(function() {
+  //    $("#new_selection_id").hide();
+      
+ //   });
+  //});
+  
+  function delete_boxes(id){  	  	
+  	$("#new_selection_id_"+id).hide();
+  	$("#new_selection_id_"+id).attr('id','first6');
+  	decre = parseInt($("#total_service_count").val());
+  	value = decre - 1;
+  	$("#total_service_count").val(value);
+  }
+</script>

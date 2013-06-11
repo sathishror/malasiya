@@ -1,0 +1,74 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Manage Resources</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/resources/new" title="Create Agency"><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Resource</a></div>
+      </div>
+ <div class="form-sec-row">
+        <label class="text">Select Category <span style=color:red>*</span></label>
+        <span class="in-box">
+
+            <%=select("transport_category","id", options_from_collection_for_select(Category.active.all, 'id','name'),{:prompt=>"SELECT A CATEGORY"})%>
+
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Select Sub Category<span style=color:red>*</span></label>
+        <span class="in-box">
+
+            <%=select("transport_sub_category","id", options_from_collection_for_select(SubCategory.active.all, 'id','name'),{:prompt=>"SELECT A SUB CATEGORY"})%>
+
+        </span>
+      </div>
+    
+  <%end%>
+  <div id="div_ajax" >
+    <%if @resources && !@resources.empty?%>
+        <%@resources.each do |resource|%>
+          <div class="manage-user box">
+            <div class="manage-user-row box">
+              <div class="mu-c1">
+              </div>
+              <div class="mu-c2">
+
+                <p class="head1">Resource Type :&nbsp;<%=resource.resource_type.camelize%></p>
+                <%if resource.vehicle_model != nil%>
+                <p class="head1">Vehicle Model :&nbsp;<%=resource.vehicle_model%></p>
+                <%end%>
+                <%if resource.location != nil%>
+                <p class="head1">Location : &nbsp;<%=resource.location%></p>
+                <%end%>
+                <%if resource.resource_type == 'room_booking'%>
+                <p class="head1">Ext No :&nbsp;<%=resource.resource_no%></p>
+                <%elsif resource.resource_type == 'transport'%>
+                <p class="head1">Reg No :&nbsp;<%=resource.resource_no%></p>
+                <%elsif resource.resource_type == 'ict'%>
+                <p class="head1">Name :&nbsp;<%=resource.name.camelize%></p>
+                <p class="head1">Brand Model :&nbsp;<%=resource.brand_model%></p>
+                <%elsif resource.resource_type == 'others'%>
+                <%sub_category = SubCategory.find(resource.sub_category_id)%>
+                <p class="head1">Sub Category Name :&nbsp;<%=sub_category.name%></p>
+                <p class="head1">Name :&nbsp;<%=resource.resource_no%></p>
+                <%end%>
+              </div>
+              <div class="mu-c3">
+                <%= link_to image_tag("../images/edit.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Edit", :action=>'edit', :id=>resource.id.to_i%>
+                <%if resource.is_active %>
+                  <%= link_to image_tag("../images/deactive.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Deactivate", update_status_resources_path(:id=>resource.id, :status=>"Deactivate"), :confirm => 'Do you want to really deactivate this resource?', :method=>:post, :title=>"Deactive" %>
+                <%else%>
+                  <%= link_to  image_tag("../images/active.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Activate",  update_status_resources_path(:id=>resource.id,:status=>"Activate"), :confirm => 'Do you want to really Activate this resource?', :method=>:post, :title=>"Activate"%>
+                <%end%>
+               
+              </div>
+            </div>
+            <div class="clear"></div>
+          </div>
+        <%end%><div class="manage-user-rows box"><br/><br/>
+          <%= paginate @resources %>
+        </div>
+    <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>

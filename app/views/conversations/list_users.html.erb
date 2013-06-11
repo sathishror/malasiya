@@ -1,0 +1,113 @@
+<div class="CenterNav">
+    <h2 class="b-head">List of Users</h2>
+  <% @users.each do |user| %>
+    <%=image_tag (user.login_status ? "online.png" : "offline.png"), :alt=>"Image", :width=>"17", :height=>"17"%>&nbsp;&nbsp;
+        <%= !user.avatar.nil? && !user.avatar.url(:thumb).nil? ? (image_tag(user.avatar.url(:thumb), :alt=>"Image", :width=>"30", :height=>"30")) : (image_tag "no_photo_small.jpg", :alt=>"Image", :width=>"30", :height=>"30")  %>
+        <font color="#369"><b><%=  link_to "#{user.username}", list_users_conversations_path(user.id), :id => user.username , :class => "online_users"%></b></font>&nbsp;&nbsp;<br/><br/>
+  <% end %>
+   </div>
+
+<%= form_tag(send_request_conversations_path) do  %>
+
+  <%= flash[:error]  %>
+  <%= flash[:notice]  %>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <div class="form-sec">   
+ <h2 class="b-head">Sending Chat Request</h2><br/>
+    <div id="MessageDiv" style="display: none; height:20px; width: 500px;"></div>
+    <br/>
+      <div class="form-sec-row">
+        <label class="text">Chat Invitation<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= text_field_tag :email,"", :id=>"email"%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">&nbsp;</label>
+        <span class="in-box">
+          <%= submit_tag 'Send Request', :class=>"btn2"%>
+        </span>
+      </div>
+    </div>
+  </div>
+<%end%>
+
+
+
+
+<script type="text/javascript">
+
+$(function()
+
+{
+  var txtEmailAddress = $('#email');
+
+
+var messageDiv = $('#MessageDiv');
+
+$('.btn2').click(function(e)
+
+{
+
+txtEmailAddressValue = txtEmailAddress.val();
+
+
+if (txtEmailAddressValue == '')
+
+{
+
+messageDiv.html('<font color=#369><b><center>E - Mail Address Required</b></font></center>');
+
+
+messageDiv.fadeIn(400).fadeOut(400).fadeIn(400).fadeOut(400).fadeIn(400);
+
+txtEmailAddress.focus();
+return false;
+}
+
+else
+
+{
+
+if (!IsValidEmail(txtEmailAddressValue))
+
+{
+
+messageDiv.html('<center><font color=#369><b>Enter a Valid E - Mail Address</b></font></center>');
+
+
+messageDiv.fadeIn(400).fadeOut(400).fadeIn(400).fadeOut(400).fadeIn(400);
+
+txtEmailAddress.focus();
+return false;
+}
+
+else
+
+{
+
+messageDiv.html('');
+
+messageDiv.hide();
+
+}
+
+}
+
+});
+
+
+function IsValidEmail(email)
+
+{
+
+var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+return filter.test(email);
+
+}
+
+});
+
+</script>

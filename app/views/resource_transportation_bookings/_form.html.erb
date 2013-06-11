@@ -1,0 +1,227 @@
+<% if ((@sub_category && !@sub_category.empty?) || current_user.is_super_admin?) %>
+
+  <h2 class="b-head">Resource Transportation Bookings</h2>
+  <%= form_for(@resource_transportation_booking, :as => :resource_transportation_booking,  :url => resource_transportation_bookings_path, :html => {:multipart => true} ,:method=>:post) do |f| %>
+    <div class="form-sec">
+      <%=f.error_messages%>
+      
+      <div class="clearfix">&nbsp;</div>
+      <% if (current_user.is_department_user? || current_user.is_department_admin?) %>
+        <%= hidden_field_tag "department_id", current_department %>
+        <div class="form-sec-row">
+          <label class="text">Agency<span style=color:red></span></label>
+          <span class="in-box">
+            <b><%= current_user.departments.first.agency.name.upcase %></b>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Department<span style=color:red></span></label>
+          <span class="in-box">
+            <b><%= current_user.departments.first.name.upcase %></b>
+          </span>
+        </div>
+      <%end%>
+
+      <div class="form-sec-row">
+        <label class="text">Resource<span style=color:red>*</span></label>
+        <span class="in-box"> <% if !current_user.is_super_admin? %>        	
+            <%= f.select(:sub_category_id, SubCategory.where(:category_id=>7,:is_available=>true,:is_active=>true).collect {|sub_category| [sub_category.name, sub_category.id]},:prompt=>"SELECT A SUB CATEGORY TYPE") %>
+          <%else%>
+            <%= hidden_field_tag 'is_super_admin', 1 %>
+            <% as = AgencyStore.find(:all,:select=>["DISTINCT sub_category_id"],:conditions=>["resource_type = 'Transport'"]).collect(&:sub_category_id).join(',') %>
+            <% if !as.blank? %>
+              <%= f.select(:sub_category_id, SubCategory.find(:all,:conditions=>["id in (#{as})"]).collect {|sub_category| [sub_category.name, sub_category.id]},:prompt=>"SELECT A SUB CATEGORY TYPE") %>
+            <%end%>
+          <%end%> </span>
+      </div>
+      
+       <div id="vehicle_model_type_div" style="display:none">       	
+       <div class="form-sec-row" >
+        <label class="text">Vehicle Brand<span style=color:red>*</span></label>
+        <span class="in-box">          
+          <td>
+          <%= select("vehicle","model_type_id", options_from_collection_for_select(VehicleModelType.all,'id',"name"),{:prompt=>"Select a Brand"})%>
+          </td>         
+        </span>
+      </div>
+      </div>
+      
+      
+      <div id="booked_or_available" style="display:none">
+      <div class="form-sec-row">
+        <label class="text">Type<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= radio_button_tag 'available', 'one_way', :checked=>true %> <%= label "Available",'Available' %>&nbsp;&nbsp;
+      	  <%= radio_button_tag 'available', 'two_way',  %> <%= label "Booked",'Already Booked' %>
+        </span>
+      </div>
+      
+        <div id="available_resource" class="form-sec-row" >
+        <label class="text">Vehicle Available<span style=color:red>*</span></label>
+        <span class="in-box">          
+          <td>
+          <%= select("vehicle","model_type_id_available", options_from_collection_for_select(VehicleModelType.all,'id',"name"),{:prompt=>"Select a Brand"})%>
+          </td>         
+        </span>
+      </div>
+      </div>
+      
+      <div id="booked_resource" style="display:none">
+        <div class="form-sec-row" >
+        <label class="text">Vehicle Booked<span style=color:red>*</span></label>
+        <span class="in-box">          
+          <td>
+          <%= select("vehicle","model_type_id_booked", options_from_collection_for_select(VehicleModelType.all,'id',"name"),{:prompt=>"Select a Brand"})%>
+          </td>         
+        </span>
+      </div>
+      </div>
+      
+      
+      <div class="form-sec-row">
+        <label class="text">Purpose<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.text_field :purpose, :rows=>2, :autofocus => true %>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Pick up place<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.text_field :pick_up_place, :size => 30, :autofocus => true %>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">From Date<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%=f.text_field :requested_from_date ,:readonly=>true %>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">To Date<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%=f.text_field :requested_to_date,:readonly=>true %>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Destination State<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.select(:state,options_from_collection_for_select(State.all, 'id','name' ), :prompt => "SELECT YOUR STATE")%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Destination Location<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.text_area :location, :rows=>2, :autofocus => true %>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Number of Passengers<span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.text_field :number_of_passengers, :autofocus => true %>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :remarks,raw("Remarks"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_area :remarks, :rows=>2, :autofocus => true %>
+        </span>
+      </div>
+      <div  class="form-sec-row">
+        <%= f.label :avatar,raw("Upload File"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.file_field :attachment %>
+          <br/>
+        </span>
+      </div>
+
+      <div class="form-sec-row">
+        <label class="text">&nbsp;</label>
+        <span class="in-box">
+          <%= f.submit "Submit",:class=>"btn2"%>
+        </span>
+      </div>
+    </div>
+    <div class="clear"></div>
+  <%end%>
+<%else%>
+  <h2 class="b-head"><%= 'All Vehicles are Reserved. Check after some time.' %></h2>
+<%end%>
+
+
+<script>
+
+ 	$("#available_one_way").live('change',function(){
+      $("#booked_resource").hide();
+      $("#available_resource").show();
+    });
+
+    $("#available_two_way").live('change',function(){
+      $("#available_resource").hide();
+      $("#booked_resource").show();
+    });
+
+
+
+	$("#resource_transportation_booking_sub_category_id").live("change", function(){		
+    if($("#is_super_admin").val() == 1)
+      {      
+    		if($("#resource_transportation_booking_sub_category_id").val() != "")
+      		{
+            $.get("/resource_transportation_bookings/get_vehicle_brands",{
+                sub_category_id : $("#resource_transportation_booking_sub_category_id").val()
+            }, 
+            function(data){
+                if (data[0]!=null)
+                {
+                    $("#vehicle_model_type_id").find('option').remove().end()                   
+                    $("#vehicle_model_type_id").append($("<option></option>").attr("value","").text("Select a Vehicle Brand"));
+                    for(var i=0; i<data[0].length;i++)
+                    {
+                       $("#vehicle_model_type_id").append($("<option></option>").attr("value",data[0][i].vehicle_model_type.id).text(data[0][i].vehicle_model_type.name));
+                       $("#vehicle_model_type_div").show();      
+                    }
+                }
+            });
+        }
+      }
+      
+   });
+   
+   $("#vehicle_model_type_id").live("change", function(){   	
+   	if($("#vehicle_model_type_id").val() != "")
+      		{
+	      		
+	            $.get("/resource_transportation_bookings/get_booked_and_available_vehicles",{
+	                vehicle_model_type_id : $("#vehicle_model_type_id").val()
+            }, 
+            function(data){            	
+            	
+                if (data['available']!=null)
+                {                	
+                    $("#vehicle_model_type_id_available").find('option').remove().end()                   
+                    $("#vehicle_model_type_id_available").append($("<option></option>").attr("value","").text("Select a Available Vehicle"));
+                    for(var i=0; i<data['available'].length;i++)
+                    {                       
+                       $("#vehicle_model_type_id_available").append($("<option></option>").attr("value",data['available'][i].resource.resource_id).text(data['available'][i].resource.vehicle_model +' : '+data['available'][i].resource.resource_no));
+                       $("#vehicle_model_type_id_available").show();      
+                    }                    
+                }
+                
+                if (data['booked']!=null)
+                {                	
+                    $("#vehicle_model_type_id_booked").find('option').remove().end()                   
+                    $("#vehicle_model_type_id_booked").append($("<option></option>").attr("value","").text("Select a Booked Vehicle"));
+                    for(var i=0; i<data['booked'].length;i++)
+                    {
+                       $("#vehicle_model_type_id_booked").append($("<option></option>").attr("value",data['booked'][i].resource.resource_id).text(data['booked'][i].resource.vehicle_model +' : '+data['booked'][i].resource.resource_no));
+                       $("#vehicle_model_type_id_booked").show();      
+                    }                   
+                }
+                $("#booked_or_available").show();  
+                
+            });
+        }
+	});
+   
+</script>
+

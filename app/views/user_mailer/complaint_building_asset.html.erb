@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Intranet Portal Melaka State Government</title>
+  </head>
+  <body style="background:#ccc; padding:0; margin:10px;">
+    <table width="650" border="0" cellspacing="0" cellpadding="0" align="center" style="background:#fff;">
+      <tr>
+        <td>
+          <%= image_tag("#{APP_URL}/images/nl_header.png", :height => "94",:width=>"650", :alt => "Logo", :style=>"display:block;") %>
+        </td>
+      </tr>
+      <tr>
+        <td><table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tr>
+              <td>
+                <h1 style=" font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#0e385f; margin:0; padding:10px 0 0px 0;">Hi&nbsp;&nbsp;<%=@user.username%>,</h1>
+              </td>
+            </tr>
+            <tr>
+              <td><br/></td>
+            </tr>
+
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;"><%=@requisition_user.username%> has been complained for Building Asset - <%=  @name.name %>...</td>
+            </tr>
+
+            <tr>
+              <td><br/><br/></td>
+            </tr>
+
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;"><table width="750" border="2" cellspacing="3" cellpadding="3" align="center"><h3><font color="red"><center><u>Complaint - Building Asset Details</u></center></font></h3><br/><tr><td><font color="#369"><b><u>Application Details:-</u></b></font></td><td></td></tr><tr><td><b>Ticket No</b></td><td><font color="red" size="3"><b>&nbsp;<%= @complaint_building_asset.id %>/<%=Time.now.year%></b></font></td></tr><tr><td><b>Date of Application</b></td><td>&nbsp;<%=@complaint_building_asset.created_at.strftime("%a %d %b %Y %I:%M %p")%></td></tr><tr><td><b>Category</b></td><td>&nbsp;<%= @name.name %></td></tr><tr><td><b>Type</b></td><td>&nbsp;<%= @demage_name.name %></td></tr><tr><td><b>Item </b></td><td>&nbsp;<%=@item_name.name%></td></tr><tr><td><b>Location</b></td><td>&nbsp;<%=@complaint_building_asset.location%></td></tr><tr><td><b>Reason</b></td><td>&nbsp;<%=@complaint_building_asset.reason%></td></tr><tr><td><b>Serial No</b></td><td>&nbsp;<%=@complaint_building_asset.serial_no%></td></tr><tr><td><b>Repair Action</b></td><td>&nbsp;<% if @complaint_building_asset.repair_action == true%>Yes<%else%>No<%end%></td></tr><tr><td><b>Spare Parts Action</b></td><td>&nbsp;<% if @complaint_building_asset.spare_part_action == true%>Yes<%else%>No<%end%></td></tr><tr><td><b>Booking Status</b></td><td>&nbsp;<% if @complaint_building_asset.status == "New"%><b><font color='#FFA500'><%= @complaint_building_asset.status %></font></b><% elsif @complaint_building_asset.status == "Approved" || @complaint_building_asset.status == "Processed"  %>  <b><font color='#329C20'><%= @complaint_building_asset.status %> </font></b><% elsif @complaint_building_asset.status == "Declined" || @complaint_building_asset.status == "Returned"  %>  <b><font color='red'><%= @complaint_building_asset.status %> </font></b><% end %></td></tr><tr><td><b>Remarks</b></td><td>&nbsp;<%= @complaint_building_asset.remarks%> </td></tr></table></td>
+            </tr>
+
+
+            <tr>
+              <td>&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= image_tag("#{APP_URL}/images/nl_footer.png", :alt => "footer", :style=>"display:block;") %>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>

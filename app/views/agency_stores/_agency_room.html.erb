@@ -1,0 +1,27 @@
+<%= form_for(@store) do |f| %>
+  <div class="form-sec-row">
+    <%= label_tag :agency_id, raw("Agency <span style=color:red>*</span>"), :class=>"text" %>
+    <span class="in-box">
+      <%= select("room","agency_id",  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Select Sub Category<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%=select("room_agency","sub_category_id", options_from_collection_for_select(SubCategory.where("category_id = 6").active.all, 'id','name'),{:prompt=>"SELECT A SUB CATEGORY"})%>
+    </span>
+  </div>
+  <%= hidden_field_tag :resource_type, ("Room") %>
+  <div class="form-sec-row">
+    <label class="text">Resource<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= select("room_agency","resource_id", Resource.where('resource_no  is not null').active.collect {|category| [category.resource_no, category.id]},:prompt=>"SELECT A RESOURCE") %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">&nbsp;</label>
+    <span class="in-box">
+      <%= f.submit :class=>"btn2", :id=>"room_store_submit", :value=>@store.new_record? ? "Create" : "Update"%>
+    </span>
+  </div>
+<%end%>

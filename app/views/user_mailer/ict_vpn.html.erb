@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Intranet Portal Melaka State Government</title>
+  </head>
+  <body style="background:#ccc; padding:0; margin:10px;">
+    <table width="650" border="0" cellspacing="0" cellpadding="0" align="center" style="background:#fff;">
+      <tr>
+        <td>
+          <%= image_tag("#{APP_URL}/images/nl_header.png", :height => "94",:width=>"650", :alt => "Logo", :style=>"display:block;") %>
+        </td>
+      </tr>
+      <tr>
+        <td><table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tr>
+              <td>
+                <h1 style=" font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#0e385f; margin:0; padding:10px 0 0px 0;">Hi&nbsp;&nbsp;<%=@user.username%>,</h1>
+              </td>
+            </tr>
+            <tr>
+              <td><br/></td>
+            </tr>
+
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;"><%=@requisition_user.username%> has been requested for ICT - <%=  @requisition_ict_vpn.name %> Booking...</td>
+            </tr>
+
+            <tr>
+              <td><br/><br/></td>
+            </tr>
+
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;"><table width="750" border="2" cellspacing="3" cellpadding="3" align="center"><h3><font color="red"><center><u>Requisition ICT - <%=  @requisition_ict_vpn.name %> Booking Details</u></center></font></h3><br/><tr><td><font color="#369"><b><u>Application Details:-</u></b></font></td><td></td></tr><tr><td><b>Ticket No</b></td><td><font color="red" size="3"><b>&nbsp;<%= @ict_vpn.id %>/<%=Time.now.year%></b></font></td></tr><tr><td><b>Date of Application</b></td><td>&nbsp;<%=@ict_vpn.created_at.strftime("%a %d %b %Y %I:%M %p")%></td></tr><tr><td><b>Type of Facility</b></td><td>&nbsp;<%= @requisition_ict_vpn.name %></td></tr><tr><td><b>VPN Access To</b></td><td>&nbsp;<%= @system_access_ict_vpn.name %></td></tr><tr><td><b>Term User </b></td><td><b>&nbsp;From&nbsp;:</b>&nbsp;&nbsp;<%=@ict_vpn.from_date.to_datetime.strftime("%a %d %b %Y %I:%M %p")%>&nbsp;<b>To&nbsp;:&nbsp;&nbsp;</b>&nbsp;<%=@ict_vpn.to_date.to_datetime.strftime("%a %d %b %Y %I:%M %p")%></td></tr><tr><td><b>Justification</b></td><td>&nbsp;<%=@ict_vpn.justification%></td></tr><tr><td><b>Notes</b></td><td>&nbsp;<%=@ict_vpn.note%></td></tr><tr><td><b>Booking Status</b></td><td>&nbsp;<% if @ict_vpn.status == "New"%><b><font color='#FFA500'><%= @ict_vpn.status %></font></b><% elsif @ict_vpn.status == "Approved" || @ict_vpn.status == "Processed"  %>  <b><font color='#329C20'><%= @ict_vpn.status %> </font></b><% elsif @ict_vpn.status == "Declined" || @ict_vpn.status == "Returned"  %>  <b><font color='red'><%= @ict_vpn.status %> </font></b><% end %></td></tr><tr><td><b>Remarks</b></td><td>&nbsp;<%= @ict_vpn.remarks%> </td></tr></table></td>
+            </tr>
+
+
+            <tr>
+              <td>&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= image_tag("#{APP_URL}/images/nl_footer.png", :alt => "footer", :style=>"display:block;") %>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>

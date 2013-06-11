@@ -1,0 +1,96 @@
+<div class="CenterNav">
+<%if !request.xhr?%>
+
+    <h2 class="b-head">Requisition Software Installation</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+    <div class="cu-c1"><a href="/ict_network_points/list_to_select_ict" title="Create Requisition for ICT "><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Requisition for ICT</a></div>
+
+    </div>
+  <%end%>
+
+  <div id="div_ajax" >
+    <%if @software_installation && !@software_installation.empty?%>
+      <%@software_installation.each do |software|%>
+    <%@software_installation_detail = SoftwareInstallationDetail.find_all_by_software_installation_id(software.id)%>
+    <%@software_installation_detail.each do |detail|%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>User Name</b>
+            </div>
+            <div class="m-c2">
+              <% @name = RequisitionType.find_by_id(software.requisition_type_id)%>
+              <% @user = User.find_all_by_id(detail.user_id) %>
+              <%= @user[0].username%>
+            </div>
+            <div class="m-c3">
+              <% if software.status == "New"%><b><font color='#FFA500'><%= "#{software.status}" %></font></b><% elsif software.status == "Approved" || software.status == "Processed"  %>  <b><font color='#329C20'><%= "#{software.status}" %> </font></b><% elsif software.status == "Declined" || software.status == "Returned"  %>  <b><font color='red'><%= "#{software.status}" %> </font></b><% end %>
+            </div>
+          </div>
+          <div class="clear"></div>
+ </div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Type of Facility</b>
+            </div>
+            <div class="m-c2">
+              <%= @name.name%>
+            </div>
+             <div class="m-c3">
+        <%if software.status == "New"%>
+           
+              <% if current_user.is_department_admin? || current_user.is_super_admin? %>
+                <span class="in-box">
+                  <%= link_to "Approve Request",  resource_booking_approval_software_installations_path(:id => software.id), :class=>"btn2 in-btn2"%>
+                </span>
+              <%end%>
+             <%elsif software.user_id == current_user.id %>
+              <%if software.status == "Approved"%>
+              <span class="in-box">
+                  <%= link_to "Process Request",  resource_booking_approval_software_installations_path(:id => software.id), :class=>"btn2 in-btn2"%>
+              </span>
+            <%end%>
+            
+         <%end%>
+               </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c2">
+              <font color="red" size="3"><b>&nbsp;<%= software.id %>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info", software_installation_path(:id => software.id), :method=>:get%></font></b>
+            </div>
+          </div>
+          <div class="clear"></div>
+       
+
+                <div class="manage-user-rows box">
+                  <div class="m-c1"><b>Date of Application</b>
+                  </div>
+                  <div class="m-c2">
+                    &nbsp;<%= software.created_at.strftime("%a %d %b %Y %I:%M %p")%></font>
+                  </div>
+                  <div class="m-c3">
+
+                  </div>
+                </div>
+          <div class="clear"></div>
+
+     
+        <h2 class="b-head"></h2>
+
+      <%end%> <%end%><div class="manage-user-rows box"><br/><br/>
+        <%#= paginate @software_installation %>
+      </div>
+      <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>
+</div>
+</div>

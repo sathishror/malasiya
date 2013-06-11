@@ -1,0 +1,31 @@
+<%= form_for(@facility_ict_server) do |f| %>
+ <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="form-sec">
+    <div class="form-sec-row">
+      <label class="text">Server Name <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_field :name%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">IP <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_field :ip%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Is Active</label>
+      <span class="in-box">
+        <%= f.check_box :is_active%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :class=>"btn2", :value=>@facility_ict_server.new_record? ? "Create" : "Update"%>
+      </span>
+    </div>
+  </div>
+
+<%end%>

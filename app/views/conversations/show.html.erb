@@ -1,0 +1,77 @@
+<h2 class="b-head"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chat Room</b></h2><br/><br/>
+<p><h2><b><font color="#369">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=image_tag (@user.login_status ? "Online.ico" : "Offline.ico"), :alt=>"Image", :width=>"10", :height=>"10"%>&nbsp;&nbsp;
+      <%=@user.username%>&nbsp;&nbsp;&nbsp; <% if current_user.is_super_admin? %>[&nbsp;<%=@user.roles.first.name%>&nbsp;]<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Department Name - <%=@user.departments.first.name%><%end%>
+    </font></b> </h2></p>
+<!-- CHAT DESIGN -->
+<div class="chat" id="<%=@user.username%>">
+  <div class="chat-head">
+    <a href="#" class="ch-name"> <%=image_tag (@user.login_status ? "online.png" : "offline.png"), :alt=>"Image", :width=>"17", :height=>"17"%>&nbsp;
+      <%=@user.username%>&nbsp;&nbsp;</a>
+    <a  id="closelink" class="ch-close" title="Close">Close</a>
+    <a  id="restore" class="ch-square" title="Restore" >Restore</a>
+    <a  id="minimize" class="ch-minas" title="Minimize">Minimize</a>
+  </div>
+  <div class="chat-msg-box" id="<%=@user.username%>" >
+    <div class="chat-msg" id="chat-msg">
+      <p class="ch-date"> <%=render :partial=>"conversation"%></p>
+      <div class="clearfix"></div>
+    </div>
+    <div class="chat-tbox"> <span class="in-box"><%= form_for Conversation.new, :remote => true do |f| %>
+          <%=f.hidden_field :to_userid, :value=>@user.id%>
+          <div class="form-sec-row" id="form-sec-row">
+            <%= f.text_area :content, :id => :content, :rows => 2, :cols => 30, :autofocus => true %> <%= f.submit raw("Send"), :id=>"btn3", :class=>"btn3"%>
+          <% end %> </div> </span>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- CHAT DESIGN END-->
+
+
+<script type="text/javascript">
+  var jsUserID = <%= @user.id %>;
+
+  $(document).ready(function() {
+
+    var isScrolling = true;
+
+    $('.chat-msg').on('scroll', function() {
+      isScrolling = true;
+      lastScrollPos = this.scrollTop;
+
+    });
+    refresh_alerts = setInterval(function () {
+      if (isScrolling){
+        $('.chat-msg').load('/conversations/'+jsUserID).scrollTop(lastScrollPos);
+
+      }
+    }, 10000);
+    isScrolling = false;
+
+
+    $("tr:last").css({backgroundColor: '#FEEDEB', fontWeight: 'bolder'});
+
+   
+ 
+  });
+
+
+  $('.ch-close').click(function() {
+    $('.chat').toggle();
+  
+  });
+
+  $('.ch-minas').click(function() {
+    $(".chat-msg-box").hide();
+  });
+
+  $('.ch-square').click(function() {
+    $(".chat-msg-box").show();
+  });
+
+
+</script>
+

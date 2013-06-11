@@ -1,0 +1,15 @@
+<div class="form-sec-row">
+  <span class="in-box">
+    <%= select(:std,:agency, Agency.where(:deleted => false).collect {|p| [ p.name, p.id ] },:selected=>@agency,:prompt => "SELECT A AGENCY") %>
+  </span>
+</div>
+<div class="form-sec-row">
+  <span class="in-box">
+    <%= select(:std,:departments, Department.active.where(:agency_id => "#{@agency}").collect {|p| [ p.name, p.id ] },:selected=> @depts,:prompt => "SELECT A DEPARTMENT") %>
+  </span>
+</div>
+<div class="form-sec-row">
+  <span class="in-box">
+    <%= select(:std,:units, Unit.find(:all,:joins=>:role_memberships,:conditions=>["role_memberships.department_id = #{@depts}"]).uniq.collect {|p| [ p.name, p.id ] },:selected=>@unit,:prompt => "SELECT AN UNIT") %>
+  </span>
+</div

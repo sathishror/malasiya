@@ -1,0 +1,27 @@
+<%= form_for(@store) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="form-sec">
+    <div class="form-sec-row">
+      <label class="text">Resource Type <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.radio_button :resource_type, 'ict'%> <%= f.label :resource_type, "ICT" %>
+        <%= f.radio_button :resource_type, 'transport'%> <%= f.label :resource_type, "Transport" %>
+        <%= f.radio_button :resource_type, 'room_booking'%> <%= f.label :resource_type, "Room Booking" %>
+        <%= f.radio_button :resource_type, 'others', :checked=>true%> <%= f.label :resource_type, "Others" %>
+      </span>
+    </div>
+    <div id="agency_room" style="display:none;">
+      <%=render :partial=>'agency_stores/agency_room'%>
+    </div>
+    <div id="agency_transport" style="display:none;">
+      <%=render :partial=>'agency_stores/agency_transport'%>
+    </div>
+    <div id="agency_others">
+      <%=render :partial=>'agency_stores/agency_others'%>
+    </div>
+    <div id="agency_ict" style="display:none;">
+      <%=render :partial=>'agency_stores/agency_ict'%>
+    </div>
+  </div>
+<%end%>

@@ -1,0 +1,94 @@
+
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+  <!--BODY START-->
+  <div id="Body">
+    <div class="form-page">
+      <div class="form-sec">
+        <%=f.error_messages%>
+        <div class="clearfix">&nbsp;</div>
+        <h2>Sign up</h2>
+        <%= f.hidden_field :role_id,:value=> 1%>
+  <%#=f.text_field :admin_signup, :value=>true%>
+        <div class="form-sec-row">
+          <%= f.label :first_name,raw("First Name"), :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :first_name, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :last_name,raw("Last Name"), :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :last_name, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :email, :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :email, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+
+        <div class="form-sec-row">
+          <%= f.label :username,raw("User Name"), :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :username, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :ic_number,raw("IC Number"), :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :ic_number, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :city, :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :city, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+
+        <div class="form-sec-row">
+          <%= f.label :state, :class=>"text"%>
+          <span class="in-box">
+            <%= f.select(:state, State.all.collect {|p| [p.name.upcase, p.id]} ,:prompt => "SELECT YOUR STATE")%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :zipcode, :class=>"text"%>
+          <span class="in-box">
+            <%= f.text_field :zipcode, :size => 5, :maxlength=>5, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :department_id,raw("Department"), :class=>"text"%>
+          <span class="in-box">
+            <%=f.select(:department_id, Department.all.collect {|p| [ p.name, p.id ] },:prompt => "SELECT YOUR DEPARTMENT ") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :password, :class=>"text"%>
+          <span class="in-box">
+            <%= f.password_field :password, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :password_confirmation, :class=>"text"%>
+          <span class="in-box">
+            <%= f.password_field :password_confirmation, :size => 30, :autofocus => true%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">&nbsp;</label>
+          <span class="in-box">
+            <%= f.submit "Sign up" ,:class=>"btn2"%>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <!--BODY END-->
+<%end%>
+
+
+

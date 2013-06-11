@@ -1,0 +1,148 @@
+
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <h2 class="b-head"><%=@admin ? "Create Admin" : "Create User" %></h2>
+    <%= form_for(@user, :as => :user,  :url => department_users_path, :html => { :method => :post, :multipart => true }) do |f| %>
+      <%=f.error_messages%>
+      <div class="clearfix">&nbsp;</div>
+      <div class="form-sec-row">
+        <%= f.label :first_name,raw("First Name <span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :first_name, :size => 30%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :last_name,raw("Last Name <span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :last_name, :size => 30%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">Email <span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.text_field :email, :size => 30%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :contact_mobile,raw("Contact Number"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :contact_mobile, :size => 30, :autofocus => true%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">IC Number<span style=color:red>*</span></label>
+        <input class="icnumber" id="num1" type="text"  maxlength="6" size="6" name="num1" onkeypress="return isNumberKey(event);" onkeyup="autoTab(event, this, num2);">&nbsp;-
+        <input class="icnumber1" id="num2" type="text"  maxlength="2" size="2" name="num2" onkeypress="return isNumberKey(event);" onKeyUp="autoTab(event, this, num3);">&nbsp;-
+        <input class="icnumber2" id="num3" type="text"  maxlength="4" size="4" name="num3" onkeypress="return isNumberKey(event);">
+      </div>
+
+      <div class="form-sec-row">
+        <%= f.label :avatar,raw("Avatar"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.file_field :avatar%>
+          <%= f.hidden_field :avatar_cache %>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :username,raw("Display Name <span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :username, :size => 30%>
+          <i>(This name will be used through out the site)</i>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :city,raw("City"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :city, :size => 30%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">State <span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.select(:state, State.all.collect {|p| [p.name.upcase, p.id]} ,:prompt => "SELECT A STATE")%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :zipcode,raw("Zipcode <span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :zipcode, :size => 5, :maxlength=>5%>
+        </span>
+      </div>
+      <%if current_user.is_super_admin? %>
+        <div class="form-sec-row">
+          <%= label_tag :role_id, raw("Role"), :class=>"text" %>
+          <span class="in-box">
+            <%if @admin%>
+              <%dept_admin=Role.find_by_name(DISP_USER_ROLE_DEPT_ADMIN)%>
+              <%= hidden_field_tag "role[id]",dept_admin.id %>
+              <%= hidden_field_tag "user_role","admin" %>
+              <%=label_tag :role,dept_admin.name%>
+            <%else%>
+              <%= select("role", "id", Role.find(:all,:conditions=>["name != 'Super Admin' and name != 'Department Admin'"]).collect {|role| [role.name, role.id]},:prompt=>"SELECT A ROLE") %>
+            <%end%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag "users_agency", raw("Agency <span style=color:red>*</span>"), :class=>"text" %>
+          <span class="in-box">
+            <%= select("users","agency",  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag "users_department", raw("Department <span style=color:red>*</span>"), :class=>"text"%>
+          <span class="in-box">
+            <%= select("users","department",Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A DEPARTMENT") %>
+          </span>
+        </div>
+        <div id="unit_display" style="display:none">
+          <div class="form-sec-row">
+            <%= label_tag "users_unit",raw("Unit"), :class=>"text"%>
+            <span class="in-box">
+              <%= select("users","unit", Unit.active.where("department_id=?", params[:department]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A UNIT") %>
+            </span>
+          </div>
+        </div>
+      <% else %>
+        <div class="form-sec-row">
+          <%= label_tag :role_id, raw("Role"), :class=>"text" %>
+          <span class="in-box">
+            <%= select("role", "id", Role.find(:all,:conditions=>["name != 'Super Admin' and name != 'Department Admin'"]).collect {|role| [role.name, role.id]},:prompt=>"SELECT A ROLE") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag "users_agency", raw("Agency <span style=color:red>*</span>"), :class=>"text" %>
+          <span class="in-box">
+            <%department=Department.find(current_department)%>
+            <%agency = Agency.find(department.agency_id) %>
+            <%= select("users","agency_id",  Agency.find_all_by_id(department.agency_id).collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag "users_department", raw("Department <span style=color:red>*</span>"), :class=>"text"%>
+          <span class="in-box">
+            <%= select("users","department", current_user.departments.collect {|p| [ p.name, p.id ] },:prompt => "SELECT A DEPARTMENT") %>
+          </span>
+        </div>
+        <div id="unit_display" style="display:none">
+          <div class="form-sec-row">
+            <%= label_tag "users_unit",raw("Unit"), :class=>"text"%>
+            <span class="in-box">
+              <%= select("users","unit", Unit.active.where("department_id=?", department.id).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A UNIT") %>
+            </span>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="form-sec-row">
+        <label class="text">&nbsp;</label>
+        <span class="in-box">
+          <%= f.submit :class=>"btn2", :id=>"sub_user_link", :value=>'Create'%>
+        </span>
+      </div>
+      <div class="clear"></div>
+      <!--BODY END-->
+    <%end%>
+  </div>
+</div>
+<div class="clearfix"></div>

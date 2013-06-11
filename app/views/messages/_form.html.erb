@@ -1,0 +1,33 @@
+<div class="CenterNav">
+<%= form_for(@message, :as => :message,  :url => messages_path, :method=>:post) do |f| %>
+  <h2 class="b-head">Compose New Message</h2>
+  <div class="form-sec">
+    <%=f.error_messages%>
+
+    <div class="clearfix">&nbsp;</div>
+
+    <div class="form-sec-row">
+      <%= f.label :receiver,raw("To"), :class=>"text"%>
+      <span class="in-box">
+        <input type="text" name="receiver" id="receiver" data-autocomplete="/messages/autocomplete_user_icnumber" class="ac_results ui-autocomplete-input idleField" autocomplete="off" role="textbox" aria-autocomplete="list"  onfocus="javascript:if(this.value=='enter first name of recipient here') { this.value=''; }" onblur="javascript:if(this.value==''){  this.value='enter first name of recipient here'; }" value="enter first name of recipient here"  aria-haspopup="true"/>
+      </span>
+    </div>
+
+    <div class="form-sec-row">
+      <%= f.label :message,raw("Message"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_area :message, :size => 5 %>
+      </span>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :class=>"btn2", :value=>'Create'%>
+      </span>
+    </div>
+  </div>
+  <div class="clear"></div>
+<%end%>
+</div>
+

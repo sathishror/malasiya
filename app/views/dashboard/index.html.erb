@@ -1,0 +1,127 @@
+<div class="CenterNav">
+  <br /><br />
+<%#if !current_user.is_super_admin?%>
+<%#@department=current_user.departments.collect(&:id)%>
+<%#if @department.length!=1%>
+<%#*<div class="create-user">Change Department :%>
+<%#*<div class="cu-c4">%>
+<%#=select "dashboard", "user_department", options_for_select(current_user.departments.collect{|p|[p.name,p.id]},current_user.departments.first.id )%>
+<%#*</div>%>
+<%#*</div>%>
+<%#end%>
+<%#end%>
+  <%if !current_user.is_super_admin?%>
+    <%departments=current_user.departments%>
+    <%if departments.length>1%>
+      <div class="wallPost-con">
+        <div class="selectRole">
+          <ul class="box">
+            <li>
+              <%department=Department.find(@current_department) %>
+              <span><%= t('dashboard.change_dept')%>  </span>
+              <%=select(:default, :department_name,  options_from_collection_for_select(departments, 'id', 'name', department.id)) %>
+            </li>
+          </ul>
+        </div>
+        <div class="clear"></div>
+      </div>
+    <%end%>
+  <%end%>
+ <h3 class="b-head"><%= t('dashboard.today_news')%> </h3><marquee behavior="scroll" direction="left" style="background: #f2f2f2;border-bottom: 1px solid #CCCCCC;
+                                               border-top: 1px solid #CCCCCC;
+                                               padding: 5px 0;"> <%= t('dashboard.today_news_con')%>
+  </marquee><br /><br /><h3 class="b-head"><%= t('dashboard.dashboard_main')%> </h3>
+  <div id="tabs">
+    <ul>
+      <%if current_user && (current_user.is_super_admin? || current_user.is_department_admin?)%>
+                            <!--li><a href="#tabs-1"><%#=current_user.is_super_admin? ? "Admin Activation" : "User Activation"%> </a></li-->
+        <li><a href="#tabs-1"><%= t('dashboard.message')%> </a></li>
+        <li><a href="#tabs-2"><%= t('dashboard.user_transfer_req')%> </a></li>
+        <li><a href="#tabs-3"><%= t('right_nav.complaints')%></a></li>
+      <%else%>
+        <li><a href="#tabs-1"><%= t('dashboard.message')%></a></li>
+        <li><a href="#tabs-2"><%= t('dashboard.vendors')%></a></li>
+        <li><a href="#tabs-3"><%= t('dashboard.resource')%></a></li>
+        <li><a href="#tabs-3"><%= t('dashboard.my_news')%></a></li>
+        <li><a href="#tabs-3"><%= t('dashboard.events')%></a></li>
+      <%end%>
+    </ul>
+<%#*<div id="tabs-1">%>
+<%#if current_user && current_user.is_super_admin? %>
+<%#@users.each do |user|%>
+<%#*<div class="manage-user-row box">%>
+<%#*<div class="mu-c1">%>
+<%#=link_to image_tag(user.avatar_url, :width=>"60", :height=>"60"), user_path(:id=>user.id), :title=>"The Melaka  State Office of Land and Mines" if user.avatar?%>
+<%#*</div>%>
+<%#*<div class="mu-c2">%>
+<%#*<p class="head1">%>
+<%#=link_to content_tag(:b, user.full_name), "javascript:void(0);", :title=>user.full_name ,:class=>"lnk_blue"%>
+<%#*<br/>%>
+<%#=user.ic_number%>
+<%#*<br/>%>
+<%#=link_to content_tag(:b, user.email), "javascript:void(0);", :title=>user.email,:class=>"lnk_blue"%>
+<%#*</p>%>
+<%#*</div>%>
+<%#*<div class="mu-c3">%>
+<%#if user.status=="Active"%>
+<%#=  link_to image_tag("../images/deactive.jpg", :width=>"14", :height=>"14")+"Deactive" , update_user_status_departments_path(:id=>user.id,:status=>"Deactivate",:department_id=>params[:department_id]), :confirm => 'Do you want to really deactivate this user?', :method=>:post, :title=>"Deactive" %>
+<%#elsif user.status=="Deactive" || user.status.nil?%>
+<%#=  link_to image_tag("../images/active.jpg", :width=>"14", :height=>"14")+"Activate" , update_user_status_departments_path(:id=>user.id,:status=>"Activate",:department_id=>params[:department_id]), :confirm => 'Do you want to really Activate this user?', :method=>:post, :title=>"Activate" %>
+<%#end%>
+<%#=  link_to image_tag("../images/delete.jpg", :width=>"14", :height=>"14")+"Delete", department_path(user), :confirm => 'Do you want to Proceed?', :method =>:delete , :title=>"Delete" %>
+<%#*</div>%>
+<%#*</div>%>
+<%#end%>
+<%#elsif current_user && current_user.is_department_admin?%>
+<%#@users.each do |user|%>
+<%#*<div class="manage-user-row box">%>
+<%#*<div class="mu-c1">%>
+<%#=link_to image_tag(user.avatar_url, :width=>"60", :height=>"60"), user_path(:id=>user.id), :title=>"The Melaka  State Office of Land and Mines" if user.avatar?%>
+<%#*</div>%>
+<%#*<div class="mu-c2">%>
+<%#*<p class="head1">%>
+<%#*<font color="#0172C4"> <b>%>
+<%#= user.full_name %>
+<%#*</b></font><br/>%>
+<%#=user.ic_number%><br/>
+<%#*<font color="#0172C4"> <b>%>
+<%#=user.email%>
+<%#*</b></font>%>
+<%#*</p>%>
+<%#*</div>%>
+<%#*<div class="mu-c3">%>
+<%#if user.status=="Active"%>
+<%#=  link_to image_tag("../images/deactive.jpg", :width=>"14", :height=>"14")+"Deactive" , update_user_status_departments_path(:id=>user.id,:status=>"Deactivate",:department_id=>params[:department_id]), :confirm => 'Do you want to really deactivate this user?', :method=>:post, :title=>"Deactive" %>
+<%#elsif user.status=="Deactive" || user.status.nil?%>
+<%#=  link_to image_tag("../images/active.jpg", :width=>"14", :height=>"14")+"Activate" , update_user_status_departments_path(:id=>user.id,:status=>"Activate",:department_id=>params[:department_id]), :confirm => 'Do you want to really Activate this user?', :method=>:post, :title=>"Activate" %>
+<%#end%>
+<%#=  link_to image_tag("../images/delete.jpg", :width=>"14", :height=>"14")+"Delete", department_path(user), :confirm => 'Do you want to Proceed?', :method =>:delete , :title=>"Delete" %>
+<%#*</div>%>
+<%#*</div>%>
+<%#end%>
+<%#else%>
+<%#*User Messages will comes here<br />%>
+<%#if current_user.departments && current_user.departments.first%>
+<%#*Department Logged%>
+<%#=current_user && current_user.departments.first.name%>
+<%#end%>
+<%#end%>
+<%#*</div>%>
+    <div id="tabs-1">
+      <!--User Messages will comes here-->
+      <%= render :partial=>'messages_view' %>
+    </div>
+    <div id="tabs-2">
+      <%if current_user && current_user.is_super_admin? %>
+        User Transfer Requests comes here
+      <%elsif current_user && current_user.is_department_admin?%>
+        User Transfer Request comes here for department admin
+      <%else%>
+        <%= t('dashboard.vendor_action')%>
+      <%end%>
+    </div>
+    <div id="tabs-3">
+ <%= t('dashboard.complaint_list')%>
+    </div>
+  </div>
+</div>

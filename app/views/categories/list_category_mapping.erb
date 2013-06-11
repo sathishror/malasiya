@@ -1,0 +1,103 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Manage Map Category</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/categories/assign_category" title="Map Category"><img src="../images/add_user.jpg" width="17" height="16" alt="img" />Map Category</a></div>
+       <div class="cu-c2">Select Department:
+      <%= select("cat_department","id",  Department.active.collect {|dept| [dept.name, dept.id]},:prompt=>"SELECT A DEPARTMENT") %>
+    </div>
+
+    </div>
+  <%end%>
+
+  <div id="div_ajax" >
+    <%if @department == nil%>
+
+      <%categories = Category.all%>
+      <%categories.each do |category|%>
+        <% if current_user.is_super_admin? %>
+          <%@category_mapping = CategoriesDepartments.find_all_by_category_id(category.id)%>
+        <%else%>
+          <%@category_mapping = CategoriesDepartments.find_all_by_category_id(category.id)%>
+        <%end%>
+        <% @category_mapping.each do |category_map|%>
+          <%categories = Category.find_all_by_id(category_map.category_id)%>
+          <%dept = Department.find_all_by_id(category_map.department_id)%>
+          <%dept.each do |department|%>
+        <%#categories.each do |category|%>
+            <div class="manage-user box">
+              <div class="manage-user-row box">
+                <div class="mu-c1">
+                  <%=category.name%>
+                </div>
+                <div class="mu-c2">
+                  <p class="head1"><%=department.name%></p>
+                </div>
+                <div class="mu-c3">
+
+                  <%if category_map.is_active%>
+                    <%if category.is_active %>
+
+                      <%= link_to image_tag("../images/deactive.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Deactivate", update_category_mapping_categories_path(:id=>category_map.id, :status=>"Deactivate"), :confirm => 'Do you want to really deactivate this category?', :method=>:post, :title=>"Deactive" %>
+                    <%else%>
+                      <%= link_to  image_tag("../images/active.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Activate",  update_category_mapping_categories_path(:id=>category_map.id,:status=>"Activate"), :confirm => 'Do you want to really Activate this category?', :method=>:post, :title=>"Activate"%>
+                    <%end%>
+                  <%else%>
+                    <%= link_to  image_tag("../images/active.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Activate",  update_category_mapping_categories_path(:id=>category_map.id,:status=>"Activate"), :confirm => 'Do you want to really Activate this category?', :method=>:post, :title=>"Activate"%>
+                  <%end%>
+                </div>
+              </div>
+              <div class="clear"></div>
+            </div>
+        <%#end%>
+          <%end%>
+        <%end%>
+      <%end%>
+    <%else%>
+      <% if current_user.is_super_admin? %>
+        <%category_mapping = CategoriesDepartments.find_by_department_id(@department)%>
+      <%else%>
+        <%category_mapping = CategoriesDepartments.find_by_department_id(@department)%>
+      <%end%>
+      <%if category_mapping != nil%>
+        <%categories = Category.find_all_by_id(category_mapping.category_id)%>
+        <%dept = Department.find_all_by_id(category_mapping.department_id)%>
+        <%dept.each do |department|%>
+          <%categories.each do |category|%>
+            <div class="manage-user box">
+              <div class="manage-user-row box">
+                <div class="mu-c1">
+                  <%=category.name%>
+                </div>
+                <div class="mu-c2">
+                  <p class="head1"><%=department.name%></p>
+                </div>
+                <div class="mu-c3">
+
+                  <%if category_mapping.is_active %>
+                    <%= link_to image_tag("../images/deactive.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Deactivate", update_category_mapping_categories_path(:id=>category_mapping.id, :status=>"Deactivate"), :confirm => 'Do you want to really deactivate this category?', :method=>:post, :title=>"Deactive" %>
+                  <%else%>
+                    <%= link_to  image_tag("../images/active.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Activate",  update_category_mapping_categories_path(:id=>category_mapping.id,:status=>"Activate"), :confirm => 'Do you want to really Activate this category?', :method=>:post, :title=>"Activate"%>
+                  <%end%>
+
+                </div>
+              </div>
+              <div class="clear"></div>
+            </div>
+          <%end%>
+        <%end%>
+      <%else%>
+        Data Not Available
+      <%end%>
+    <%end%>
+    <div class="manage-user-rows box"><br/><br/>
+<%#= paginate  categories %>
+    </div>
+<%#else%>
+<%#*No Categories Available%>
+<%#end%>
+<%#*<div><%= paginate @units %>
+  </div>
+
+</div>

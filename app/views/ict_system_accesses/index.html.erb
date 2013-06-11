@@ -1,0 +1,144 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">List of Requisition ICT - System Access</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/ict_network_points/list_to_select_ict" title="Create Requisition for ICT "><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Requisition for ICT</a></div>
+    </div>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @ict_system_access && !@ict_system_access.empty?%>
+      <%@ict_system_access.each do |ict_system_access|%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <% @sys_name = SystemAccess.find_by_id(ict_system_access.system_access_id)%>
+            <% @name = RequisitionType.find_by_id(ict_system_access.requisition_type_id)%>
+            <% @user = User.find_by_id(ict_system_access.user_id) %>
+
+            <div class="m-c1"><b>User Name</b>
+            </div>
+            <div class="m-c2">
+
+              <%= @user.username%>
+            </div>
+             <div class="m-c3">
+              <% if ict_system_access.status == "New"%><b><font color='#FFA500'><%= "#{ict_system_access.status}" %></font></b><% elsif ict_system_access.status == "Approved" || ict_system_access.status == "Processed"  %>  <b><font color='#329C20'><%= "#{ict_system_access.status}" %> </font></b><% elsif ict_system_access.status == "Declined" || ict_system_access.status == "Returned"  %>  <b><font color='red'><%= "#{ict_system_access.status}" %> </font></b><% end %>
+            </div>
+          </div>
+     <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Type of Facility</b>
+            </div>
+            <div class="m-c2">
+              <%= @name.name%>
+            </div>
+            <% time = Setting.find_by_id(1) %>
+            <%if time.present?%>
+              <% temp = time.timeline.strftime("%H:%M:%S")%>
+              <%dt = DateTime.parse(temp)%>
+              <% seconds = dt.hour * 3600 + dt.min * 60 %>
+
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id && ict_system_access.created_at > (Time.now-seconds) %>
+                  <span class="in-box">
+                    <% if ict_system_access.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve", approval_ict_system_accesses_path(:id => ict_system_access.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id && ict_system_access.created_at > (Time.now-2*seconds)%>
+                  <span class="in-box">
+                    <% if ict_system_access.status == "New" %>
+                      <% val = (ict_system_access.created_at > (Time.now-seconds))  %>
+                      <% if !val.present? %>
+                        <b><font color="#336699"><%= link_to "Approve", approval_ict_system_accesses_path(:id => ict_system_access.id), :class=>"btn2 in-btn2"%></b>
+                      <%end%>
+                    <%end%>
+                  </span>
+                <% elsif ict_system_access.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve", approval_ict_system_accesses_path(:id => ict_system_access.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if ict_system_access.status == "Approved" && ict_system_access.forward_to == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process", approval_ict_system_accesses_path(:id => ict_system_access.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%else%>
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if ict_system_access.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve", approval_ict_system_accesses_path(:id => ict_system_access.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if ict_system_access.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve", approval_ict_system_accesses_path(:id => ict_system_access.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif ict_system_access.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve", approval_ict_system_accesses_path(:id => ict_system_access.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if ict_system_access.status == "Approved" && ict_system_access.forward_to == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process", approval_ict_system_accesses_path(:id => ict_system_access.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%end%>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>System Access To</b>
+            </div>
+            <div class="m-c2">
+              <%= @sys_name.name%>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info", ict_system_access_path(:id => ict_system_access.id), :method=>:get%></font></b>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c2">
+              <font color="red" size="3"><b>&nbsp;<%= ict_system_access.id %>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Date of Application</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= ict_system_access.created_at.strftime("%a %d %b %Y %I:%M %p")%></font>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+          </div>
+        <h2 class="b-head"></h2> <%end%>
+      <div class="manage-user-rows box"><br/><br/>
+        <%= paginate @ict_system_access %></div>
+
+    <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>

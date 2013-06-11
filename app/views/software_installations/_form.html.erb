@@ -1,0 +1,73 @@
+<%= form_for(SoftwareInstallation.new(), :html => { :method => :post, :multipart => true }) do |f| %>
+  <%#=error_messages%>
+
+  <div class="form-sec">
+  </div>
+
+  <%= hidden_field_tag :requisition_type_id, 5 %>
+  <div class="form-sec-row">
+        <%= f.label :software_attachment,raw("Upload File"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.file_field :software_attachment%>
+          <%= f.hidden_field :software_attachment_cache %>
+          <%= hidden_field_tag 'total_service_count', 0 %>
+        </span>
+      </div>
+  <div class="form-sec-row">
+    <label class="text">Software Name<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.select(:facility_ict_software_id, FacilityIctSoftware.all.collect {|p| [ p.name, p.id ] },:prompt => "SELECT A SOFTWARE", :style=> "width:132%;") %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Name<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= text_field 'service', 'name', :value=>current_user.username%></span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Position<span style=color:red>*</span></label>
+    <span class="in-box">
+
+      <%= text_field 'service', 'position'%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Grade<span style=color:red>*</span></label>
+    <span class="in-box">
+
+      <%=  text_field 'service', 'grade'%></span>
+  </div>
+<div class="form-sec-row" id="add_selection_box">
+        <%#*<a id="add-selection-box"><b>Add</b></a>%>
+  </div>
+  <div id="std"></div>
+  <div class="form-sec-row">
+    <div class="CenterNav">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :value=>'Save', :class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+<%end%>
+   <script type="text/javascript">
+
+  $(document).ready(function(){
+
+    $("#add-selection-box").click(function() {
+    	incre = parseInt($("#total_service_count").val());
+    	if (incre < 3){
+    	incre = incre + 1;
+    	$.get("/software_installations/add_select_boxes",{
+    		val : incre
+    	});
+    	$("#total_service_count").val(incre);
+    	}
+
+    	else
+    	{
+    		alert("No More Additions Permitted");
+    	}
+    });
+  });
+</script>

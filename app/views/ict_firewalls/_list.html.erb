@@ -1,0 +1,42 @@
+<div class="CenterNav">
+        <%@ict_firewalls = IctFirewall.find(:all,:conditions=>["user_id = ? or incharge_person = ?",current_user.id,current_user.id])%>
+  <div id="div_ajax" >
+    <%if @ict_firewalls && !@ict_firewalls.empty?%>
+      <%  @ict_firewalls.each do |ict_firewall|%>
+        <div class="manage-user box">
+          <div id="user_box_<%= ict_firewall.id %>" class="manage-user-row box">
+            <div class="mu-c1">
+            </div>
+            <div class="mu-c2">
+              <p class="head1"><b>User Name : <%= ict_firewall.user.first_name %><b/></p>
+              <p class="head1"><b>Ticket No : <%= ict_firewall.id.to_s+'/'+ict_firewall.created_at.strftime("%Y") %><b/></p>
+              <p class="head1"><b>Justification : <%= ict_firewall.justification %><b/></p>
+              <p class="head1"><b>From Date : <%= ict_firewall.requested_from_date.strftime("%d - %m - %Y") %><b/></p>
+              <p class="head1"><b>To Date : <%= ict_firewall.requested_to_date.strftime("%d - %m - %Y") %><b/></p>
+            </div>
+            <div class="form-sec-row">
+              <b><font color='#329C20'><%= "#{ict_firewall.status}" %></font></b>
+            </div>
+
+            <% if current_user.is_department_admin? && ict_firewall.status == "New" %>
+              <div class="form-sec-row">
+                <span class="in-box">
+                  <%= link_to "Approve Request", edit_ict_firewall_path(ict_firewall) %>
+                </span>
+              </div>
+            <% elsif (ict_firewall.incharge_person.to_i == current_user.id.to_i) && ict_firewall.status == "Approved" %>
+              <div class="form-sec-row">
+                <span class="in-box">
+                  <%= link_to "Process Request", edit_ict_firewall_path(ict_firewall) %>
+                </span>
+              </div>
+            <%end%>
+            <%= link_to "Request Details", ict_firewall_path(ict_firewall) %>
+          </div>
+        </div>
+      <%end%>
+    <%end%>
+    <div class="manage-user-rows box"><br/><br/>
+    </div>
+  </div>
+</div>

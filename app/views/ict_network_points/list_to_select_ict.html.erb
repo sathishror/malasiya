@@ -1,0 +1,40 @@
+<div class="CenterNav">
+  <h2 class="b-head">Manage ICT Requisition</h2>
+  <div class="form-sec">
+
+    <div class="form-sec-row form-sec-row1">
+      <div id="show_text"><font color='#8F6811' size="2"><b><%= "Please Select the drop box to list out the paricular Requisition" %></b></font></div>
+      <br/><br/>
+      <div class="form-sec-row">
+        <%= label "requisition","type_id",raw("Requisition Type<span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%= select("requisition","type_id", RequisitionType.all.collect {|p| [ p.name, p.id ] },:prompt => "SELECT A ICT FACILITY", :style=> "width:132%;") %>
+        </span>
+      </div>
+
+      <div id="network_for_ict" style="display:none;">
+        <%=render :partial=>'ict_network_points/form'%>
+      </div>
+
+      <div id="firewall_for_ict" style="display:none;">
+        <%=render :partial=>'ict_firewalls/form'%>
+      </div>
+
+      <div id="vpn_for_ict" style="display:none;">
+        <%=render :partial=>'ict_vpns/form'%>
+      </div>
+
+      <div id="hardware_for_ict" style="display:none;">
+        <%=render :partial=>'ict_hardware_bookings/form'%>
+      </div>
+
+      <div id="software_for_ict" style="display:none;">
+        <%=render :partial=>'software_installations/form'%>
+      </div>
+
+      <div id="system_access_for_ict" style="display:none;">
+        <%=render :partial=>'ict_system_accesses/form'%>
+      </div>
+    </div>
+  </div>
+</div>

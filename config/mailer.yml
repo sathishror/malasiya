@@ -1,0 +1,4 @@
+development:
+  host: "localhost:3000"
+  user_name: "edvinjoy"
+  password: "testtest"

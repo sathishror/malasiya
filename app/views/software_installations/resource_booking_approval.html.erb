@@ -1,0 +1,149 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <h2 class="b-head">ICT Software Installation Approval</h2>
+    <%= form_for(@software_installation_detail, :url =>  software_installation_path(:id=>@software_installation_detail.id), :method=>:post) do |f| %>
+  <%#=error_messages%>
+      <div class="clearfix">&nbsp;</div>
+      <div class="form-sec">
+        <font color="#369" size="3"><br/><b><u>Applicant Information :-</u><br/><br/></b></font>
+
+        <% @dept = Department.find_by_id(current_department) %>
+        <% @agency = Agency.find_by_id(@dept.agency_id) %>
+        <% @user = User.find_by_id(current_user) %>
+        <div class="form-sec-row">
+          <label class="text">Agency Name</label>
+          <span class="in-box"><%= @agency.name  %></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Department Name</label>
+          <span class="in-box">
+            <%= @dept.name  %></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">First Name</label>
+          <span class="in-box">
+            <%= @user.first_name %></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Last Name</label>
+          <span class="in-box"><%= @user.last_name %></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Contact Mobile</label>
+          <span class="in-box"><%= @user.contact_mobile  %></span>
+        </div>
+
+        <div class="form-sec-row">
+          <label class="text">IC Number</label>
+          <span class="in-box">
+            <%= @user.ic_number %></span>
+        </div>
+
+        <div class="form-sec-row">
+          <label class="text">E - Mail</label>
+          <span class="in-box">
+            <%= @user.email %></span>
+        </div>
+
+        <h2 class="b-head"></h2>
+
+        <div class="form-sec-row">
+          <label class="text">Ticket No</label>
+          <span class="in-box"><font color="red" size="3"><b>&nbsp;<%= @software_installation_detail.id %>/<%=Time.now.year%></span>
+                </div>
+
+                <div class="form-sec-row">
+                  <label class="text">Date of Application</label>
+                  <span class="in-box"><%= @software_installation_detail.created_at.strftime("%a %d %b %Y %I:%M %p")%></span>
+                </div>
+
+                </div>
+                <h2 class="b-head"></h2>
+
+                <div class="form-sec-row">
+                  <label class="text">Type of Facility</label>
+                  <span class="in-box">
+                    <%software_name = FacilityIctSoftware.find(@software_installation_detail.software_installation_id)%>
+                    <%requisition_name = RequisitionType.find(@software_installation.requisition_type_id)%>
+                    <%= requisition_name.name %>
+                  </span>
+                </div>
+                 <div class="form-sec-row">
+                <table width="520" border="0" class="app-table" cellspacing="0" cellpadding="0" align="center" color="#329C20">                <tr>
+                    <th color="#329C20" width="5%"><b>No</b></th>
+
+                    <th width="15%"><b>Software Name</b></th>
+                    <th width="20%"><b>Name | Position | Grade</b></th>
+                    <th width="25%"><b>Action</b></th>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td><b>&nbsp;<%=software_name.name%></b></td>
+                    <td><b>&nbsp;<%=@software_installation_detail.name%>&nbsp;|&nbsp;<%=@software_installation_detail.position%>&nbsp;|&nbsp;<%=@software_installation_detail.grade%></b></td>
+                    <td> <%= f.radio_button :approve_status, 'Approve'%> <%= f.label :approve_status, "Approve" %>
+                    <%= f.radio_button :approve_status, 'Not Approve'%> <%= f.label :approve_status, "Not Approve" %></td>
+                   
+
+                  </tr>
+                </table>
+                 </div>
+               
+                <%#*<div class="form-sec-row">%>
+                  <%#*<label class="text">Position</label>%>
+                  <%#*<span class="in-box">%>
+                    <%#= @software_installation_detail.position %></span>
+                <%#*</div>%>
+                <%#*<div class="form-sec-row">%>
+                  <%#*<label class="text">Grade</label>%>
+                  <%#*<span class="in-box">%>
+                    <%#= @software_installation_detail.grade %></span>
+                <%#*</div>%>
+                <h2 class="b-head"></h2>
+                <font color="#369" size="3"><br/><b><u>Officer Action :-</u><br/><br/></b></font>
+
+                <div class="form-sec-row">
+                  <label class="text">Booking Status<span style=color:red>*</span></label>
+                  <%if @software_installation.status == 'New'%>
+                    <span class="in-box">
+                      <%= select 'status', 'id', options_for_select([["SELECT A STATUS", -1],["Approved", "Approved"], ["Declined", "Declined"]], @software_installation.status) %>
+                    </span>
+                  <%elsif @software_installation.status == 'Approved'%>
+                    <span class="in-box">
+                      <%= select 'status', 'id', options_for_select([["SELECT A STATUS", -1],["Processed", "Processed"], ["Declined", "Declined"]], @software_installation.status) %>
+                    </span>
+                  <%end%>
+                </div>
+                <%if @software_installation.status == 'New'%>
+                  <%@dept = Department.find(default_department)%>
+                  <%@users = @dept.users%>
+                  <div class="form-sec-row">
+                    <label class="text">Forward To<span style=color:red>*</span></label>
+                    <span class="in-box">
+                      <%= f.select(:user_id, @users.collect {|p| [ p.first_name, p.id ] },:prompt => "SELECT A USER") %>
+                    </span>
+                  </div>
+                <%end%>
+  <%#*<div class="form-sec-row">%>
+  <%#*<label class="text">Remarks<span style=color:red>*</span></label>%>
+  <%#*<span class="in-box">%>
+  <%#= f.text_area :remarks, :rows =>4%>
+  <%#*<div>%>
+
+
+                <div class="form-sec-row">
+                  <div class="CenterNav">
+                    <label class="text">&nbsp;</label>
+                    <span class="in-box">
+                      <%= f.submit :value=>'Update', :class=>"btn2"%>
+                    </span>
+                  </div>
+                </div>
+  <%#*</div>%>
+              <%end%>
+
+
+
+
+              </div>
+              </div>

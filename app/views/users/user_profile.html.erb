@@ -1,0 +1,93 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <%= form_for(@users, :url => user_profile_users_path(:id=>@users.id), :html => { :method => :put, :multipart => true }) do |f| %>
+      <%=f.error_messages%>
+      <div class="clearfix">&nbsp;</div>
+      <table><tr><td><h4><b><font color="#336699">Step 1-></font></b></h4></td><td><font color="#858585">Step 2-></font></td><td><font color="#858585">Step 3-></font></td><td><font color="#858585">Step 4-></font></td><td><font color="#858585">Step 5</font></td></tr></table>
+     <div class="clearfix">&nbsp;</div>
+      <h2>Update User Profile</h2>
+      <div class="form-sec-row">
+        <%= f.label :username,raw("Name <span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :username, :size => 30, :autofocus => true%>
+        </span>
+      </div>
+     <div class="form-sec-row">
+        <%= f.label :ic_number,raw("IC Number"), :class=>"text"%>
+        <span class="in-box">
+          <%= @users.ic_number%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :marital_status,raw("Marital Status"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.radio_button :marital_status, 'Single', :checked=>@users && @users.marital_status=='Single' ? true : false%> <%= f.label :marital_status, "Single" %>
+           <%= f.radio_button :marital_status, 'Married', :checked=>@users && @users.marital_status=='Married' ? true : false%> <%= f.label :marital_status, "Married" %>
+           <%= f.radio_button :marital_status, 'Widow', :checked=>@users && @users.marital_status=='Widow' ? true : false%> <%= f.label :marital_status, "Widow/Widower" %></span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :gender,raw("Gender"), :class=>"text"%>
+        <span class="in-box">
+      <%= f.radio_button :gender, 'Male', :checked=>@users && (@users.gender=='Male' || @users.gender.blank?) ? true : false%> <%= f.label :gender, "Male" %>
+      <%= f.radio_button :gender, 'Female', :checked=>@users && @users.gender=='Female' ? true : false%> <%= f.label :gender, "Female" %>
+         
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <%= f.label :address,raw("Address <span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :address, :size => 30, :autofocus => true%>
+        </span>
+      </div>
+       <div class="form-sec-row">
+        <%= f.label :zipcode,raw("Post Code<span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%= f.text_field :zipcode, :autofocus => true, :onkeypress=>"return isNumberKey(event);"%></span>
+       </div>
+       <div class="form-sec-row">
+          <%= f.label :city,raw("City<span style=color:red>*</span>"), :class=>"text"%>
+          <span class="in-box"> <%= f.text_field :city, :size => 30, :autofocus => true%>
+        </span>
+        
+      </div>
+           <div class="form-sec-row">
+        <label class="text">State <span style=color:red>*</span></label>
+        <span class="in-box">
+          <%= f.select(:state, State.all.collect {|p| [p.name.upcase, p.id]} ,:prompt => "SELECT A STATE")%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+      <%= f.label :hp_number,raw("HP Number<span style=color:red>*</span>"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :hp_number, :onkeypress=>"return isNumberKey(event);", :size => 30, :autofocus => true%>
+      </span>
+    </div>
+ <div class="form-sec-row">
+        <label class="text">Date Of Birth <span style=color:red>*</span></label>
+        <span class="in-box">
+          <%=f.text_field :date_of_birth ,:value=>@users && @users.date_of_birth!=nil ? @users.date_of_birth.strftime("%d-%m-%Y") : nil ,:readonly=>true%>
+        </span>
+      </div>
+      <h2>Dependent</h2>
+       <div class="form-sec-row-out">
+        <%= f.label :child,raw("Total Children/Dependent <span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-boxx">
+          <%= f.text_field :child, :autofocus => true, :onkeypress=>"return isNumberKey(event);", :class=>'size-quan-box-ict' %>persons
+        </span>
+      </div>
+      <div class="form-sec-row">
+        <label class="text">&nbsp;</label>
+        <span class="in-box">
+          <%= f.submit "Update Profile" ,:class=>"btn2"%>
+        </span>
+      </div>
+    </div>
+  </div>
+  <%#*</div>%>
+  <div class="clear"></div>
+  <!--BODY END-->
+<%end%>
+
+
+<div class="clearfix"></div>

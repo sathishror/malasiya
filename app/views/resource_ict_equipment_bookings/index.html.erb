@@ -1,0 +1,155 @@
+<div class="CenterNav">
+  <h2 class="b-head">List Resource ICT Equipment</h2>
+  <div id="div_ajax" >
+    <%if @resource_ict_equipment_bookings && !@resource_ict_equipment_bookings.empty?%>
+      <%  @resource_ict_equipment_bookings.each do |resource_ict_equipment_booking|%>
+        <div class="manage-user box">
+          <div class="form-sec-row">
+            <label class="text heading_blue">User Details:</label>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Agency Name</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.department.agency.name %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Department Name</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.department.name %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">IC Number</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.user.ic_number%></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">First Name</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.user.first_name%></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Last Number</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.user.last_name%></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Email</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.user.email%></b>
+            </span>
+          </div>
+
+          <div class="form-sec-row">
+            <label class="text heading_blue">ICT Equipment Details:</label>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Date of Application</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.created_at.strftime("%a %B %d, %Y %I:%M:%S %p") %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Purpose</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.purpose %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Location</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.location %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Sub Category</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.sub_category.name %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Requested From Date</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.requested_from_date.strftime("%a %B %d, %Y %I:%M:%S %p") %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Requested To Date</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.requested_to_date.strftime("%a %B %d, %Y %I:%M:%S %p") %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Officer Needed</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.need_officer ? "Yes" : "No" %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Meeting Start Time</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.meeting_start_time.strftime("%a %B %d, %Y %I:%M:%S %p") %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Meeting End Time</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.meeting_end_time.strftime("%a %B %d, %Y %I:%M:%S %p") %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Notes</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.notes %></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Status</label>
+            <span class="in-box">
+              <b><%= resource_ict_equipment_booking.status %></b>
+            </span>
+          </div>
+          <div id="user_box_<%= resource_ict_equipment_booking.id %>" class="manage-user-row box">
+            <div class="form-sec-row">
+              <% if resource_ict_equipment_booking.status == "Processed" && resource_ict_equipment_booking.user_id = current_user.id%>
+                <div id="div_ict_chk_<%= resource_ict_equipment_booking.id %>" style="display:block;">
+                  <% if !resource_ict_equipment_booking.user_returned_status? %>
+                    <label class="text"> Is Returnable?</label>
+                    <span class="in-box">
+                      <%= check_box_tag "user_returned_status[#{resource_ict_equipment_booking.id}]","",false,:onchange=>"returnIctEquipment(this.id,#{resource_ict_equipment_booking.id})" %>
+                    </span>
+                  <%end%>
+                </div>
+              <%end%>
+              <div id="div_ict_msg_<%= resource_ict_equipment_booking.id %>" style="display:none;">
+                <b class="heading_blue"><%= "You have successfully returned the Resource" %></b>
+              </div>
+              <% if resource_ict_equipment_booking.status == "Returned" || resource_ict_equipment_booking.user_returned_status? %>
+                <b class="heading_blue"><%= "You have successfully returned the Resource " %></b>
+              <%end%>
+            </div>
+            <div class="form-sec-row">
+              <% if current_user.is_department_admin? || current_user.is_super_admin? %>
+                <span class="in-box">
+                </span>
+              <%end%>
+            </div>
+            <div class="form-sec-row">
+              <span class="in-box">
+                <b style="color:#BB0802;"><%= link_to "Show Info",resource_ict_equipment_booking_path(:id => resource_ict_equipment_booking.id), :method=>:get%></b>
+              </span>
+            </div>
+          </div>
+        </div>
+      <%end%>
+      <div class="manage-user-rows box"><br/><br/>
+      </div>
+    <%else%>
+      No Resource Booking done
+    <%end%>
+  </div>
+</div>

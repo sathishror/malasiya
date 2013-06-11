@@ -1,0 +1,21 @@
+<table width ="100%" cellpadding="0" cellspacing="5" align="center" >    
+  <%@conversations.each do |convo|%>
+    <tr>
+      <td width="30%" align="left">
+        <%if convo.from_userid==@user.id %>
+          <%image_url= !@user.avatar.nil? && !@user.avatar.url(:thumb).nil? ? (image_tag(@user.avatar.url(:thumb), :alt=>"Image", :width=>"30", :height=>"30")) : (image_tag "no_photo_small.jpg", :alt=>"Image", :width=>"30", :height=>"30")  %>
+          <%=image_url%>
+          <font color="#369"><br/><b><%=@user.username%></b></font>
+        <%elsif convo.to_userid==@user.id%>
+          <%image_url= !current_user.avatar.nil? && !current_user.avatar.url(:thumb).nil? ? (image_tag(current_user.avatar.url(:thumb), :alt=>"Image", :width=>"30", :height=>"30")) : (image_tag "no_photo_small.jpg", :alt=>"Image", :width=>"30", :height=>"30")  %>
+          <%=image_url%>
+          <font color="#369"><br/><b><% if current_user.username %>Me<%else%><%=current_user.username%><%end%></b></font>
+        <%end%>
+      </td>
+      <td align="left" width="45%" valign="top" style="vertical-align: top;"><%=convo.content %></td><td align="right" width="20%"><i><%= time_ago_in_words(convo.created_at).gsub('about','') + ' ago' %></i></td>
+    </tr>
+  <%end%>
+</table>
+
+
+

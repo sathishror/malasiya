@@ -1,0 +1,138 @@
+<%= form_for(@ict_hardware_booked_user, :url=>update_request_ict_hardware_bookings_path(:id=>@ict_hardware_booked_user.id)) do |f| %>
+  <%= f. error_messages%>
+  <div class="CenterNav">
+    <h2 class="b-head">List Facility ICT Hardware</h2>
+    <div class="manage-user box">
+      <div class="manage-user-row box">
+        <div class="form-sec-row">
+          <label class="text">Name</label>
+          <span class="in-box">
+            <%= @ict_hardware_booking.booker.full_name%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">IC Number</label>
+          <span class="in-box">
+            <%= @ict_hardware_booking.booker.ic_number%>
+          </span>
+        </div>
+        <%department=Department.find(@current_department)%>
+        <div class="form-sec-row">
+          <label class="text">Agency</label>
+          <span class="in-box">
+            <%= department.agency.name%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Department</label>
+          <span class="in-box">
+            <%= department.name%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Facility Type</label>
+          <span class="in-box">
+            <%= @ict_hardware_booking.facility_ict.name%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Ticket No</label>
+          <span class="in-box">
+            <%=@ict_hardware_booking.id%>/<%=Time.now.year%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Date of Application</label>
+          <span class="in-box"><%=@ict_hardware_booking.created_at.strftime("%a %d %b %Y %I:%M %p")%></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Name</label>
+          <span class="in-box">
+            <%=@ict_hardware_booked_user.user.full_name%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Department</label>
+          <span class="in-box">
+            <%=@ict_hardware_booked_user.user.departments.first.name%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Requested Type</label>
+          <span class="in-box">
+            <%=@ict_hardware_booked_user.is_replacement? ? "Replacement" : "New"%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">PC</label>
+          <span class="in-box">
+            <%=@ict_hardware_booked_user.pc ? "Yes" : "No"%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Printer</label>
+          <span class="in-box">
+            <%=@ict_hardware_booked_user.printer ? "Yes" : "No"%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Scanner</label>
+          <span class="in-box">
+            <%=@ict_hardware_booked_user.scanner? ? "Yes" : "No"%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Status</label>
+          <span class="in-box">
+            <b style="color : <%=@ict_hardware_booked_user.status=='New' ? '#FFA500' : (@ict_hardware_booked_user.status == "Approved" || @ict_hardware_booked_user.status == "Processed" ? '#329C20' : 'red')%>"><%= @ict_hardware_booked_user.status%></b>
+          </span>
+        </div>
+        <% if @ict_hardware_booked_user.status == "New" %>
+          <font color="#369" size="3"><br/><b><u>Approval Action :-</u><br/><br/></b></font>
+          <div class="form-sec-row">
+            <label class="text"><%= f.label :status,raw("Action"), :class=>"text"%></label>
+            <span class="in-box">
+              <%select_options=["Approved","Declined"]%>
+              <%=f.select(:status, options_for_select(select_options))%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <%dept = Department.find(default_department)%>
+            <%users = dept.users%>
+            <label class="text"> <%= f.label :forward_to,raw("Forward To"), :class=>"text"%></label>
+            <span class="in-box">
+              <%= f.select(:forward_to, users.collect {|p| [ p.username, p.id ] },:prompt => "SELECT A USER") %>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text"> <%= f.label :status,raw("Remarks"), :class=>"text"%></label>
+            <span class="in-box">
+              <%= f.text_area :remarks, :cols => "20", :rows => "3"%>
+            </span>
+          </div>
+        <%end%>
+        <% if @ict_hardware_booked_user.forward_to.present? %>
+          <% if @ict_hardware_booked_user.status == "Approved"  && @ict_hardware_booked_user.forward_to == current_user.id %>
+            <h2 class="b-head"></h2>
+            <font color="#369" size="3"><br/><b><u>Status :-</u><br/><br/></b></font>
+            <div class="form-sec-row">
+              <label class="text">Status</label>
+              <span class="in-box">
+                <%select_options=["Processed","Declined"]%>
+                <%=f.select(:status, options_for_select(select_options))%>
+              </span>
+            </div>
+          <%end%>
+        <%end%>
+        <div class="form-sec-row">
+          <label class="text">&nbsp;</label>
+          <span class="in-box">
+            <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+            <%= f.submit :value=>'Update', :class=>"btn2"%>
+          </span>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+<%end%>

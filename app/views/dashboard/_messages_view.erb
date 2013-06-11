@@ -1,0 +1,33 @@
+
+<% if @messages && !@messages.empty? %>
+  <% @messages.each do |message| %>
+
+    <div id="post_message_<%= message.id %>" class="postedMsg-row box">
+      <div class="postedMsg-img">
+        <a href="#" title="Social Welfare Department of Melaka"><img src="images/img_user2.jpg" alt="Image" width="60" height="60" /></a>
+      </div>
+      <div class="postedMsg-txt">
+        <p class="head1">
+          <b> <% if message.is_sticky_message?%> <font color='#329C20'><%= message.message %> </font> <%else%>
+              <%= message.message%>
+            <%end%> </b>
+        </p>
+        <div class=""></div>
+        <div id="message_field_<%= message.id %>" ></div>
+
+        <p class="PM-des">
+                            by  <%= message.user.first_name %> &nbsp; - &nbsp; <%= time_ago_in_words(message.created_at) %> ago
+          <% if message.message_comments.count == 0 %>
+            &nbsp; - &nbsp;
+            <%= link_to 'View ', messages_path %>
+          <%end%>
+        </p>
+
+        <div id ="comments_section_message_<%= message.id %>"></div>
+      </div>
+    </div>
+  <%end%>
+<%else%>
+  <%=t('dashboard.message_list')%>
+<%end%>
+

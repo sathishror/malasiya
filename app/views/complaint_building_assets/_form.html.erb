@@ -1,0 +1,59 @@
+<%= form_for(@complaint_building_asset, :html => { :method => :post, :multipart => true }) do |f| %>
+ <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <%#*<div class="CenterNav">%>
+
+  <div class="form-sec">
+  <%# if @manager.present? %>
+
+  </div>
+<br/>
+  <div class="form-sec-row">
+    <label class="text">Category<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.select(:building_asset_type_id, BuildingAssetType.all.collect {|p| [ p.name, p.id] },:prompt => "Select Category", :style=> "width:132%;") %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Type<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.select(:type_id, BuildingAssetType.where("parent_type_id=?", params[:building_asset_type_id]).collect {|p| [ p.name, p.id, p.parent_type_id]  },:prompt => "Select Type", :style=> "width:132%;") %>
+    </span>
+  </div>
+    <div class="form-sec-row">
+    <label class="text">Item<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.select(:item_id, BuildingAssetType.where("parent_type_id=?", params[:type_id]).collect {|p| [ p.name, p.id ] },:prompt => "Select Item", :style=> "width:132%;") %>
+    </span>
+  </div>
+
+  <div class="form-sec-row">
+    <label class="text">Location <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :location%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Serial No <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :serial_no%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Reason<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_area :reason, :rows =>4%></span>
+    <div>
+
+    </div>
+  </div>
+  <div class="form-sec-row">
+    <div class="CenterNav">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :value=>'Save', :class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+  <%#*</div>%>
+<%end%>

@@ -1,0 +1,70 @@
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+  <% if  flash[:notice] || flash[:alert] %>
+    <div class="error">
+      <% flash.each do |name, msg| %>
+        <%= content_tag :div, msg, :id => "flash_#{name}" %>
+      <% end %>
+    </div>
+    <div class="clearfix">&nbsp;</div>
+  <%end%>
+  <div class="landing-con">
+    <div class="banner">
+      <span class="cor-tl"></span>
+      <span class="cor-tr"></span>
+      <span class="cor-bl"></span>
+      <span class="cor-br"></span>
+      <div id="slides">
+        <div class="slides_container">
+          <div class="slide">
+            <%=image_tag("banner1.png", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+          <div class="slide">
+            <%=image_tag("banner2.jpg", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+          <div class="slide">
+            <%=image_tag("banner3.jpg", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+          <div class="slide">
+            <%=image_tag("banner4.jpg", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+          <div class="slide">
+            <%=image_tag("banner5.jpg", :alt=>"Image", :width=>"390", :height=>"340") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="login-ban">
+      <div class="ban-tr">
+        <div class="ban-tl"></div>
+        <div class="ban-tc"></div>
+      </div>
+      <div class="ban-m">
+        <h1><%=t('login.wel')%></h1>
+        <h3>" <%=t('login.corridor')%> "</h3>
+        <div class="footer-land">
+          <p class="formRow t-left">
+            <%= f.label :ic_number, :class=>"ui-watermark-label-pass"%>
+            <span class="shadow-input">
+              <%= f.text_field :ic_number, :class=>"pass"%>
+            </span>
+          </p>
+          <p class="formRow t-left">
+            <%= f.label :password, :class=>"ui-watermark-label-pass"%>
+            <span class="shadow-input">
+              <%= f.password_field :password, :class=>"pass"%>
+            </span>
+          </p>
+          <%= f.submit t('login.login_in'), :class => "btn1" %>
+          <div class="clear"></div>
+          <p class="loggedin">
+            <%= f.check_box :remember_me %><%= f.label :remember_me,t('login.keep_me_login_in') %>
+          </p>
+          <p class="forgot-row">
+            <%= link_to t('login.forget_pass'), new_user_password_path,:title=>title="Forgot Your Password?" %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clear"></div>
+<%end%>

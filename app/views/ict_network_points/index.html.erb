@@ -1,0 +1,95 @@
+<div class="CenterNav">
+  <h2 class="b-head">Manage Resource  Requisition</h2>
+  <div class="create-user">
+    <div class="cu-c1"><a href="/ict_network_points/list_to_select_ict" title="Create Requisition for ICT "><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Requisition for ICT</a></div>
+  </div>
+
+  <div id="div_ajax" >
+    <%if @requisition && !@requisition.empty?%>
+      <%@requisition.each do |resource|%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Name</b>
+            </div>
+            <div class="m-c2">
+              <% @user = User.find_by_id(resource.user_id) %>
+              <%= @user.username %>
+            </div>
+            <div class="m-c3">
+              <% if resource.status == "New"%><b><font color='#FFA500'><%= "#{resource.status}" %></font></b><% elsif resource.status == "Approved" || resource.status == "Processed"  %>  <b><font color='#329C20'><%= "#{resource.status}" %> </font></b><% elsif resource.status == "Declined" || resource.status == "Returned"  %>  <b><font color='red'><%= "#{resource.status}" %> </font></b><% end %>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Type of Facility</b>
+            </div>
+            <div class="m-c2">
+              <% name = RequisitionType.find_by_id(resource.requisition_type_id) %>
+              <%=name.name%>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c2">
+              <font color="red"><b>&nbsp;<%=resource.id%>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info",ict_network_point_path(:id => resource.id), :method=>:get%></font></b>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Loaction</b>
+            </div>
+            <div class="m-c2">
+              <%=resource.location%>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Date of Application</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= resource.created_at.strftime("%a %d %b %Y %I:%M %p")%></font>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+
+        </div>
+        <h2 class="b-head"></h2>
+
+      <%end%> <div class="manage-user-rows box"><br/><br/>
+        <%= paginate @requisition %></div>
+      <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,28 @@
+/* RESET */
+.box {height:1%;}
+
+#Header .iHeader .globe-links {width: 185px; clear:left;}
+#Header .iHeader .profName-con{ clear:left;}
+#Header .iHeader .language{width: 48px; clear:left;}
+.CenterNav{ padding-top:0; margin-top:10px;}
+ul.dropdown ul li					{ display: inline; width: 100%; } 
+.leftNav{left:-180px;}
+.toIE7 .profInfo,.toIE7 .leftNav-links{display:none;}
+
+.loggedin{ margin-top:-110px !important;}
+.forgot-row{ margin-top:-106px !important;}
+.loggedin label{line-height:22px !important;}
+.land-footer-l-mtop{ margin-top:-17px;}
+
+.language{ width:50px !important;}
+h2.b-head a{ margin-top:-35px;}
+.sortRow2{ width:96% !important; overflow:hidden; text-align:right !important;}
+
+.footer-in-des{font-size:11px; color:#7f7f7f; display:inline-block; padding-left:250px; }
+
+#pr-time {
+ height:220px; overflow:hidden;
+}
+#pr-time table {
+    margin-top: -36px !important;
+}

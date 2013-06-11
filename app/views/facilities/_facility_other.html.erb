@@ -1,0 +1,41 @@
+<%= form_for(@facility) do |f| %>
+  <%= hidden_field_tag :resource_type, ("others") %>
+  <div class="form-sec-row">
+    <%= label_tag :sub_category_id, raw("Sub Category <span style=color:red>*</span>"), :class=>"text"%>
+    <span class="in-box">
+      <%= select("other","sub_category_id",SubCategory.all.collect {|p| [ p.name, p.id ] },:prompt => "SELECT A SUB CATEGORY") %>
+    </span>
+  </div>
+  <div id="sub_list_facility">
+    <div class="form-sec-row">
+      <%= label_tag :resource_id, raw("Resource Ex No"), :class=>"text"%>
+      <span class="in-box">
+        <%= select("other", "resource_id", Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A RESOURCE") %>
+      </span>
+    </div>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Name<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :name, :size => 10%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Total Quantity<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :total_qty, :size => 10%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Is Active</label>
+    <span class="in-box">
+      <%= f.check_box :is_active %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">&nbsp;</label>
+    <span class="in-box">
+      <%= f.submit :value=>'Save', :class=>"btn2", :value=>@facility.new_record? ? "Create" : "Update"%>
+    </span>
+  </div>
+<%end%>

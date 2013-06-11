@@ -1,0 +1,13 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <% if @category_department && !@category_department.blank? %>
+      <h2 class="b-head">Resource ICT Equipment Bookings</h2>
+      <%=render :partial=>"form" %>
+    <%else%>
+      <div class="form-sec">
+        <h2>Sorry... ICT Equipment Booking Facility is not Available for your Department...</h2>
+      </div>
+    <%end%>
+  </div>
+</div>

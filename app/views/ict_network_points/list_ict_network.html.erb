@@ -1,0 +1,135 @@
+<div class="clearfix">&nbsp;</div>
+<div class="CenterNav">
+  <h2 class="b-head">ICT Network Point List</h2>
+  <div id="div_ajax" >
+    <%if @list_network_point && !@list_network_point.empty?%>
+      <%@list_network_point.each do |resource|%>
+    <%# if resource.user_id == current_user.id || resource.person_incharge == current_user.id || @approve == current_user.id%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Name</b>
+            </div>
+            <div class="m-c2">
+              <% @user = User.find_by_id(resource.user_id) %>
+              <%= @user.username %>
+            </div>
+            <div class="m-c3">
+              <% if resource.status == "New"%><b><font color='#FFA500'><%= "#{resource.status}" %></font></b><% elsif resource.status == "Approved" || resource.status == "Processed"  %>  <b><font color='#329C20'><%= "#{resource.status}" %> </font></b><% elsif resource.status == "Declined" || resource.status == "Returned"  %>  <b><font color='red'><%= "#{resource.status}" %> </font></b><% end %>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Type of Facility</b>
+            </div>
+            <div class="m-c2">
+              <% name = RequisitionType.find_by_id(resource.requisition_type_id) %>
+              <%=name.name%>
+            </div>
+
+            <% time = Setting.find_by_id(1) %>
+            <%if time.present?%>
+              <% temp = time.timeline.strftime("%H:%M:%S")%>
+              <%dt = DateTime.parse(temp)%>
+              <% seconds = dt.hour * 3600 + dt.min * 60 %>
+
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id && resource.created_at > (Time.now-seconds) %>
+                  <span class="in-box">
+                    <% if resource.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve Request",approval_network_point_ict_network_points_path(:id => resource.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id && resource.created_at > (Time.now-2*seconds)%>
+                  <span class="in-box">
+                    <% if resource.status == "New" %>
+                      <% val = (resource.created_at > (Time.now-seconds))  %>
+                      <% if !val.present? %>
+                        <b><font color="#336699"><%= link_to "Approve Request",approval_network_point_ict_network_points_path(:id => resource.id), :class=>"btn2 in-btn2"%></b>
+                      <%end%>
+                    <%end%>
+                  </span>
+                <% elsif resource.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve Request",approval_network_point_ict_network_points_path(:id => resource.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if resource.status == "Approved" && resource.person_incharge == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process Request",approval_network_point_ict_network_points_path(:id => resource.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%else%>
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if resource.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve Request",approval_network_point_ict_network_points_path(:id => resource.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if resource.status == "New" %>
+                        <b><font color="#336699"><%= link_to "Approve Request",approval_network_point_ict_network_points_path(:id => resource.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif resource.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve Request",approval_network_point_ict_network_points_path(:id => resource.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if resource.status == "Approved" && resource.person_incharge == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process Request",approval_network_point_ict_network_points_path(:id => resource.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%end%>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c2">
+              <font color="red"><b>&nbsp;<%=resource.id%>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info",ict_network_point_path(:id => resource.id), :method=>:get%></font></b>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Loaction</b>
+            </div>
+            <div class="m-c2">
+              <%=resource.location%>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Date of Application</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= resource.created_at.strftime("%a %d %b %Y %I:%M %p")%></font>
+            </div>
+            <div class="m-c3">
+            </div>
+          </div>
+          <div class="clear"></div>
+
+        </div>
+        <h2 class="b-head"></h2>
+
+      <%end%> <div class="manage-user-rows box"><br/><br/>
+        <%= paginate @list_network_point %></div>
+      <%else%>
+      No Resources Available
+    <%end%>
+  </div>
+</div>

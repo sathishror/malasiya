@@ -1,0 +1,175 @@
+<%= form_for(@resource_booking, :url=>update_resource_booking_resource_bookings_path) do |f| %>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <% if current_user.is_department_admin? %>
+      <h2 class="b-head">Resource Approval</h2>
+    <%else%>
+      <h2 class="b-head">Resource Process</h2>
+    <%end%>
+    <%= hidden_field_tag :resource_book_id,(@resource_booking.id)  %>
+    <%= hidden_field_tag :resource_id,(@resource_booking.resource_id)  %>
+    <div class="form-sec">
+  <%# if @manager.present? %>
+      <div class="form-sec-row form-sec-row1">
+        <td><table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;">
+                <table width="750" border="2" cellspacing="3" cellpadding="3" align="center"><br/>
+                  <tr>
+                    <td><font color='#369'><b><u>User Details:-</u></b></font></td>
+                    <td></td>
+                  </tr>
+                <% if @resource_booking.attachment.present? %>
+                    <tr>
+                      <td><b>Upload File</b></td>
+                      <% image = @resource_booking.attachment.url(:profile).split(".").last %>
+                      <% if image == "gif" || image == "jpg" || image == "jpeg" || image == "png" %>
+                        <td><%=image_tag(@resource_booking.attachment.url(:profile),:title=>@resource_booking.attachment)%></td>
+                      <%else%>
+                        <% file = (@resource_booking.attachment).url(:profile).split("/").last %>
+                        <td><b>&nbsp;<%= file %></b></td>
+                      <%end%>
+                    </tr>
+                  <%end%>
+                    <% if @agency.present? %>
+                  <tr>
+                    <td><b>Agency Name</b></td>
+                    <td><b>&nbsp;<%= @agency.name  %></b></td>
+                  </tr>
+                    <%end%>
+                  <tr>
+                    <td><b>Department Name</b></td>
+                    <td><b>&nbsp;<%= @dept.name  %></b></td>
+                  </tr>
+                  <% if @manager.present? %>
+                    <tr>
+                      <td><b>Resource Manager</b></td>
+                      <td><b>&nbsp;<%= @manager.first_name  %></b></td>
+                    </tr>
+                  <%end%>
+                  <tr>
+                    <td><b>First Name</b></td>
+                    <td><b>&nbsp;<%= @user.first_name %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Last Name</b></td>
+                    <td><b>&nbsp;<%= @user.last_name %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>IC Number</b></td>
+                    <td><b>&nbsp;<%= @user.ic_number %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Email</b></td>
+                    <td><b>&nbsp;<%= @user.email %></b></td>
+                  </tr>
+                  <tr>
+                    <td><font color="#369"><b><u>Room Details:-</u></b></font></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><b>Ticket No</b></td>
+                  <b><td style="color:#BB0802;">&nbsp;<%=@resource_booking.id%>/<%=Time.now.year%></td></b>
+            </tr>
+            <tr>
+              <td><b>Date of Application</b></td>
+              <td><b>&nbsp;<%=@resource_booking.created_at.strftime("%a %d %b %Y %I:%M %p")%></b></td>
+            </tr>
+            
+            <tr>
+              <td><b>Booking Date</b></td>
+              <td><b>&nbsp;<%=@resource_booking.requested_from_date%></b></td>
+            </tr>
+            <tr>
+              <td><b>Return Date</b></td>
+              <td><b>&nbsp;<%=@resource_booking.requested_to_date%></b></td>
+            </tr>
+            <tr>
+              <td><b>Purpose</b></td>
+              <td><b>&nbsp;<%=@resource_booking.purpose%></b></td>
+            </tr>
+            <tr>
+              <td><b>Remarks</b></td>
+              <td><b>&nbsp;<%=@resource_booking.description%></b></td>
+            </tr>
+            <% if current_user.is_resource_manager? && @resource_booking.status == "Approved" %>
+              <tr>
+                <td><label class="text">Change</label></td>
+                <td><span class="in-box">
+                    <%= f.select("resource_id",  Resource.where(["sub_category_id = ?",@resource_booking.sub_category_id ]).active.collect {|category| [category.resource_no, category.id]}, {:prompt => 'Select Person'})%>
+                  </span></td>
+              </tr>
+            <%end%>
+            <tr>
+              <td id="dis_col" style="display:none;"><label class="text">Details</label></td>
+              <td><div id="details_resource_id" style="display:none;">
+                </div></td>
+            </tr>
+            <% if @facility.present? %>
+              <tr>
+                <td><font color="#369"><b><u>Facility Details:-</u></b></font></td>
+                <td></td>
+              </tr>
+              <% @facility.each do |facility| %>
+                <tr>
+                  <td><b> Facility Name</b></td>
+                  <td><b>&nbsp;<%=facility.name%></b></td>
+                </tr>
+                <tr>
+                  <td><b> Quantity</b></td>
+                  <td><b>&nbsp;<%=facility.total_qty%></b></td>
+                </tr>
+              <%end%>
+            <%end%>
+      </div>
+      <tr>
+        <td><font color="#369"><b><u>Status Details:-</u></b></font></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><label class="text"> <%= f.label :location,raw("Status"), :class=>"text"%></label></td>
+        <% if @approve.present?  && @approve.user_id == current_user.id %>
+          <td><span class="in-box">
+              <%select_options=["Approved","Declined"]%>
+              <%=f.select(:status, options_for_select(select_options))%>
+            </span></td>
+        <% elsif current_user.is_department_admin? && !@approve.present?%>
+          <td><span class="in-box">
+              <%select_options=["Approved","Declined"]%>
+              <%=f.select(:status, options_for_select(select_options))%>
+            </span></td>
+        <%elsif current_user.is_resource_manager? && @resource_booking.user_returned_status?%>
+          <td><span class="in-box">
+              <%select_options=["Returned"]%>
+              <%=f.select(:status, options_for_select(select_options))%>
+            </span></td>
+        <%else%>
+          <td><span class="in-box">
+              <%select_options=["Processed", "Declined"]%>
+              <%=f.select(:status, options_for_select(select_options))%>
+            </span></td>
+        <%end%>
+      </tr>
+      </table>
+      </td>
+      </tr>
+      </table>
+      </td>
+      <div class="form-sec-row">
+        <label class="text">&nbsp;</label>
+        <span class="in-box">
+          <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+         <% if @resource_booking.status == "Processed" && @resource_booking.user_returned_status? %>
+            <%= f.submit raw('Acknowledge'), :class=>"btn2"%>
+          <%else%>
+            <%= f.submit raw('Submit'), :class=>"btn2"%>
+          <%end%>
+        </span>
+      </div>
+    </div>
+  <%#else%>
+  <%#= "No Resource Available" %>
+  <%#end%>
+  </div>
+  </div>
+<%end%>

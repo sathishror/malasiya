@@ -1,0 +1,53 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :multipart => true }) do |f| %>
+      <!--BODY START-->
+
+      <div class="form-sec">
+        <%=f.error_messages%>
+        <div class="clearfix">&nbsp;</div>
+        <%if current_user.sign_in_count == 1%>
+          <h2>Account Settings</h2>
+           <h2 class="b-head-acc-set">Change Password</h2>
+        <%else%>
+          <h2>CHANGE PASSWORD</h2>
+         
+        <%end%>
+
+        <div class="form-sec-row">
+          <%= f.label :current_password, :class=>"text"%>
+          <span class="in-box">
+            <%= f.password_field :current_password, :size => 30, :autofocus => true, :class=>'passfiled'%><br/>
+            <i>(we need your current password to confirm your changes)</i>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :password,raw("New password"), :class=>"text"%>
+          <span class="in-box">
+            <%= f.password_field :password, :size => 30, :autofocus => true, :class=>'passfiled'%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= f.label :password_confirmation, :class=>"text"%>
+          <span class="in-box">
+            <%= f.password_field :password_confirmation, :size => 30, :autofocus => true, :class=>'passfiled'%>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">&nbsp;</label>
+          <span class="in-box">
+            <%= f.submit "Submit" ,:class=>"btn2"%>
+          </span>
+        </div>
+  <%#end%>
+      </div>
+    </div>
+   
+  </div>
+
+  <div class="clear"></div>
+  <!--BODY END-->
+<%end%>
+
+<div class="clearfix"></div>

@@ -1,0 +1,95 @@
+<%= form_for(@user, :as => :user,  :url => users_path, :method=>:post) do |f| %>
+  <div class="form-sec">
+    <%=f.error_messages%>
+    <div class="clearfix">&nbsp;</div>
+    <h2>Edit User <%=@user.full_name%></h2>
+    <div class="form-sec-row">
+      <%= f.label :first_name,raw("First Name <span style=color:red>*</span>"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :first_name, :size => 30, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :last_name,raw("Last Name <span style=color:red>*</span>"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :last_name, :size => 30, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :email,,raw("Email <span style=color:red>*</span>") :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :email, :size => 30, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :username,raw("User Name <span style=color:red>*</span>"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :username, :size => 30, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :ic_number,raw("IC Number <span style=color:red>*</span>"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :ic_number, :size => 30, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :city, :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :city, :size => 30, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :state, :class=>"text"%>
+      <span class="in-box">
+        <%= f.select(:state,options_for_select(State.all, 'id','name' ), :prompt => "SELECT YOUR STATE")%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :zipcode, :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :zipcode, :size => 6, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= label_tag "users_agency", raw("Agency <span style=color:red>*</span>"), :class=>"text" %>
+      <span class="in-box">
+        <%= select("users","agency", options_for_select(Agency.active, 'id','name', @user.state!=nil ? @user.state : "" ), {},:prompt=>"SELECT AN AGENCY") %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= label_tag "users_department", raw("Department <span style=color:red>*</span>"), :class=>"text"%>
+      <span class="in-box">
+        <%= select("users","department", Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A DEPARTMENT") %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= label_tag "users_unit",raw("Unit"), :class=>"text"%>
+      <span class="in-box">
+        <%= select("users","unit", Unit.active.where("department_id=?", params[:department]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT AN UNIT") %>
+      </span>
+    </div>
+
+
+    <div  class="form-sec-row">
+      <%= f.label :avatar , :class=>"text"%>
+      <span class="in-box">
+  <%#= image_tag(resource.avatar.url) if resource.avatar.url.present?%>
+        <%= f.file_field :avatar%>
+        <%= f.hidden_field :avatar_cache %>
+        <br/>
+        <%= f.check_box :remove_avatar %>
+        <%= f.label :remove_avatar %>
+      </span>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :class=>"btn2", :value=>'Create'%>
+      </span>
+    </div>
+  </div>
+  <div class="clear"></div>
+<%end%>
+

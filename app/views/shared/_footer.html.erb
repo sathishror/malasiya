@@ -1,0 +1,33 @@
+<div class="clear"></div></div></div></div>
+<!--BODY END-->
+<%if controller_name.to_s == 'sessions' && action_name.to_s == 'new'  %>
+  <div class="footer-in">
+    <div class="land-footer-r">Copyright &copy; 2012 Melaka</div>
+      Designed &amp; Developed by
+      <%=link_to "Openwave Computing.","http://www.openwavecomp.com/", :title=>"Openwave Computing", :target=>"_blank"%>
+    <div class="land-footer-l">
+      <ul>
+        <%=render :partial=>"shared/cms_footer_page"%>
+      </ul>
+    </div>
+  </div>
+<%else%>
+  <div id="Footer">
+    <div class="fCity"></div>
+    <div class="footer-in">
+      <div class="land-footer-r">Copyright &copy; 2012 Melaka</div>
+      <div class="land-footer-l">
+        <ul>
+        <%=render :partial=>"shared/cms_footer_page"%>
+        </ul>
+      </div>
+      Designed &amp; Developed by
+      <%=link_to "Openwave Computing.","http://www.openwavecomp.com/", :title=>"Openwave Computing", :target=>"_blank"%>
+    </div>
+    <div class="clear"></div>
+  </div>
+<%end%>
+
+<div class="clear"></div>
+<!--BODY END-->
+</div>

@@ -1,0 +1,38 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Resource Manager</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/resource_manager/new" title="Create Resource Manager"><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Create Resource Manager</a></div>
+
+    </div>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @resources && !@resources.empty?%>
+        <%@resources.each do |resource|%>
+          <div class="manage-user box">
+            <div class="manage-user-row box">
+              <div class="mu-c1">
+              </div>
+              <div class="mu-c2">
+                <p class="head1"><%=resource.serial_no%></p>
+              </div>
+              <div class="mu-c3">
+                <%= link_to image_tag("../images/edit.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Edit", :action=>'edit', :id=>resource.id.to_i%>
+                <%if resource.is_active %>
+                  <%= link_to image_tag("../images/deactive.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Deactivate", update_status_resource_managers_path(:id=>resource.id, :status=>"Deactivate"), :confirm => 'Do you want to really deactivate this resource manager?', :method=>:post, :title=>"Deactive" %>
+                <%else%>
+                  <%= link_to  image_tag("../images/active.jpg",:width=>"14",:height=>"14",:alt=>"img") +"Activate",  update_status_resource_managers_path(:id=>resource.id,:status=>"Activate"), :confirm => 'Do you want to really Activate this resource manager?', :method=>:post, :title=>"Activate"%>
+                <%end%>
+               
+              </div>
+            </div>
+            <div class="clear"></div>
+          </div>
+        <%end%>
+    <%else%>
+      No Resource Manager Available
+    <%end%>
+<%#*<div><%= paginate @units %>
+  </div>
+</div>

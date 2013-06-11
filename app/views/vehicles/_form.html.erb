@@ -1,0 +1,41 @@
+<%= form_for(@vehicle, :as => :vehicle,  :url => vehicles_path, :method=>:post) do |f| %>
+  <div class="form-sec">
+    <%=f.error_messages%>
+    <div class="clearfix">&nbsp;</div>
+
+    <div class="form-sec-row">
+      <%= f.label :vehicle_type_id, :class=>"text"%>
+      <span class="in-box">
+        <%= f.select(:vehicle_type_id,options_from_collection_for_select(VehicleType.all, 'id','name' ), :prompt => "SELECT TYPE")%>
+      </span>
+    </div>
+
+    <div class="form-sec-row">
+      <%= f.label :driver_id, :class=>"text"%>
+      <span class="in-box">
+        <%= f.select(:driver_id,options_from_collection_for_select(Driver.all, 'id','name' ), :prompt => "SELECT DRIVER")%>
+      </span>
+    </div>
+
+    <div class="form-sec-row">
+      <%= f.label :model_name,raw("Model <span style=color:red>*</span>"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :model_name, :rows=>2, :autofocus => true%>
+      </span>
+    </div>
+
+    <div class="form-sec-row">
+      <%= f.label :registration_number,raw("Registration Number <span style=color:red>*</span>"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_field :registration_number, :rows=>2, :autofocus => true%>
+      </span>
+    </div>
+
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+<%end%>

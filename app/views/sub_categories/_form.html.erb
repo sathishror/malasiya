@@ -1,0 +1,30 @@
+<%= form_for(@sub_category) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="form-sec">
+    <div class="form-sec-row">
+      <label class="text">Select Category Name <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.select(:category_id,  Category.active.collect {|category| [category.name, category.id]},:prompt=>"SELECT A CATEGORY") %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Sub Category Name <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_field :name%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Is Active</label>
+      <span class="in-box">
+        <%= f.check_box :is_active%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :value=>'Save', :class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+<%end%>

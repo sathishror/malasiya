@@ -1,0 +1,30 @@
+a#controlbtn{
+	display:block;
+	width:20px;
+	height:20px;
+	position:absolute;
+	top:0px;
+	right:-20px;
+	text-align:left;
+	overflow:hidden;
+	text-indent:-999px;
+}
+
+a#controlbtn.open {
+	background: transparent url(../images/arrow_panel.png) no-repeat 0 0;
+}
+
+a#controlbtn.close {
+	background: transparent url(../images/arrow_panel.png) no-repeat 0 -20px;
+}
+
+
+
+div#linkblock {
+	margin-left: -180px;
+}
+
+div#maincontent {
+	position: relative;
+	margin-left: 180px;
+}

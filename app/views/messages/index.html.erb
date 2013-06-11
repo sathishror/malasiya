@@ -1,0 +1,130 @@
+<div class="CenterNav" id="message_section">
+  <div class="wallPost-con">
+    <div class="selectRole">      
+    </div>
+    <div class="clear"></div>
+    <%= form_for @message, :url => {:action=>'create'}, :html=> { :multipart=> true, :onSubmit => "return validateMessageForm(event)" } do |f| %>
+
+      <div class="wallPost">
+        <h4 class="f-left">Post a note</h4>
+        <div class="clear"></div>
+        <div class="tArea">
+          <span class="arrow"></span>
+          <p class="formRow">
+            <label for="msg" class="ui-watermark-label-pass"></label>
+            <!--<textarea name="msg" id="msg" rows="" cols=""></textarea>-->
+            <%= f.text_area :message  %>
+          </p>
+          <%= f.hidden_field :sender,:value=>current_user.id %>
+        </div>
+
+        <% if current_user && current_user.is_super_admin? %>
+
+<% sticky_msg_count = Message.where(:is_sticky_message=>true,:deleted=>false).count %>
+			<% if sticky_msg_count < 2 %>
+			<span class="in-box"> <b><%= f.check_box :is_sticky_message %></b> </span>
+			<label class="text">Check If it is a Sticky Message?<span style=color:red></span></label>
+			<%end%>
+
+          <div class="form-sec-row">
+            <span class="in-box">
+              <%= select_tag :message_user_select,"<option>Please Select</option>
+    <option>All Users</option>
+    <option>All Dept Admins</option>
+    <option>Select Agency</option>
+    <option>Select Department</option>
+    <option>Select Dept Admin</option>".html_safe %>
+            </span>
+    <%# <option>All Unit Admins</option> <option>Select Unit</option><option>Select Unit Admin</option> %>
+          </div>
+          <div id ="user_type_select_div"></div>
+
+    <%#= f.file_field :attachment %>
+
+
+        <%elsif current_user && current_user.is_department_admin? %>
+
+          <%= 'The Message will be posted to all the users in your Department' %>
+          <input type="hidden" id="message_user_select" value="Department Admin Message"/>
+
+        <%end%>
+
+        <div class="botRow box">
+          <%= f.submit "Submit",:class=>"btn2 in-btn2",:id=>"message_submit_button"  %>
+        </div>
+
+      <%end%>
+
+    </div>
+  </div>
+  <div class="postedMsg-con">
+    <% if @messages && !@messages.empty? %>
+      <% @messages.each do |message| %>
+
+        <div id="post_message_<%= message.id %>" class="postedMsg-row box">
+          <div class="postedMsg-img">
+            <a href="#" title="Social Welfare Department of Melaka"><img src="images/img_user2.jpg" alt="Image" width="60" height="60" /></a>
+          </div>
+          <div class="postedMsg-txt">
+            <p class="head1"><b>
+					<% if message.is_sticky_message?%>
+					<font color='#329C20'><%= message.message %> </font>
+					<%else%>
+					<%=message.message%>
+					<%end%>
+					</b>
+					<br /></p>
+            <div class=""></div>
+            <div id="message_field_<%= message.id %>" ></div>
+
+            <p class="PM-des">
+              by  <%= message.user.first_name %> &nbsp; - &nbsp; <%= time_ago_in_words(message.created_at) %> ago
+              <% if message.message_comments.count == 0 %>
+                &nbsp; - &nbsp;
+                <a value="<%= message.id %>" id ="message_<%= message.id %>" title="Comment" onclick= "insert_text_field(id)">Comment    </a>
+                <% if message.user.id == current_user.id %>
+                  &nbsp; - &nbsp;
+                  <%= link_to 'Delete', message_path(:id => message.id),:method=>"delete",:confirm=>"Are are sure ?" %>
+                <%end%>
+              <%end%>
+            </p>
+
+            <div id ="comments_section_message_<%= message.id %>">
+
+            </div>
+            <% if message.message_comments.count > 0 %>
+              <div class="PM-cmts box">
+                <h4>Comments</h4>
+                <% message.message_comments.each do |comment| %>
+                  <div class="clear"></div>
+                  <div class="PM-cmts-row box">
+                    <div class="PM-cmts-img">
+                      <a href="#" title="Melaka"><img src="images/img_user3.jpg" alt="Image" width="30" height="30" /></a>
+                    </div>
+                    <div class="PM-cmts-txt">
+                      <p><%= comment.comments %></p>
+                      <p class="PM-des">by <a href="#" title="Melaka "> <%= comment.user.first_name %> </a> &nbsp; - &nbsp; <%= time_ago_in_words(comment.created_at) %> ago</p>
+                    </div>
+                  </div>
+                <%end%>
+                <div class="clear"></div>
+                <div class="PM-cmts-post">
+                  <p class="formRow">
+                    <label for="cmts" class="ui-watermark-label-pass"></label>
+                    <textarea class="posting_comments_<%= message.id %>" name="cmts_area_<%= message.id %>" id="post_comment_<%= message.id %>" rows="" cols=""></textarea>
+                  </p>
+                  <input type="submit" id="post_comment" onclick='submit_post_comment(<%=message.id%>)' class="btn2 in-btn2" value="Post" title="Post" name="post" />
+                </div>
+              </div>
+            <%end%>
+          </div>
+        </div>
+      <%end%>
+    <%else%>
+      <%= "Messages Not Available" %>
+    <%end%>
+  </div>
+  <div id="old_updates" class="olderRow">
+    <a href="#" title="Old Updates">Old Updates</a>    
+  </div>
+</div>

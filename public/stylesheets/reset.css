@@ -1,0 +1,29 @@
+/* =============================================================================
+
+	RESET.CSS
+	version: 1.0
+	updated: 2009-02-02, 11:47 GMT+1
+
+============================================================================= */
+
+/* =============================================================================
+RESET
+============================================================================= */
+
+* {margin:0; padding:0;}
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {border:0; outline:0; vertical-align:baseline; background:transparent; font-family:Arial, sans-serif; color:#333; font-size:12px; line-height:17px; font-weight:normal;}
+input,select,textarea{ font-family:Arial, Helvetica, sans-serif;}
+body{ background:#fff url(../images/bg_header.jpg) repeat-x 0 0;}
+a{ font-family: Arial, sans-serif; font-size:12px; line-height:17px; color:#336699; text-decoration:none;}
+a:hover{ color:#e62c0c;}
+ul,ol{ list-style-type:none;}
+.clear{ clear:both;}
+.hidden {position:absolute; left:-1000em; top:-1000em; width:1px; height:1px; overflow:hidden;}
+.noscreen {display:none;}
+.box {min-height:1px;}
+.box:after {display:block; visibility:hidden; clear:both; line-height:0; font-size:0; content:".";}
+.f-left {float:left !important;}
+.f-right {float:right !important;}
+.nom {margin:0 !important;}
+.noPad{ padding:0 !important;}
+.nBor{ border:0 !important;}

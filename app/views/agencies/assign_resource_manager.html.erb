@@ -1,0 +1,34 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+    <h2 class="b-head">Assign Resource Manager</h2>
+    <%= form_for(@agency, :url => update_assign_resource_manager_agencies_path) do |f| %>
+      <div class="create-user">
+        <div class="form-sec-row">
+          <%= label_tag :agency_id, raw("Agency <span style=color:red>*</span>"), :class=>"text" %>
+          <span class="in-box">
+            <%= select(:transfer_from,:agency,  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag :department_id, raw("Department <span style=color:red>*</span>"), :class=>"text"%>
+          <span class="in-box">
+            <%= select(:from_department,:id, Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A DEPARTMENT") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <%= label_tag :username, raw("User <span style=color:red>*</span>"), :class=>"text"%>
+          <span class="in-box">
+            <%= select(:transfer, :username, Department.active.where("agency_id =?", params[:agency]).collect {|p| [ p.name, p.id ] },:prompt => "SELECT A USER") %>
+          </span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">&nbsp;</label>
+          <span class="in-box"><br/>
+            <%= f.submit raw('Assign Resource Manager'), :class=>"btn2"%>
+          </span>
+        </div>
+      </div>
+    <%end%>
+  </div>
+</div>

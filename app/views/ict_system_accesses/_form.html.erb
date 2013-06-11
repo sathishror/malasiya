@@ -1,0 +1,35 @@
+<%= form_for(IctSystemAccess.new, :html => { :method => :post, :multipart => true }) do |f| %>
+ <%=f.error_messages%>
+<%= hidden_field_tag :requisition_type_id, 6 %>
+      <div class="form-sec-row">
+          <label class="text">Required System<span style=color:red>*</span></label>
+          <span class="in-box">
+            <%= f.select(:system_access_id, SystemAccess.all.collect {|p| [ p.name, p.id ] },:prompt => "Select Required System", :style=> "width:132%;") %>
+          </span>
+      </div>
+          <div class="form-sec-row">
+            <label class="text">Upload File<span style=color:red>*</span></label>
+              <span class="in-box">
+                <%= f.file_field :system_access_attachment%>
+                <%= f.hidden_field :system_access_attachment_cache %>
+              </span>
+          </div>
+         
+          <div class="form-sec-row">
+            <label class="text">Remarks<span style=color:red>*</span></label>
+            <span class="in-box">
+              <%= f.text_area :remarks, :rows =>4%></span>
+            <div>
+
+            </div>
+          </div>
+          <div class="form-sec-row">
+            <div class="CenterNav">
+              <label class="text">&nbsp;</label>
+              <span class="in-box">
+                <%= f.submit :value=>'Save', :class=>"btn2"%>
+              </span>
+            </div>
+          </div>
+  <%#*</div>%>
+        <%end%>

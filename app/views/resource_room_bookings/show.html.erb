@@ -1,0 +1,179 @@
+<%= form_for(@resource_room_booking, :url=>update_room_booking_resource_room_bookings_path) do |f| %>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <% if current_user.is_department_admin? %>
+      <h2 class="b-head">Resource Room Approval Request</h2>
+    <%else%>
+      <h2 class="b-head">Resource Room Process Request</h2>
+    <%end%>
+    <%= hidden_field_tag :resource_book_id,(@resource_room_booking.id)  %>
+    <%= hidden_field_tag :resource_id,(@resource_room_booking.resource_id)  %>
+    <div class="form-sec">
+  <%# if @manager.present? %>
+      <div class="form-sec-row form-sec-row1">
+        <td><table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;">
+                <table width="750" border="2" cellspacing="3" cellpadding="3" align="center"><br/>
+                  <tr>
+                    <td><font color='#369'><b><u>User Details:-</u></b></font></td>
+                    <td></td>
+                  </tr>
+                  <% if @resource_room_booking.room_attachment.present? %>
+                    <tr>
+                      <td><b>Attachment</b></td>
+                      <% image = @resource_room_booking.room_attachment.url(:profile).split(".").last %>
+                      <% if image == "gif" || image == "jpg" || image == "jpeg" || image == "png" %>
+                        <td><%=image_tag(@resource_room_booking.room_attachment.url(:profile),:title=>@resource_room_booking.room_attachment)%></td>
+                      <%else%>
+                        <% file = (@resource_room_booking.room_attachment).url(:profile).split("/").last %>
+                        <td><b>&nbsp;<%= file %></b></td>
+                      <%end%>
+                    </tr>
+                  <%end%>
+                  <% if @agency.present? %>
+                    <tr>
+                      <td><b>Agency Name</b></td>
+                      <td><b>&nbsp;<%= @agency.name  %></b></td>
+                    </tr>
+                  <%end%>
+                  <tr>
+                    <td><b>Department Name</b></td>
+                    <td><b>&nbsp;<%= @dept.name  %></b></td>
+                  </tr>
+                  <% if @manager.present? %>
+                    <tr>
+                      <td><b>Resource Manager</b></td>
+                      <td><b>&nbsp;<%= @manager.first_name  %></b></td>
+                    </tr>
+                  <%end%>
+                  <tr>
+                    <td><b>First Name</b></td>
+                    <td><b>&nbsp;<%= @user.first_name %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Last Name</b></td>
+                    <td><b>&nbsp;<%= @user.last_name %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>IC Number</b></td>
+                    <td><b>&nbsp;<%= @user.ic_number %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Email</b></td>
+                    <td><b>&nbsp;<%= @user.email %></b></td>
+                  </tr>
+
+                  <tr>
+                  <tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+            </tr>
+
+            <tr>
+              <td><font color="#369"><b><u>Room Details:-</u></b></font></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><b>Ticket No</b></td>
+            <b><td style="color:#BB0802;">&nbsp;<%=@resource_room_booking.id%>/<%=Time.now.year%></td></b>
+            </tr>
+            <tr>
+              <td><b>Date of Application</b></td>
+              <td><b>&nbsp;<%=@resource_room_booking.created_at.localtime.strftime("%d-%m-%Y %H:%M %p")%></b></td>
+            </tr>
+            <tr>
+              <td><b>Room Name</b></td>
+              <td><b>&nbsp;<%=@resource.name%></b></td>
+            </tr>
+            <tr>
+              <td><b>From Date</b></td>
+              <td><b>&nbsp;<%=@resource_room_booking.requested_from_date.to_datetime.strftime("%d-%m-%Y %H:%M %p")%></b></td>
+            </tr>
+            <tr>
+              <td><b>To Date</b></td>
+              <td><b>&nbsp;<%=@resource_room_booking.requested_to_date.to_datetime.strftime("%d-%m-%Y %H:%M %p")%></b></td>
+            </tr>
+            <% if @resource_room_booking.status == "Returned" %>
+              <tr>
+                <td><b>Return Date</b></td>
+                <td><b>&nbsp;<%=@resource_room_booking.updated_at.localtime.strftime("%d-%m-%Y %H:%M %p")%></b></td>
+              </tr>
+            <%end%>
+            <tr>
+              <td><b>Purpose</b></td>
+              <td><b>&nbsp;<%=@resource_room_booking.purpose%></b></td>
+            </tr>
+            <tr>
+              <td><b>Remarks</b></td>
+              <td><b>&nbsp;<%=@resource_room_booking.remarks%></b></td>
+            </tr>
+              <% if @details_resource.present?%>
+                <tr>
+                  <td><font color="#369"><b><u>Resource Details:-</u></b></font></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><b> Room Ex No</b></td>
+                  <td><b>&nbsp;<%=@details_resource.resource_no%></b></td>
+                </tr>
+                <tr>
+                  <td><b> Location</b></td>
+                  <td><b>&nbsp;<%=@details_resource.location%></b></td>
+                </tr>
+                <tr>
+                  <td><b> Capacity</b></td>
+                  <td><b>&nbsp;<%=@details_resource.capacity%></b></td>
+                </tr>
+              <%end%>
+            <% if @facility.present? %>
+
+              <tr>
+              <tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+              </tr>
+
+              <tr>
+                <td><font color="#369"><b><u>Facility Details:-</u></b></font></td>
+                <td></td>
+              </tr>
+              <% @facility.each do |facility| %>
+                <tr>
+                  <td><b> Facility Name</b></td>
+                  <td><b>&nbsp;<%=facility.name%></b></td>
+                </tr>
+                <tr>
+                  <td><b> Quantity</b></td>
+                  <td><b>&nbsp;<%=facility.total_qty%></b></td>
+                </tr>
+              <%end%>
+            <%end%>
+      </div>
+
+      <tr>
+      <tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+      </tr>
+
+      <tr>
+        <td><font color="#369"><b><u>Status Details:-</u></b></font></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><label class="text"> <%= f.label :location,raw("Status"), :class=>"text"%></label></td>
+        <td><b>&nbsp;<%=@resource_room_booking.status%></b></td>
+      </tr>
+      </table>
+      </td>
+      </tr>
+      </table>
+      </td>
+    </div>
+    <div class="form-sec-row2">
+      <label class="text">&nbsp;</label>
+      <span class="in-box2">
+        <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+      </span>
+    </div>
+  <%#else%>
+  <%#= "No Resource Available" %>
+  <%#end%>
+  </div>
+  </div>
+<%end%>

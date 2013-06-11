@@ -1,0 +1,119 @@
+<div class="clearfix">&nbsp;</div>
+<div class="CenterNav">
+  <% if current_user.is_department_admin? %>
+    <h2 class="b-head">Resource ICT Approval List</h2>
+  <%else%>
+    <h2 class="b-head">Resource ICT Process List</h2>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @booking && !@booking.empty?%>
+      <%@booking.each do |resource|%>
+        <div class="manage-user box">
+          <% @name = SubCategory.find_by_id(resource.sub_category_id)%>
+          <% @user = User.find_by_id(resource.user_id) %>
+          <div class="form-sec-row">
+            <label class="text">Name</label>
+            <span class="in-box">
+              <%= @user.first_name%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Category Name</label>
+            <span class="in-box">
+              <%= @name.name%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Resource Name</label>
+            <span class="in-box">
+              <%= @name.resources.first.name%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Serial Number</label>
+            <span class="in-box">
+              <%= resource.agency_store.serial_no%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Ticket No</label>
+            <span class="in-box">
+              <b><font color="#BB0802;">&nbsp;<%=resource.id%>/<%=Time.now.year%></font></b>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Requested From Date</label>
+            <span class="in-box">
+              <%= resource.requested_from_date.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Meeting Start Time</label>
+            <span class="in-box">
+              <%= resource.meeting_start_time.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Meeting End Time</label>
+            <span class="in-box">
+              <%= resource.meeting_end_time.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Booked Date</label>
+            <span class="in-box">
+              <%=resource.created_at.strftime("%a %B %d, %Y %I:%M:%S %p")%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Status</label>
+            <span class="in-box">
+              <b><font color="#FFA500"><%= "#{resource.status}" %></font></b>
+            </span>
+          </div>
+          <div class="form-sec-row2">
+            <% if @approve.present?  && @approve.user_id == current_user.id && resource.created_at > (Time.now-24.hours) %>
+              <span class="in-box2">
+                <% if resource.status == "New" %>
+                  <%= link_to "Approve Request",approve_request_resource_ict_equipment_bookings_path(:id => resource.id), :class=>"btn2 in-btn2"%>
+                <%end%>
+              </span>
+            <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id && resource.created_at < (Time.now-48.hours)%>
+              <span class="in-box2">
+                <% if resource.status == "New" %>
+                  <%= link_to "Approve Request",approve_request_resource_ict_equipment_bookings_path(:id => resource.id), :class=>"btn2 in-btn2"%>
+                <%end%>
+              </span>
+            <%elsif current_user.is_department_admin? &&  !@approve.present? %>
+              <span class="in-box2">
+                <% if resource.status == "New" %>
+                  <%= link_to "Approve Request",approve_request_resource_ict_equipment_bookings_path(:id => resource.id), :class=>"btn2 in-btn2"%>
+                <%end%>
+              </span>
+            <%elsif current_user.is_resource_manager?%>
+              <span class="in-box2">
+                <% if resource.status == "Approved" %>
+                  <%= link_to "Process Request",approve_request_resource_ict_equipment_bookings_path(:id => resource.id), :class=>"btn2 in-btn2"%>
+                <%elsif resource.user_returned_status? && resource.status != "Returned" && resource.status != "Declined" %>
+                  <%= link_to "Acknowledge",approve_request_resource_ict_equipment_bookings_path(:id => resource.id), :class=>"btn2 in-btn2"%>
+                <%end%>
+              </span>
+            <%end%>
+          </div>
+          <div class="form-sec-row">
+            <span class="in-box">
+              <b color="#336699"><%= link_to "Show Info",resource_ict_equipment_booking_path(:id => resource.id), :method=>:get%></b>
+            </span>
+          </div>
+          <div class="mu-c3">
+            <%= hidden_field_tag(:id, resource.id) %>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    <%end%>
+  <%#= paginate @booking %>
+  <%else%>
+    No Resources Available
+  <%end%>
+</div>

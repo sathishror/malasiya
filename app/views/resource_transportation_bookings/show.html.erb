@@ -1,0 +1,149 @@
+<%#= form_tag :controller=>"resource_transportation_bookings",:action=>"change_resource_status" do %>
+<div class="clearfix">&nbsp;</div>
+<div class="CenterNav">
+  <h2 class="b-head">Resource Transport Approval</h2>
+  <%= hidden_field_tag :id,(@resource_transportation_booking.id)  %>
+  <div class="form-sec">
+    <div class="form-sec-row form-sec-row1">
+      <td><table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+          <tr>
+            <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;">
+              <table width="750" border="2" cellspacing="3" cellpadding="3" align="center"><br/>
+                <tr>
+                  <td><font color="#369"><b><u>User Details:-</u></b></font></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td><b>Agency Name</b></td>
+                  <td>&nbsp;<b><%= @requester.departments[0].agency.name.upcase if !@requester.is_super_admin? %></b></td>
+                </tr>
+                <tr>
+                  <td><b>Department Name</b></td>
+                  <td>&nbsp;<b><%= @requester.departments[0].name if !@requester.is_super_admin? %></b></td>
+                </tr>
+                <tr>
+                  <td><b>IC Number</b></td>
+                  <td>&nbsp;<b><%= @requester.ic_number %></b></td>
+                </tr>
+                <tr>
+                  <td><b>First Name</b></td>
+                  <td>&nbsp;<b><%= @requester.first_name %></b></td>
+                </tr>
+                <tr>
+                  <td><b>Last Name</b></td>
+                  <td>&nbsp;<b><%= @requester.last_name %></b></td>
+                </tr>
+                <tr>
+                  <td><b>Email</b></td>
+                  <td>&nbsp;<b><%= @requester.email %></b></td>
+                </tr>
+
+                <tr>
+                <tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+          </tr>
+
+          <tr>
+            <td><font color="#369"><b><u>Transport Details:-</u></b></font></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><b>Date of Application</b></td>
+            <td>&nbsp;<b><%=@resource_transportation_booking.created_at.localtime.strftime("%d-%m-%Y %H:%M %p")%></b></td>
+          </tr>
+          <tr>
+            <td><b>Purpose</b></td>
+            <td>&nbsp;<b><%=@resource_transportation_booking.purpose%></b></td>
+          </tr>
+          <tr>
+            <td><b>Pick up place</b></td>
+            <td>&nbsp;<b><%=@resource_transportation_booking.pick_up_place%></b></td>
+          </tr>
+          <tr>
+            <td><b>Destination Location</b></td>
+            <td>&nbsp;<b><%=@resource_transportation_booking.location%></b></td>
+          </tr>
+          <tr>
+            <td><b>Destination State</b></td>
+            <td>&nbsp;<b><%=  State.find(@resource_transportation_booking.state).name %></b></td>
+          </tr>
+          <tr>
+            <td><b>From Date</b></td>
+            <td>&nbsp;<b><%=@resource_transportation_booking.requested_from_date.strftime("%d-%m-%Y %H:%M %p") %></b></td>
+          </tr>
+          <tr>
+            <td><b>To Date</b></td>
+            <td>&nbsp;<b><%=@resource_transportation_booking.requested_to_date.strftime("%d-%m-%Y %H:%M %p") %></b></td>
+          </tr>
+
+          <% if !@resource_transportation_booking.request_returned_date.blank? %>
+            <tr>
+              <td><b>Return Date</b></td>
+              <td>&nbsp;<b><%=@resource_transportation_booking.request_returned_date.strftime("%d-%m-%Y %H:%M %p") %></b></td>
+            </tr>
+          <%end%>
+
+          <tr>
+            <td><b>Number of Passengers</b></td>
+            <td>&nbsp;<b><%=@resource_transportation_booking.number_of_passengers%></b></td>
+          </tr>
+          <tr>
+            <td><b>Attachment</b></td>
+            <td>&nbsp;<b><%= link_to 'Download File', download_attachments_resource_transportation_bookings_path(:id=>@resource_transportation_booking.id) if @resource_transportation_booking.attachment?  %></b></td>
+          </tr>
+          
+          <tr>
+            <td><b>Remarks</b></td>
+            <td>&nbsp;<b><%=  @resource_transportation_booking.remarks %></b></td>
+          </tr>
+
+          <tr>
+          <tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr>
+          </tr>
+
+          <tr>
+            <td><font color="#369"><b><u>Vehicle Details:-</u></b></font></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><b>Status</b></td>
+            <td>&nbsp;<b><%= @resource_transportation_booking.status %></b></td>
+          </tr>
+          <tr>
+            <td><b>Vehicle Type</b></td>
+            <td>&nbsp;<b><%=@resource_transportation_booking.sub_category.name %></b></td>
+          </tr>
+          <% if (@resource_transportation_booking.status == 'Approved' || @resource_transportation_booking.status == 'Processed' || @resource_transportation_booking.status == 'Returned') %>
+            <% vehicle = Resource.find(@resource_transportation_booking.agency_store.resource_id) %>
+            <tr>
+              <td><b>Vehicle Model</b></td>
+              <td>&nbsp;<b><%=vehicle.vehicle_model %></b></td>
+            </tr>
+            <tr>
+              <td><b>Vehicle Registration</b></td>
+              <td>&nbsp;<b><%=vehicle.resource_no %></b></td>
+            </tr>
+
+            <% driver = Driver.find(@resource_transportation_booking.driver_id) %>
+            <tr>
+              <td><b>Driver Name</b></td>
+              <td>&nbsp;<b><%= driver.name %></b></td>
+            </tr>
+            <tr>
+              <td><b>Driver Phone</b></td>
+              <td>&nbsp;<b><%= driver.telephone_number %></b></td>
+            </tr>
+          <%end%>
+        </table>
+      </td>
+      </tr>
+      </table>
+      </td>
+    </div>
+  </div>
+  <div class="form-sec-row2">
+    <label class="text">&nbsp;</label>
+    <span class="in-box2">
+      <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+    </span>
+  </div></div>
+<%#end%>

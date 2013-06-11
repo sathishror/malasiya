@@ -1,0 +1,39 @@
+<div id="new_selection_id_<%= params[:val]%>">
+  <div class="form-sec-row">
+    <label class="text">Software Name<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= select("name", "#{params[:val]}", FacilityIctSoftware.find(:all,:conditions=>["is_active = true"]).collect {facility_software| [facility_software.name, facility_software.id]},:prompt=>"SELECT A SOFTWARE") %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Name<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= text_field 'service', 'name', :value=>current_user.username%></span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Position<span style=color:red>*</span></label>
+    <span class="in-box">
+
+      <%= text_field 'service', 'position'%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Grade<span style=color:red>*</span></label>
+    <span class="in-box">
+
+      <%=  text_field 'service', 'grade'%></span>
+  </div>
+
+  <a onclick= 'delete_boxes(<%= params[:val]%>)' ><b>Delete</b></a>
+</div>
+
+<script type="text/javascript">
+  
+  function delete_boxes(id){  	  	
+  	$("#new_selection_id_"+id).hide();
+  	$("#new_selection_id_"+id).attr('id','first6');
+  	decre = parseInt($("#total_service_count").val());
+  	value = decre - 1;
+  	$("#total_service_count").val(value);
+  }
+</script>

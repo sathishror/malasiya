@@ -1,0 +1,124 @@
+<div class="clearfix"></div>
+<div class="CenterNav">
+  <div class="form-sec">
+   <h2>Step 3 of 5 - Head of Department Information</h2>
+      <div class="form-sec-row">
+         <%= f.label :name,raw("Head of Department Name<span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+         <%= current_user.departments.first.name%>
+        </span>
+      </div>
+    <div class="form-sec-row">
+       <%= f.label :name,raw("Head Department Position Title<span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+         <%dept_name = RoleMembership.find_by_department_id_and_role_id(current_user.departments.first.id,2)%>
+          <%position = User.find(dept_name.user_id)%>
+          <%user_service = UserService.find(dept_name.user_id) if !position%>
+          <%if user_service !=nil %>
+          <%=user_service.position%>
+          <%end%>
+        </span>
+      </div>
+      <div class="form-sec-row">
+         <%= f.label :name,raw("Head Department Email<span style=color:red>*</span>"), :class=>"text"%>
+        <span class="in-box">
+          <%=position.email%>
+        </span>
+      </div>
+      <%end%>
+ <h2>Stage 4 - Update User Profile</h2>
+<div class="form-sec-row-out">
+      <label class="text">Level of Service</label>
+      <span class="in-box">
+        <%= @service_level.stage %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Classification of Service</label>
+      <span class="in-box">
+        <%= @classification.title %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Service Standards</label>
+      <span class="in-box">
+        <%= @standard.name %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Appointment</label>
+      <span class="in-box">
+        <%= @appointment.name %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Grade </label>
+      <span class="in-box">
+        <%= @service.grade_id %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Position </label>
+      <span class="in-box">
+        <%= @service.position %></span>
+    </div>
+  <div class="form-sec-row-out">
+      <label class="text">Salary Scale</label>
+      <span class="in-box">
+        <%salary_scale =  @service.salary_scale1, @service.salary_scale2 %>
+        <%= salary_scale %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Email </label>
+      <span class="in-box">
+        <%= @service.email %></span>
+    </div>
+  <div class="form-sec-row-out">
+      <label class="text">Destination State </label>
+      <span class="in-box">
+        <%= @state.name %></span>
+    </div>
+  <div class="form-sec-row-out">
+      <label class="text">City </label>
+      <span class="in-box">
+        <%= @service.city %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Postal Code </label>
+      <span class="in-box">
+        <%= @service.postal_code %></span>
+    </div>
+  <div class="form-sec-row-out">
+      <label class="text">Office Address</label>
+      <span class="in-box">
+        <%= @service.office_address %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Office Number</label>
+      <span class="in-box">
+        <%= @service.office_number %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">Office Fax</label>
+      <span class="in-box">
+        <%= @service.office_fax %></span>
+    </div>
+  <div class="form-sec-row-out">
+      <label class="text">Date of First Appointment of Public Service </label>
+      <span class="in-box">
+        <%= @service.first_appointment_to_public_service %></span>
+    </div>
+  <div class="form-sec-row-out">
+      <label class="text"> Date of First Appointment of the Present Post </label>
+      <span class="in-box">
+        <%= @service.first_appointment_to_present_position %></span>
+    </div>
+   <div class="form-sec-row-out">
+      <label class="text">  Date of Promotion to Present Grade </label>
+      <span class="in-box">
+        <%= @service.promotion_to_present_grade %></span>
+    </div>
+ <div class="form-sec-row-out">
+      <label class="text">   Confirmation Date </label>
+      <span class="in-box">
+        <%= @service.confirmation_date %></span>
+    </div>
+
+  </div>
+  <li><a href="/users/show_stage" title="Click Next to View Other Stages">View Other Stages </a></li>
+</div>

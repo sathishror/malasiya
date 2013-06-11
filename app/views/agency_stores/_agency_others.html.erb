@@ -1,0 +1,51 @@
+<%= form_for(@store) do |f| %>
+  <div class="form-sec-row">
+    <%= label_tag :agency_id, raw("Agency <span style=color:red>*</span>"), :class=>"text" %>
+    <span class="in-box">
+      <%= select("other","agency_id",  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Select Category <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%=select("other_category","id", options_from_collection_for_select(Category.where("id != 6 and id != 7 and id !=8").active.all, 'id','name'),{:prompt=>"SELECT A CATEGORY"})%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Select Sub Category<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%=select("other_agency","sub_category_id", options_from_collection_for_select(SubCategory.active.all, 'id','name'),{:prompt=>"SELECT A SUB CATEGORY"})%>
+    </span>
+  </div>
+  <%= hidden_field_tag :resource_type, ("Others") %>
+  <div class="form-sec-row">
+    <label class="text">Resource<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= select("other_agency","resource_id", Resource.where('resource_no  is not null').active.collect {|category| [category.resource_no, category.id]},:prompt=>"SELECT A RESOURCE") %>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Quantity <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :quantity%>
+    </span>
+  </div>
+  <div class="dynamic-form">
+    <div class="form-sec-row"><a href="#" id="add">Add</a> | <a href="#" id="remove">Remove</a> | <a href="#" id="reset">Remove all Serial No</a></div>
+    <div class="inputs">
+     
+    </div>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">UOM <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :uom%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">&nbsp;</label>
+    <span class="in-box">
+      <%= f.submit :class=>"btn2", :id=>"other_store_submit", :value=>@store.new_record? ? "Create" : "Update"%>
+    </span>
+  </div>
+<%end%>

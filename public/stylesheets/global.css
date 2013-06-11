@@ -1,0 +1,83 @@
+
+#slides {
+    left: 0;
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+}
+.slides_container {
+    display: none;
+    overflow: hidden;
+    position: relative;
+    width: 390px;
+    z-index: 1001;
+}
+.slides_container div.slide {
+    display: block;
+    height: 340px;
+    width: 390px;
+}
+#slides .next, #slides .prev {
+    display: block;
+    height: 43px;
+    left: -39px;
+    position: absolute;
+    top: 107px;
+    width: 24px;
+    z-index: 101;
+}
+#slides .next {
+    left: 585px;
+}
+.pagination {
+/*    background: url("../images/bg_slide_indicator.png") no-repeat scroll 0 0 transparent;   commented for image missing warning through in console*/
+    float: right;
+    height: 7px;
+    margin: -20px 15px 0 0;
+    padding: 0;
+    position: relative;
+    z-index: 2222;
+}
+.pagination li {
+    float: left;
+    list-style: none outside none;
+    margin: 0 0 0 4px;
+    outline: medium none;
+}
+.pagination li a {
+    background-image: url("../images/bullet1.png");
+    background-position: 0 0;
+    display: block;
+    float: left;
+    height: 7px;
+    outline: medium none;
+    overflow: hidden;
+    text-indent: -999px;
+    width: 7px;
+}
+.pagination li.current a {
+    background-image: url("../images/bullet2.png");
+}
+.caption {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+    height: 110px;
+    padding: 10px 20px 0;
+    position: absolute;
+    right: 0;
+    text-shadow: none;
+    top: 45px;
+    width: 370px;
+    z-index: 5000;
+}
+.caption h1 {
+    color: #FFFFFF;
+    font-size: 20px;
+    line-height: 35px;
+    text-transform: uppercase;
+}
+.caption p {
+    color: #FFFFFF;
+    font-size: 13px;
+    padding-bottom: 10px;
+}

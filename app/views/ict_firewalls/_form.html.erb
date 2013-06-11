@@ -1,0 +1,100 @@
+<%= form_for IctFirewall.new do |f|%>
+  <%=f.error_messages%>
+  <%= hidden_field_tag :department_id, (current_department) %>
+  <%= hidden_field_tag :requisition_type_id, 2 %>
+  <%= hidden_field_tag 'total_service_count', 0 %>
+  <div class="form-sec-row">
+    <label class="text">Source Ip<span style=color:red>*</span></label>
+    <input class="source_ip" id="source1" type="text"  maxlength="3" size="3" name="s1" onkeypress="return isNumberKey(event);" onkeyup="autoTab(event, this, s2);">&nbsp;-
+    <input class="source_ip1" id="source2" type="text"  maxlength="3" size="3" name="s2" onkeypress="return isNumberKey(event);" onKeyUp="autoTab(event, this, s3);">&nbsp;-
+    <input class="source_ip2" id="source3" type="text"  maxlength="3" size="3" name="s3" onkeypress="return isNumberKey(event);" onKeyUp="autoTab(event, this, s4);">&nbsp;-
+    <input class="source_ip3" id="source4" type="text"  maxlength="3" size="3" name="s4" onkeypress="return isNumberKey(event);">
+  </div>
+
+  <div class="form-sec-row">
+    <label class="text">Destination Ip<span style=color:red>*</span></label>
+    <input class="dest_ip" id="dest1" type="text"  maxlength="3" size="3" name="d1" onkeypress="return isNumberKey(event);" onkeyup="autoTab(event, this, d2);">&nbsp;-
+    <input class="dest_ip1" id="dest2" type="text"  maxlength="3" size="3" name="d2" onkeypress="return isNumberKey(event);" onKeyUp="autoTab(event, this, d3);">&nbsp;-
+    <input class="dest_ip2" id="dest3" type="text"  maxlength="3" size="3" name="d3" onkeypress="return isNumberKey(event);" onKeyUp="autoTab(event, this, d4);">&nbsp;-
+    <input class="dest_ip3" id="dest4" type="text"  maxlength="3" size="3" name="d4" onkeypress="return isNumberKey(event);">
+  </div>
+
+  <div class="form-sec-row">
+  <%# f.fields_for :ict_firewall_services do |builder| %>
+  <%#= render "ict_firewall_services", :f => builder %>
+  <%# end %>
+  </div>
+
+  <div class="form-sec-row">
+    <label class="text">Service Name<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= select("ict_facility_service", "id", FacilityIctService.find(:all,:conditions=>["is_active = true"]).collect {|ict_facility| [ict_facility.port, ict_facility.id]},:prompt=>"SELECT A ICT SERVICE TYPE") %>
+    </span>
+  </div>
+
+  <div class="form-sec-row">
+    <label class="text">Type<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.radio_button :one_way, 'one_way', :checked=>true %> <%= f.label :one_way, "One Way" %>&nbsp;&nbsp;
+      <%= f.radio_button :one_way, 'two_way', :checked=>false %> <%= f.label :two_way, "Two Way" %>
+    </span>
+  </div>
+
+    <div class="form-sec-row" id="add_selection_box">
+        <a id="add-selection-box"><b>Add</b></a>
+  </div>
+  <div id="std"></div>
+
+  <div class="form-sec-row">
+    <label class="text">From Date<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%=f.text_field :requested_from_date ,:readonly=>true%>
+    </span>
+  </div>
+
+  <div class="form-sec-row">
+    <label class="text">To Date<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%=f.text_field :requested_to_date,:readonly=>true%>
+    </span>
+  </div>
+
+  <div class="form-sec-row">
+    <label class="text">Justification<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_area :justification, :rows=>2, :autofocus => true%>
+    </span>
+  </div>
+
+  <div class="form-sec-row">
+    <label class="text">&nbsp;</label>
+    <span class="in-box">
+      <%= f.submit "Submit", :onclick=> "return validate_ict_firewall_requests();",:class=>"btn2"%>
+    </span>
+  </div>
+<%end%>
+
+
+    
+    <script type="text/javascript">
+
+  $(document).ready(function(){    
+  	
+    $("#add-selection-box").click(function() {
+    	incre = parseInt($("#total_service_count").val());  
+    	
+    	if (incre < 3){    	
+    	incre = incre + 1;
+    	$.get("/ict_firewalls/add_select_boxes",{
+    		val : incre
+    	});    	
+    	$("#total_service_count").val(incre);
+    	}
+    	
+    	else
+    	{
+    		alert("No More Additions Permitted");
+    	}     
+    });
+  });
+</script>

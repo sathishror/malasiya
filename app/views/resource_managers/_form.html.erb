@@ -1,0 +1,44 @@
+<%= form_for(@resource) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="form-sec">
+    <div class="form-sec-row">
+    <%= label_tag :agency_id, raw("Agency <span style=color:red>*</span>"), :class=>"text" %>
+    <span class="in-box">
+      <%= f.select(:agency_id,  Agency.active.collect {|agency| [agency.name, agency.id]},:prompt=>"SELECT AN AGENCY") %>
+    </span>
+  </div>
+      <div class="form-sec-row">
+      <label class="text">Resource Sub Category <span style=color:red>*</span></label>
+      <span class="in-box">
+       <%= select("resource","resource_id",  Resource.active.collect {|category| [category.name, category.id]},:prompt=>"SELECT A RESOURCE") %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Quantity <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_field :quantity%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Serial No</label>
+      <span class="in-box">
+        <%= f.text_field :serial_no%>
+      </span>
+    </div>
+    
+    <div class="form-sec-row">
+      <label class="text">UOM</label>
+      <span class="in-box">
+        <%= f.text_field :uom%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit raw('Save'), :class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+
+<%end%>

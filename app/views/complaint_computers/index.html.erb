@@ -1,0 +1,171 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Complaint / Issue Log - Computers</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/complaint_computers/new" title="Complaint Computers"><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Complaint Computers</a></div>
+
+    </div>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @complaint_computer && !@complaint_computer.empty?%>
+      <%@complaint_computer.each do |complaint_computer|%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>User Name</b>
+            </div>
+            <div class="m-c2">
+              <%  @name = ComplaintType.find_by_id(complaint_computer.complaint_type_id)%>
+              <%  @system_access_name = SystemAccess.find_by_id(complaint_computer.system_access_id)%>
+              <%  @system_model_name = SystemModelType.find_by_id(complaint_computer.system_model_type_id)%>
+              <% @user = User.find_by_id(complaint_computer.user_id) %>
+              <%= @user.username%>
+            </div>
+            <div class="m-c3">
+              <% if complaint_computer.status == "New"%><b><font color='#FFA500'><%= "#{complaint_computer.status}" %></font></b><% elsif complaint_computer.status == "Approved" || complaint_computer.status == "Processed"  %>  <b><font color='#329C20'><%= "#{complaint_computer.status}" %> </font></b><% elsif complaint_computer.status == "Declined" || complaint_computer.status == "Returned"  %>  <b><font color='red'><%= "#{complaint_computer.status}" %> </font></b><% end %>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Type of Complaint</b>
+            </div>
+            <div class="m-c2">
+              <%= @name.name%>
+            </div>
+           
+
+            <% time = Setting.find_by_id(1) %>
+            <%if time.present?%>
+              <% temp = time.timeline.strftime("%H:%M:%S")%>
+              <%dt = DateTime.parse(temp)%>
+              <% seconds = dt.hour * 3600 + dt.min * 60 %>
+
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id && complaint_computer.created_at > (Time.now-seconds) %>
+                  <span class="in-box">
+                    <% if complaint_computer.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_complaint_computers_path(:id => complaint_computer.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id && complaint_computer.created_at > (Time.now-2*seconds)%>
+                  <span class="in-box">
+                    <% if complaint_computer.status == "New" %>
+                      <% val = (complaint_computer.created_at > (Time.now-seconds))  %>
+                      <% if !val.present? %>
+                        <b><font color="#336699"><%= link_to "Approve",approval_complaint_computers_path(:id => complaint_computer.id), :class=>"btn2 in-btn2"%></b>
+                      <%end%>
+                    <%end%>
+                  </span>
+                <% elsif complaint_computer.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve",approval_complaint_computers_path(:id => complaint_computer.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if complaint_computer.status == "Approved" && complaint_computer.forward_to == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process",approval_complaint_computers_path(:id => complaint_computer.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%else%>
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if complaint_computer.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_complaint_computers_path(:id => complaint_computer.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if complaint_computer.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_complaint_computers_path(:id => complaint_computer.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif complaint_computer.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve",approval_complaint_computers_path(:id => complaint_computer.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if complaint_computer.status == "Approved" && complaint_computer.forward_to == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process",approval_complaint_computers_path(:id => complaint_computer.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%end%>
+          </div>
+       
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Item / Type of System</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= @system_access_name.name%>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info", complaint_computer_path(:id => complaint_computer.id), :method=>:get%></font></b>
+            </div>
+          </div>
+       
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Model Item / System </b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= @system_model_name.name%>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c2">
+              <font color="red" size="3"><b>&nbsp;<%= complaint_computer.id %>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Date of Application</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= complaint_computer.created_at.strftime("%a %d %b %Y %I:%M %p")%></font>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Serial No</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= complaint_computer.serial_no%>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <h2 class="b-head"></h2>
+
+      <%end%> <div class="manage-user-rows box"><br/><br/>
+        <%= paginate @complaint_computer %></div>
+      <%else%>
+      No Complaints Available
+    <%end%>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<%if users && !users.blank?%>
+  <%users.each do |user|%>
+    <div class="manage-user-row box">
+      <div class="mu-c1">
+        <%=link_to image_tag(user.avatar_url, :width=>"60", :height=>"60"), user_path(:id=>user.id), :title=>"The Melaka  State Office of Land and Mines" if user.avatar?%>
+      </div>
+      <div class="mu-c2">
+        <p class="head1">
+          <%=link_to content_tag(:b, user.full_name), "javascript:void(0);", :title=>user.full_name ,:class=>"lnk_blue"%><br/>
+          <%=user.ic_number%><br/>
+          <%=link_to content_tag(:b, user.email), "javascript:void(0);", :title=>user.email,:class=>"lnk_blue"%>
+        </p>
+      </div>
+      <div class="mu-c3">
+        <%if user.activation_code!=nil%>
+          <%=  link_to image_tag("../images/active.jpg", :width=>"14", :height=>"14")+"Approve" , action_name.to_s=="admin_activation" ? activate_department_admin_users_path(:id=>user.id) : activate_department_user_users_path(:id=>user.id), :confirm => 'Do you want to really Approve this user?', :method=>:post, :title=>"Approve" %>
+        <%else%>
+          <%=  link_to "Approved" , "javascript:void(0);", :title=>"Approved" %>
+        <%end%>
+        <%#=  link_to image_tag("../images/edit.jpg", :width=>"14", :height=>"14")+"Edit", edit_user_path(user) , :title=>"Edit" %>
+      </div>
+    </div>
+  <%end%>
+  <div><%= paginate users %></div>
+<%else%>
+  No Users are Available!
+<%end%>

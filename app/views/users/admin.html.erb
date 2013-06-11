@@ -1,0 +1,50 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Manage Department Admin</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1">
+        <%=link_to image_tag("../images/add_user.jpg", :width=>"17", :height=>"17", :title=>"Create New User")+"Create New Admin", new_department_user_path(:admin=>"admin") %>
+      </div>
+      <%=hidden_field_tag :department_id, ""%>
+      <div class="cu-c2">Select Department:
+        <%= select(:admin_user,:department_id, Department.all_undeleted.order('name').all.collect{ |s| [truncate(s.name, :length => 50), s.id] },:selected => @department_id ,:prompt => "SELECT A DEPARTMENT") %>
+      </div>
+    </div>
+    <div class="manage-user box">
+    <%end%>
+    <div id="div_ajax">
+      <%if @users && !@users.empty?%>
+        <%@users.each do |user|%>
+          <div class="manage-user-row box">
+            <div class="mu-c1">
+              <%=link_to image_tag(user.avatar_url, :width=>"60", :height=>"60"), user_path(:id=>user.id), :title=>"The Melaka  State Office of Land and Mines" if user.avatar?%>
+            </div>
+            <div class="mu-c2">
+              <p class="head1">
+                <b><%=user.full_name%></b><br/>
+                <%=user.ic_number%><br/>
+                <b><%=user.email%></b>
+              </p>
+            </div>
+            <div class="mu-c3">
+              <%if user.status=="Active"%>
+                <%=  link_to image_tag("../images/deactive.jpg", :width=>"14", :height=>"14")+"Deactive" , update_status_users_path(:id=>user.id,:status=>"Deactivate",:department_id=>params[:department_id]), :confirm => 'Do you want to really deactivate this user?', :method=>:post, :title=>"Deactive" %>
+              <%elsif user.status=="Deactive" || user.status.nil?%>
+                <%=  link_to image_tag("../images/active.jpg", :width=>"14", :height=>"14")+"Activate" , update_status_users_path(:id=>user.id,:status=>"Activate",:department_id=>params[:department_id]), :confirm => 'Do you want to really Activate this user?', :method=>:post, :title=>"Activate" %>
+              <%end%>
+              <%#=  link_to image_tag("../images/delete.jpg", :width=>"14", :height=>"14")+"Delete", user_path(user), :confirm => 'Do you want to Proceed?', :method =>:delete , :title=>"Delete" %>
+            </div>
+          </div>
+        <%end%>
+      <div class="manage-user-rows box"><br/><br/>
+        <%= paginate @users %>
+      </div>
+      <%else%>
+        No User Data Available
+      <%end%>
+    </div>
+    <%if !request.xhr?%>
+    </div>
+  </div>
+<%end%>

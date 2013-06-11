@@ -1,0 +1,344 @@
+<script>
+  $("#driver_change_button").live("click",function(){
+    $("#normal").hide();
+    $("#changed_driver").hide();
+    $('#alternate').show();    
+  });
+
+  $("#driver_name").live("change",function(){
+    if ($("#driver_name").val() != 'SELECT A VEHICLE')
+    {
+      $('#alternate').hide();      
+      $('#changed_driver').text($("#driver_name").val()).css("font-weight", "bold");
+      $('#changed_driver').append('<input type="button" id="driver_change_button" name="Change" value="Change" />');
+      $("#changed_driver").show();
+      $("#alternate_driver").val($("#driver_name").val());
+    }
+  });
+
+  $().ready(function() {
+    $('#alternate').hide();
+    $('#changed_driver').hide();
+    $('#change_vehicle').hide();
+  });
+  
+</script>
+
+<%= form_tag :controller=>"resource_transportation_bookings",:action=>"change_resource_status" do %>
+  <div class="clearfix">&nbsp;</div>
+  <div class="CenterNav">
+    <h2 class="b-head">Resource Transport Approval</h2>
+    <%= hidden_field_tag :id,(@resource_transportation_booking.id)  %>
+    <div class="form-sec">
+      <div class="form-sec-row form-sec-row1">
+        <td><table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;">
+                <table width="750" border="2" cellspacing="3" cellpadding="3" align="center"><br/>
+                  <tr>
+                    <td><font color="#369"><b><u>User Details:-</u></b></font></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><b>Agency Name</b></td>
+                    <td>&nbsp;<b><%= @requester.departments[0].agency.name.upcase if !@requester.is_super_admin? %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Department Name</b></td>
+                    <td>&nbsp;<b><%= @requester.departments[0].name if !@requester.is_super_admin? %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>First Name</b></td>
+                    <td>&nbsp;<b><%= @requester.first_name.upcase %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Last Name</b></td>
+                    <td>&nbsp;<b><%= @requester.last_name.upcase %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>IC Number</b></td>
+                    <td>&nbsp;<b><%= @requester.ic_number %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Email</b></td>
+                    <td>&nbsp;<b><%= @requester.email %></b></td>
+                  </tr>
+
+                  <tr>
+                    <td><font color="#369"><b><u>Transport Details:-</u></b></font></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td><b>Date of Application</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.created_at.localtime.strftime("%d-%m-%Y %H:%M %p") %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Ticket Number</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.id.to_s+'/'+Time.now.year.to_s %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Purpose</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.purpose%></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Pick up place</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.pick_up_place%></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Destination Location</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.location%></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Destination State</b></td>
+                    <td>&nbsp;<b><%= State.find(@resource_transportation_booking.state).name %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>From Date</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.requested_from_date.localtime.strftime("%d-%m-%Y %H:%M %p") %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>To Date</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.requested_to_date.localtime.strftime("%d-%m-%Y %H:%M %p") %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Number of Passengers</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.number_of_passengers%></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Attachment</b></td>
+                    <td>&nbsp;<b><%= link_to 'Download File', download_attachments_resource_transportation_bookings_path(:id=>@resource_transportation_booking.id) if @resource_transportation_booking.attachment?  %></b></td>
+                  </tr>
+                  <tr>
+                    <td><b>Remarks</b></td>
+                    <td>&nbsp;<b><%=  @resource_transportation_booking.remarks %></b></td>
+                  </tr>
+
+                  <tr>
+                    <td><font color="#369"><b><u>Vehicle Details:-</u></b></font></td>
+                    <td></td>
+                  </tr>
+                  <% if (current_user.is_super_admin? || current_user.is_department_admin? ) %>
+                    <tr>
+                      <td><label class="text"> <%= label :location,raw("Status"), :class=>"text"%></label></td>
+                      <td>
+                        <%= select_tag :approve_status,"<option>Approved</option><option>Declined</option>".html_safe %>
+                      </td>
+                    </tr>
+                  <% elsif (current_user.is_department_user? && !current_user.is_resource_manager?) %>
+                    <% @approver = Approver.active.find_all_by_department_id(current_user.departments).first %>
+                    <% @approver_second = Approver.active.find_all_by_department_id(current_user.departments).last %>
+
+                    <% if (@approver.user_id.to_i == current_user.id || @approver_second.user_id.to_i == current_user.id) %>
+                      <tr>
+                        <td><label class="text"> <%= label :location,raw("Status"), :class=>"text"%></label></td>
+                        <td>
+                          <%= select_tag :approve_status,"<option>Approved</option><option>Declined</option>".html_safe %>
+                        </td>
+                      </tr>
+                    <%end%>
+
+                  <%else%>
+
+                    <tr>
+                      <td><label class="text"> <%= label :status,raw("Status"), :class=>"text"%></label></td>
+                      <td>&nbsp;<b><%= @resource_transportation_booking.status %></b></td>
+                    </tr>
+
+                    <% if @resource_transportation_booking.status == "Approved" %>
+                      <tr>
+                        <td>&nbsp;<b>Change Status</b></td>
+                        <td><%= select_tag :approve_status,"<option>Processed</option><option>Declined</option>".html_safe %></td>
+                      </tr>
+                    <%elsif @resource_transportation_booking.status == "Processed" %>
+                      <%= hidden_field_tag :approve_status,"Returned"  %>
+                    <%end%>
+
+                    <% if @resource_transportation_booking.resource_returned_from_user? %>
+                      <tr>
+                        <td><label class="text"> <%= label :location,raw("Resource Returned From User"), :class=>"text"%></label></td>
+                        <td>&nbsp;<b><%= 'Yes' %></b>
+                        </td>
+                      </tr>
+                    <%end%>
+
+                  <%end%>
+                  <tr>
+                    <td><b>Vehicle Type</b></td>
+                    <td>&nbsp;<b><%=@resource_transportation_booking.sub_category.name %></b></td>
+                  </tr>
+
+                  <% if !@resource_transportation_booking.agency_store_id.blank? %>
+                    <% if @resource_transportation_booking.status != "Processed" %>
+                      <tr>
+                        <td><b>Vehicle Model</b></td>
+                        <% vehicle = Resource.find(@resource_transportation_booking.agency_store.resource_id) %>
+                        <td>&nbsp;<b><%= vehicle.vehicle_model+' : '+vehicle.resource_no %></b></td>
+                      </tr>
+                      <tr>
+
+      <%#*<td><b>Change Vehicle</b></td>%>
+      <%# user = User.find(@resource_transportation_booking.requester_id) %>
+      <%# a = AgencyStore.find(:all,:conditions=>["sub_category_id = ? and resource_type = ? and booked = ?",@resource_transportation_booking.sub_category_id,'Transport',false]).collect(&:resource_id).join(',') %>
+      <%# if !a.blank? %>
+      <%#*<td>%>
+      <%#= hidden_field_tag :alternate_vehicle_id,'1' %>
+      <%#= select("vehicle","id", options_from_collection_for_select(Resource.find(:all,:conditions=>["id in (#{a})"]),'id',"resource_no"),{:prompt=>"SELECT A VEHICLE"})%>
+      <%#*</td>%>
+      <%#else%>
+      <%#*<td>&nbsp;<b><%= 'No Vehicles Available' %> <%#= hidden_field_tag :alternate_vehicle_id,'0' %>
+                        <!--</b></td>%>-->
+      <%#end%>
+
+      <%#*</tr>%>
+
+
+                      <tr>
+                        <td><b>Driver</b></td>
+                        <td>&nbsp;
+                          <div id="normal" >
+                            <% driver = Driver.find(@resource_transportation_booking.agency_store.driver_id) %>
+                            <b><%= driver.name %></b>
+                            <input type="button" id="driver_change_button" name="Change" value="Change" />
+                          </div>
+
+                          <div id="alternate">
+                            <%= select("driver","name", options_from_collection_for_select(Driver.find(:all,:conditions=>["already_assigned = false"]),'name',"name"),{:prompt=>"SELECT A DRIVER"})%>
+                          </div>
+
+                          <div id="changed_driver">
+                          </div>
+
+                          <%= hidden_field_tag "alternate_driver"  %>
+                        </td>
+                      </tr>
+                    <%else%>
+                      <% vehicle = Resource.find(@resource_transportation_booking.agency_store.resource_id) %>
+
+                      <tr>
+                        <td><b>Vehicle</b></td>
+                        <td>&nbsp;<b><%= vehicle.vehicle_model+' : '+vehicle.resource_no %></b></td>
+                      </tr>
+
+                      <% driver = Driver.find(@resource_transportation_booking.driver_id) %>
+                      <tr>
+                        <td><b>Driver Name</b></td>
+                        <td>&nbsp;<b><%= driver.name %></b></td>
+                      </tr>
+                      <tr>
+                        <td><b>Driver Phone</b></td>
+                        <td>&nbsp;<b><%= driver.telephone_number %></b></td>
+                      </tr>
+
+                    <%end%>
+                  <%else%>
+                    <tr>
+                      <td><b>Brand Name</b></td>                                       
+                      <!--<#% a = AgencyStore.find(:all,:conditions=>["agency_id = ? and sub_category_id = ? and resource_type = ? and booked = ?",current_user.departments[0].agency.id,@resource_transportation_booking.sub_category_id,'Transport',false]).collect(&:resource_id).join(',') %>
+                      <#% if !a.blank? %>
+                        <td>
+                          <%#= select("vehicle","id", options_from_collection_for_select(Resource.find(:all,:conditions=>["id in (#{a})"]),'id',"resource_no"),{:prompt=>"SELECT A BRAND"})%>
+                        </td>
+                      <%#end%>
+                      </div>-->
+                      <% user = User.find(@resource_transportation_booking.requester_id) %>
+                      <% a = AgencyStore.find(:all,:conditions=>["agency_id = ? and sub_category_id = ? and resource_type = ? and booked = ?",current_user.departments[0].agency.id,@resource_transportation_booking.sub_category_id,'Transport',false]).collect(&:resource_id).join(',') %>
+                      <% b = Resource.find(:all,:conditions=>["id in (#{a})"]).collect(&:vehicle_model_type_id).uniq.join(',') %>
+                      <% if !b.blank? %>
+                        <td>
+                          <%= select("vehicle","model_type_id", options_from_collection_for_select(VehicleModelType.find(:all,:conditions=>["id in (#{b})"]),'id',"name"),{:prompt=>"Select a Brand"})%>
+                        </td>
+                      <%end%>
+                      </div>
+                    </tr>
+                    
+                    <tr>
+                      <td><b>Vehicle</b></td>
+                      <% user = User.find(@resource_transportation_booking.requester_id) %>
+                      <% a = AgencyStore.find(:all,:conditions=>["agency_id = ? and sub_category_id = ? and resource_type = ? and booked = ?",current_user.departments[0].agency.id,@resource_transportation_booking.sub_category_id,'Transport',false]).collect(&:resource_id).join(',') %>
+                      <% if !a.blank? %>
+                        <td>                          
+                          <%#= select("vehicle","id", options_from_collection_for_select(Resource.find(:all,:conditions=>["id in (#{a})"]),'id',"resource_no"),{:prompt=>"Select a Vehicle"})%>
+                          <%= select("vehicle","id", options_from_collection_for_select(VehicleModelType.where("sub_category_id = ?",params[:sub_category_id]).active, 'id','name'),{:prompt=>"Select a Vehicle"})%>
+                        </td>
+                      <%end%>
+                      </div>
+                    </tr>
+                  <%end%>
+                  <tr>
+                    <td>
+                    </td>
+                    <td>
+                      <div id="driver_details">
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <div class="form-sec-row">
+          <label class="text">&nbsp;</label>
+          <span class="in-box">
+            <% if @resource_transportation_booking.status == "New" %>
+              <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+              <%= submit_tag "Submit", :class=>"btn1",:onclick=>'return validate_request_approval_form();' %>
+            <% elsif @resource_transportation_booking.status == "Approved" %>
+              <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+              <%= submit_tag "Submit", :class=>"btn1",:onclick=>'return validate_request_approval_form();' %>
+            <% elsif @resource_transportation_booking.status == "Processed" %>
+              <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+              <%= submit_tag "Acknowledge", :class=>"btn1",:onclick=>'return validate_request_approval_form();' %>
+            <%end%>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<%end%>
+
+<script>
+	
+	    /* Validating Transport Request Approval Form */
+
+function validate_request_approval_form(){	
+	alert(1);
+    if($("#approve_status").val() == "Declined"){
+        var r = confirm("You want to Decline this Request. Continue ?");
+        if (r == false)
+        {
+        	alert(3);
+            return false;
+        }
+    }
+    alert(2);
+    else if ($("#approve_status").val() == "New"){
+        var r = confirm("You didn't Approve this request. Continue ?");
+        if (r== false)
+        {
+            return false;
+        }
+    }
+    else if ($("#approve_status").val() == "Approved"){
+    	alert(1);
+    	if ($("#vehicle_model_type_id").val() == "Select a Brand"){
+            alert("Please Select the Brand");
+            return false;
+        }    	
+        alert(2);
+        else if ($("#vehicle_id").val() == "Select a Vehicle"){
+            alert("Please Select the Vehicle");
+            return false;
+        }
+    }
+    else if ($("#approve_status").val() == "Returned"){
+        var r = confirm("You want to Return this Request. Continue ?")
+        if (r == false)
+        {
+            return false;
+        }
+    }
+}
+
+</script>

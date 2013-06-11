@@ -1,0 +1,710 @@
+<div class="LCNav-con">
+  <div id="maincontent">
+    <div id="linkblock" class="leftNav">
+      <%if current_user && (current_user.sign_in_count>1 || (current_user.sign_in_count==1 && session[:password_changed]=="true"))%>
+        <% user_service = UserService.where(:user_id=>current_user.id) %>
+        <% declaration_property = DeclarationProperty.find_by_user_id(current_user.id) %>
+        <% emergency_reference = EmergencyReference.find_by_user_id(current_user.id) %>
+        <% outstation = Outstation.find_by_user_id(current_user.id) %>
+
+        <%  resource_room_new_count = generic_model_status_count(ResourceRoomBooking, "New") %>
+        <%  resource_ict_new_count = generic_model_status_count(ResourceIctEquipmentBooking, "New")%>
+        <%  resource_transport_new_count = generic_model_status_count(ResourceTransportationBooking, "New")%>
+        <%  resource_other_new_count = generic_model_status_count(ResourceBooking, "New")%>
+
+        <%  ict_network_new_count = generic_model_status_count(IctNetworkPoint,'New')%>
+
+        <div id="control">
+          <a id="controlbtn" class="open" href="javascript:void(0);" alt="Side Panel">Side Panel</a>
+        </div>
+        <div class="profInfo">
+          <div class="profInfo-img box">
+            <%= !current_user.avatar.nil? && !current_user.avatar.url(:thumb).nil? ? (image_tag current_user.avatar.url(:profile), :alt=>"Image", :width=>"120", :height=>"120") : (image_tag t('left_nav.photo'), :alt=>"Image", :width=>"120", :height=>"120")  %>
+            <p><%=  current_user.profile_status ? t('left_nav.private') : t('left_nav.public')%></p>
+          </div>
+          <ul>
+            <li><a href="javascript:void(0);" title="<%=t('left_nav.daily_updates')%>" class="selected"><%=image_tag "icn_news.png" , :width=>"16", :height=>"16", :alt=>"Daily Updates"%><%=t('left_nav.daily_updates')%></a></li>
+            <li><a href="/messages" title="<%=t('left_nav.messages')%>"><%=image_tag "icn_email.png" , :width=>"16", :height=>"16", :alt=>"Email"%><span class="notifiNo"></span><%=t('left_nav.messages')%></a></li>
+            <li>
+              <% count = User.find(:all, :conditions=>["login_status = ? and id !=?",'1', current_user.id]).count %>
+              <a href="/conversations" title="<%=t('left_nav.chat')%>"><%=image_tag "chat_icon.png" , :width=>"16", :height=>"16", :alt=>"Chat"%><span class="notifiNo"><%= count %></span><%=t('left_nav.chat')%></a>
+            </li>
+            <li><a href="javascript:void(0);" title="<%=t('left_nav.events')%>"><%=image_tag "icn_calendar.png" , :width=>"16", :height=>"16", :alt=>"Calendar"%><%=t('left_nav.events')%></a></li>
+            <li><a href="javascript:void(0);" title="<%=t('left_nav.find_user')%>"><%=image_tag "icn_user.png" , :width=>"16", :height=>"16", :alt=>"Find User"%><%=t('left_nav.find_user')%></a></li>
+            <%if session[:current_role] && session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN%>
+              <li><a href="javascript:void(0);" title="<%=t('left_nav.uploaded_files')%>"><%=image_tag "attach.png" , :width=>"16", :height=>"16", :alt=>"Upload Files"%><%=t('left_nav.uploaded_files')%></a></li>
+            <%end%>
+          </ul>
+        </div>
+        <div class="clear"></div>
+        <div class="leftNav-links box">
+          <h2><%=t('left_nav.alerts')%></h2>
+          <ul>
+  <%# if (current_user.is_datuk_suk? || current_user.is_department_admin? || current_user.is_suk_deputy? || current_user.is_human_resource_manager? || current_user.is_chief_minister?) %>
+            <li>
+              <%=link_to "Resource Booking", "javascript:void(0);" , :title=>"Resource Booking" ,:class=>"", :id=>"lnk_approve_resource_booking" ,:onclick=>"leftNavigation(this.id,'div_approve_resource_booking')"%>
+              <div id ="div_approve_resource_booking" style="display:none;">
+                <ul>
+
+                  <%if resource_room_new_count > 0 %>
+                    <li>
+                      <span class="notifiNo"><%= resource_room_new_count %></span>
+                      <%= link_to "Approve Room Request", list_resource_booking_resource_room_bookings_path %>
+                    </li>
+                  <%end%>
+                  <li><a href="javascript:void(0);" title="<%=t('left_nav.user_transfer_request')%>"><%=t('left_nav.user_transfer_request')%></a></li>
+                  <%if session[:current_role]==DISP_USER_ROLE_DEPT_ADMIN%>
+                    <li>
+                      <span class="notifiNo"><%= resource_room_new_count>0 ? resource_room_new_count : '' %></span>
+                      <%= link_to "Approve Room Request", list_resource_booking_resource_room_bookings_path %>
+                    </li>
+                  <%end%>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <%=link_to "ICT Facility", "javascript:void(0);" , :title=>"ICT Facility" ,:class=>"", :id=>"lnk_approve_ict_facility" ,:onclick=>"leftNavigation(this.id,'div_approve_ict_facility')"%>
+              <div id="div_approve_ict_facility" style="display:none;">
+                <ul>
+                  <%hardware_count = approve_hardware_request('New')%>
+                  <%if hardware_count >0 %>
+                    <li>
+                      <span class="notifiNo"><%= hardware_count %></span>
+                      <%=link_to "Approve H/W Request", requests_ict_hardware_bookings_path %>
+                    </li>
+                  <%end%>
+
+                  <%if ict_network_new_count > 0 %>
+                    <li>
+                      <span class="notifiNo"><%= ict_network_new_count %></span>
+                      <%=link_to "Approve N/W Request", list_ict_network_ict_network_points_path %>
+                    </li>
+                  <%end%>
+                  <% ict_network_user = generic_model_person_incharge(IctNetworkPoint,"person_incharge")%>
+                  <% if ict_network_user.present? %>
+                    <li>
+                      <%ict_network_count= generic_model_status_count(IctNetworkPoint,'Approved') %>
+                      <span class="notifiNo"><%=  ict_network_count > 0 ? ict_network_count : ''%> </span>
+                      <%=link_to "Process N/W Request", list_ict_network_ict_network_points_path %>
+                    </li>
+                  <%end%>
+
+                  <% firewall = generic_model_person_incharge(IctFirewall,"incharge_person")%>
+                  <% if firewall.present? %>
+                    <li>
+                      <%ict_firewall_count= generic_model_status_count(IctFirewall,'Approved') %>
+                      <span class="notifiNo"><%= ict_firewall_count > 0 ? ict_firewall_count : '' %></span>
+                      <%=link_to "Process F/W Request", ict_firewalls_path %>
+                    </li>
+                  <%end%>
+                  <% ict_user = IctHardwareBookedUser.where(:forward_to => current_user.id)%>
+                  <% if ict_user.present? %>
+                    <li>
+                      <%ict_hardware_count = approve_hardware_request('Approved') %>
+                      <span class="notifiNo"><%= ict_hardware_count>0 ? ict_hardware_count : '' %></span>
+                      <%=link_to "Process H/W Request", requests_ict_hardware_bookings_path %>
+                    </li>
+                  <%end%>
+                  <% system_user= generic_model_person_incharge(IctSystemAccess,"forward_to")%>
+                  <%if system_user.present?%>
+                    <li>
+                      <%system_count = generic_model_status_count(IctSystemAccess,'Approved')%>
+                      <span class="notifiNo"><%= system_count > 0 ? system_count : '' %></span>
+                      <%=link_to "Process S/A Request", ict_system_accesses_path %>
+                    </li>
+                  <%end%>
+                  <% vpn_user= generic_model_person_incharge(IctVpn,"forward_to")%>
+                  <%if vpn_user.present?%>
+                    <li>
+                      <%vpn_count = generic_model_status_count(IctVpn,'Approved')%>
+                      <span class="notifiNo"><%= vpn_count > 0 ? vpn_count : '' %></span>
+                      <%=link_to "Process VPN Request", ict_vpns_path %>
+                    </li>
+                  <%end%>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <%=link_to "Complaints / Issue Logs", "javascript:void(0);" , :title=>"Approve Complaint" ,:class=>"", :id=>"lnk_approve_complaint" ,:onclick=>"leftNavigation(this.id,'div_approve_complaint')"%>
+              <div id ="div_approve_complaint" style="display:none;">
+                <ul>
+                  <li>
+                    <%complaint_building_asset_count = generic_model_status_count(ComplaintBuildingAsset,'New')%>
+                    <span class="notifiNo"><%= complaint_building_asset_count > 0 ? complaint_building_asset_count : '' %></span>
+                    <%=link_to "Approve Building Asset", complaint_building_assets_path %>
+                  </li>
+                  <li>
+                    <%complaint_computer_count = generic_model_status_count(ComplaintComputer,'New')%>
+                    <span class="notifiNo"><%= complaint_computer_count > 0 ? complaint_computer_count : '' %></span>
+                    <%=link_to "Approve Computers", complaint_computers_path %>
+                  </li>
+                  <% building_user= generic_model_person_incharge(ComplaintBuildingAsset,"forward_to")%>
+                  <%if building_user.present?%>
+                    <li>
+                      <%building_count = generic_model_status_count(ComplaintBuildingAsset,'Approved')%>
+                      <span class="notifiNo"><%= building_count > 0 ? building_count : '' %></span>
+                      <%=link_to "Process Building Assets", complaint_building_assets_path %>
+                    </li>
+                  <%end%>
+                  <% computer_user = generic_model_person_incharge(ComplaintComputer,"forward_to")%>
+                  <%if computer_user.present?%>
+                    <li>
+                      <%computer_count = generic_model_status_count(ComplaintComputer,'Approved')%>
+                      <span class="notifiNo"><%= computer_count > 0 ? computer_count : '' %></span>
+                      <%=link_to "Process Computers", complaint_computers_path %>
+                    </li>
+                  <%end%>
+                </ul>
+              </div>
+            </li>
+            <%if (session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN || session[:current_role]==DISP_USER_ROLE_DEPT_ADMIN)%>
+              <li><a href="javascript:void(0);" title="<%=t('left_nav.complaints')%>"><span class="notifiNo"></span><%=t('left_nav.complaints')%></a></li>
+              <li><a href="javascript:void(0);" title="<%=t('left_nav.resource_requisition')%>"><%=t('left_nav.resource_requisition')%></a></li>
+              <li><a href="javascript:void(0);" title="<%=t('left_nav.issue_log')%>"><%=t('left_nav.issue_log')%></a></li>
+              <li><a href="javascript:void(0);" title="<%=t('left_nav.change_requests')%>"><%=t('left_nav.change_requests')%></a></li>
+              <li><a href="javascript:void(0);" title="<%=t('left_nav.canceled_requests')%>"><%=t('left_nav.canceled_requests')%></a></li>
+            <%end%>
+          </ul>
+        </div>
+        <div class="clear"></div>
+        <div class="leftNav-links box">
+          <%if (session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN || session[:current_role]==DISP_USER_ROLE_DEPT_ADMIN)%>
+            <h2>Management Tools</h2>
+            <ul>
+              <%if (session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN)%>
+                <li class="menu-item">
+                  <%=link_to t('left_nav.agency'), "javascript:void(0);" , :title=>t('left_nav.agency') ,:class=>"", :id=>"lnk_agency" ,:onclick=>"leftNavigation(this.id,'div_agency')"%>
+                  <div id ="div_agency" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_agency_path%></li>
+                      <li><%=link_to t('left_nav.list'), agencies_path%></li>
+                      <!--li><%# = link_to "Resource Manager", assign_resource_manager_agencies_path%></li-->
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to t('left_nav.agency_store'), "javascript:void(0);" , :title=>t('left_nav.agency_store') ,:class=>"", :id=>"lnk_agency_store" ,:onclick=>"leftNavigation(this.id,'div_agency_store')"%>
+                  <div id ="div_agency_store" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_agency_store_path%></li>
+                      <li><%=link_to t('left_nav.list'), agency_stores_path%></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to t('left_nav.department'), "javascript:void(0);" , :title=>t('left_nav.department') ,:class=>"", :id=>"lnk_department", :onclick=>"leftNavigation(this.id,'div_department')"%>
+                  <div id ="div_department" style="<%=controller_name.to_s=="departments" ? 'display:block' : 'display:none'%> ">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_department_path%></li>
+                      <li><%=link_to t('left_nav.list'), departments_path%></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to t('left_nav.unit'), "javascript:void(0);" , :title=>t('left_nav.unit') ,:class=>"", :id=>"lnk_unit" ,:onclick=>"leftNavigation(this.id,'div_unit')"%>
+                  <div id ="div_unit" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_unit_path%></li>
+                      <li><%=link_to t('left_nav.list'), units_path%></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to t('left_nav.admin'), "javascript:void(0);" , :title=>t('left_nav.admin') ,:class=>"", :id=>"lnk_admin" ,:onclick=>"leftNavigation(this.id,'div_admin')"%>
+                  <div id ="div_admin" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_department_user_path(:admin=>'admin')%></li>
+                      <li><%=link_to t('left_nav.list'), admin_users_path(:admin=>'admin')%></li>
+                    </ul>
+                  </div>
+                </li>
+              <%end%>
+              <%if (session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN || session[:current_role]==DISP_USER_ROLE_DEPT_ADMIN)%>
+                <li class="menu-item">
+                  <%=link_to t('left_nav.user'), "javascript:void(0);" , :title=>t('left_nav.user') ,:class=>"", :id=>"lnk_user" ,:onclick=>"leftNavigation(this.id,'div_user')"%>
+                  <div id ="div_user" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_department_user_path%></li>
+                      <li><%=link_to t('left_nav.list'), users_path %></li>
+                      <%if current_user && (session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN) %>
+                        <li><%=link_to t('left_nav.transfer_dept'), transfer_users_path , :title=>t('left_nav.transfer_dept') ,:class=>""%></li>
+                        <li><%=link_to t('left_nav.assign_dept'), assign_department_users_path , :title=>t('left_nav.assign_dept') ,:class=>""%></li>
+                        <li><%=link_to t('left_nav.transfer_unit'), transfer_unit_users_path , :title=>t('left_nav.transfer_unit') ,:class=>""%></li>
+                        <li><%=link_to t('left_nav.assign_unit'), assign_unit_users_path , :title=>t('left_nav.assign_unit') ,:class=>""%></li>
+                      <%end%>
+                    </ul>
+                  </div>
+                </li>
+                <%if current_user && (session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN)%>
+                  <li class="menu-item">
+                    <%=link_to t('left_nav.category'), "javascript:void(0);" , :title=>t('left_nav.category') ,:class=>"", :id=>"lnk_category" ,:onclick=>"leftNavigation(this.id,'div_category')"%>
+                    <div id ="div_category" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_category_path%></li>
+                        <li><%=link_to t('left_nav.list'), categories_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Resources", "javascript:void(0);" , :title=>"Resources" ,:class=>"", :id=>"lnk_resources" ,:onclick=>"leftNavigation(this.id,'div_resources')"%>
+                    <div id ="div_resources" style="display:none;">
+                      <ul>
+                        <li><%= link_to t('left_nav.create'), new_resource_path %></li>
+                        <li><%= link_to t('left_nav.list'), resources_path %></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to t('left_nav.sub_category'), "javascript:void(0);" , :title=>t('left_nav.sub_category') ,:class=>"", :id=>"lnk_sub_category" ,:onclick=>"leftNavigation(this.id,'div_sub_category')"%>
+                    <div id ="div_sub_category" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_sub_category_path%></li>
+                        <li><%=link_to t('left_nav.list'), sub_categories_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to t('left_nav.map_category'), "javascript:void(0);" , :title=>t('left_nav.map_category') ,:class=>"", :id=>"lnk_map_category" ,:onclick=>"leftNavigation(this.id,'div_map_category')"%>
+                    <div id ="div_map_category" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.map_category'), assign_category_categories_path%></li>
+                        <li><%=link_to t('left_nav.list_map_category'), list_category_mapping_categories_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <%if session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN %>
+                    <li class="menu-item">
+                      <%=link_to "Driver", "javascript:void(0);" , :title=>"Driver" ,:class=>"", :id=>"lnk_driver" ,:onclick=>"leftNavigation(this.id,'div_driver')"%>
+                      <div id ="div_driver" style="display:none;">
+                        <ul>
+                          <li><%= link_to t('left_nav.create'), new_driver_path %></li>
+                          <li><%= link_to t('left_nav.list'), drivers_path %></li>
+                        </ul>
+                      </div>
+                    </li>
+                  <%end%>
+                  <li class="menu-item">
+                    <%=link_to "Facility", "javascript:void(0);" , :title=>"Admin" ,:class=>"", :id=>"lnk_facility" ,:onclick=>"leftNavigation(this.id,'div_facility')"%>
+                    <div id ="div_facility" style="display:none;">
+                      <ul>
+                        <li>
+                          <%=link_to t('left_nav.create'), new_facility_path%>
+                        </li>
+                        <li>
+                          <%=link_to t('left_nav.list'), facilities_path%>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Facility Ict Softwares", "javascript:void(0);" , :title=>"Facility Ict Softwares" ,:class=>"", :id=>"lnk_facility_ict_softwares" ,:onclick=>"leftNavigation(this.id,'div_facility_ict_softwares')"%>
+                    <div id ="div_facility_ict_softwares" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_facility_ict_software_path%></li>
+                        <li><%=link_to t('left_nav.list'), facility_ict_softwares_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Facility Ict Servers", "javascript:void(0);" , :title=>"Facility Ict Servers" ,:class=>"", :id=>"lnk_facility_ict_servers" ,:onclick=>"leftNavigation(this.id,'div_facility_ict_servers')"%>
+                    <div id ="div_facility_ict_servers" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_facility_ict_server_path%></li>
+                        <li><%=link_to t('left_nav.list'), facility_ict_servers_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Facility Ict Services", "javascript:void(0);" , :title=>"Facility Ict Services" ,:class=>"", :id=>"lnk_facility_ict_services" ,:onclick=>"leftNavigation(this.id,'div_facility_ict_services')"%>
+                    <div id ="div_facility_ict_services" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_facility_ict_service_path%></li>
+                        <li><%=link_to t('left_nav.list'), facility_ict_services_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Facility Ict Hardwares", "javascript:void(0);" , :title=>"Facility Ict Hardwares" ,:class=>"", :id=>"lnk_facility_ict_hardwares" ,:onclick=>"leftNavigation(this.id,'div_facility_ict_hardwares')"%>
+                    <div id ="div_facility_ict_hardwares" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_facility_ict_hardware_path%></li>
+                        <li><%=link_to t('left_nav.list'), facility_ict_hardwares_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Facility Ict Wirings", "javascript:void(0);" , :title=>"Facility Ict Wirings" ,:class=>"", :id=>"lnk_facility_ict_wirings" ,:onclick=>"leftNavigation(this.id,'div_facility_ict_wirings')"%>
+                    <div id ="div_facility_ict_wirings" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_facility_ict_wiring_path%></li>
+                        <li><%=link_to t('left_nav.list'), facility_ict_wirings_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <div class="clear"></div>
+                <%end%>
+                <%if session[:current_role] == DISP_USER_ROLE_DEPT_ADMIN %>
+                  <li class="menu-item">
+                    <%=link_to "ICT Equipment Booking", "javascript:void(0);" , :title=>"ICT Equipment Booking" ,:class=>"", :id=>"lnk_resource_ict_bookings" ,:onclick=>"leftNavigation(this.id,'div_resource_ict_bookings')"%>
+                    <div id ="div_resource_ict_bookings" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_resource_ict_equipment_booking_path %></li>
+                        <li><%=link_to t('left_nav.list'), resource_ict_equipment_bookings_path %></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Resources Room Booking", "javascript:void(0);" , :title=>"Resource Room Booking" ,:class=>"", :id=>"lnk_resource_room_booking" ,:onclick=>"leftNavigation(this.id,'div_resource_room_booking')"%>
+                    <div id ="div_resource_room_booking" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_resource_room_booking_path %></li>
+                        <li><%=link_to t('left_nav.list'), resource_room_bookings_path %></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Resources Transport Booking", "javascript:void(0);" , :title=>"Resources Transport Booking" ,:class=>"", :id=>"lnk_resource_transport_booking" ,:onclick=>"leftNavigation(this.id,'div_resource_transport_booking')"%>
+                    <div id ="div_resource_transport_booking" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_resource_transportation_booking_path %></li>
+                        <li><%=link_to t('left_nav.list'), resource_transportation_bookings_path %></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Other Resource Booking", "javascript:void(0);" , :title=>"Resource Booking" ,:class=>"", :id=>"lnk_resource_bookings" ,:onclick=>"leftNavigation(this.id,'div_resource_bookings')"%>
+                    <div id ="div_resource_bookings" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_resource_booking_path%></li>
+                        <li><%=link_to t('left_nav.list'), resource_bookings_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Complaints / Issue Logs", "javascript:void(0);" , :title=>"Complaints / Issue Logs" ,:class=>"", :id=>"lnk_complaints_issue_logs" ,:onclick=>"leftNavigation(this.id,'div_complaints_issue_logs')"%>
+                    <div id ="div_complaints_issue_logs" style="display:none;">
+                      <ul>
+                        <li><%=link_to "Create Building Asset", new_complaint_building_asset_path%></li>
+                        <li><%=link_to "Create Computers", new_complaint_computer_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="menu-item">
+                    <%=link_to "Outstation Request", "javascript:void(0);" , :title=>"Outstation Request" ,:class=>"", :id=>"lnk_outstation_request" ,:onclick=>"leftNavigation(this.id,'div_outstation_request1')"%>
+                    <div id ="div_outstation_request1" style="display:none;">
+                      <ul>
+                        <li>
+                          <%=link_to "Create Request", new_outstation_path%>
+                        </li>
+                        <%if !user_service.blank? && !declaration_property.blank? && !emergency_reference.blank? && !outstation.blank? %>
+                          <li>
+                            <%=link_to "Show Request", user_path(:id=>current_user.id)%>
+                          </li>
+                        <%end%>
+                      </ul>
+                    </div>
+                  </li>
+                  <li>
+                    <%=link_to "Approve Booking Requests", "javascript:void(0);" , :title=>"Approve Booking Request" ,:class=>"", :id=>"lnk_approve_requests" ,:onclick=>"leftNavigation(this.id,'div_approve_requests')"%>
+                    <div id ="div_approve_requests" style="display:none;">
+                      <ul>
+                        <li>
+                          <span class="notifiNo"><%= resource_transport_new_count > 0 ? resource_transport_new_count : '' %></span>
+                          <%=link_to "Travel Request",approve_request_resource_transportation_bookings_path%>
+                        </li>
+                        <li>
+                          <span class="notifiNo"><%= resource_room_new_count > 0 ? resource_room_new_count : '' %></span>
+                          <%=link_to "Room Booking", list_resource_booking_resource_room_bookings_path%>
+                        </li>
+                        <li>
+                          <span class="notifiNo"><%= resource_ict_new_count > 0 ? resource_ict_new_count : '' %></span>
+                          <%=link_to "ICT Equipment Booking", requests_resource_ict_equipment_bookings_path%>
+                        </li>
+                        <li>
+                          <span class="notifiNo"><%= resource_other_new_count > 0 ? resource_other_new_count : '' %></span>
+                          <%=link_to "Others Booking", list_resource_booking_resource_bookings_path%>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li>
+                    <%=  link_to "Approve Requisition", "javascript:void(0);" , :title=>"Approve Requisition" ,:class=>"", :id=>"lnk_approve_requisition" ,:onclick=>"leftNavigation(this.id,'div_approve_requisition')"%>
+                    <div id ="div_approve_requisition" style="display:none;">
+                      <ul>
+                        <li><%=  link_to "Software Request", software_installations_path%></li>
+                        <li>
+                          <%  firewall_count = generic_model_status_count(IctFirewall,'New')%>
+                          <span class="notifiNo"><%= firewall_count > 0 ? firewall_count : '' %></span>
+                          <%=  link_to "Firewall Request", ict_firewalls_path %>
+                        </li>
+                        <li>
+                          <span class="notifiNo"><%= ict_network_new_count > 0 ? ict_network_new_count : '' %></span>
+                          <%=  link_to "Network Request", list_ict_network_ict_network_points_path %>
+                        </li>
+                        <li>
+                          <% ict_hardware_count = ict_hardware_status_count('New')%>
+                          <span class="notifiNo"> <%=  ict_hardware_count > 0 ? ict_hardware_count : ''%></span>
+                          <%=  link_to "Hardware Request", requests_ict_hardware_bookings_path%>
+                        </li>
+                        <li>
+                          <% ict_vpn_count = generic_model_status_count(IctVpn,'New') %>
+                          <span class="notifiNo"> <%=  ict_vpn_count > 0 ? ict_vpn_count : ''%></span>
+                          <%=link_to "VPN Request", ict_vpns_path %>
+                        </li>
+                        <li>
+                          <% ict_system_access_count = generic_model_status_count(IctSystemAccess,'New') %>
+                          <span class="notifiNo"> <%=  ict_system_access_count > 0 ? ict_system_access_count : ''%></span>
+                          <%=link_to "System Access Request", ict_system_accesses_path %>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li>
+                    <%=link_to "Assign Approver", "javascript:void(0);" , :title=>"Assign Approver" ,:class=>"", :id=>"lnk_assign_approver" ,:onclick=>"leftNavigation(this.id,'div_assign_approver')"%>
+                    <div id ="div_assign_approver" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), resource_approver_resources_path %></li>
+                        <li><%=link_to t('left_nav.list'), list_approver_resources_path %></li>
+                      </ul>
+                    </div>
+                  </li>
+                <%end%>
+                <li class="menu-item">
+                  <%=link_to t('left_nav.content_mng'), "javascript:void(0);" , :title=>t('left_nav.content_mng') ,:class=>"", :id=>"lnk_cms" ,:onclick=>"leftNavigation(this.id,'div_cms')"%>
+                  <div id ="div_cms" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_cms_page_path%></li>
+                      <li><%=link_to t('left_nav.list'), cms_pages_path%></li>
+                    </ul>
+                  </div>
+                </li>
+                <%if current_user && (session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN)%>
+                  <li class="menu-item"> <%=link_to t('left_nav.vendors'), "javascript:void(0);" , :title=>t('left_nav.vendors') ,:class=>"", :id=>"lnk_vendors" ,:onclick=>"leftNavigation(this.id,'div_vendors')"%>
+                    <div id ="div_vendors" style="display:none;">
+                      <ul>
+                        <li><%=link_to t('left_nav.create'), new_vendor_path%></li>
+                        <li><%=link_to t('left_nav.list'), vendors_path%></li>
+                      </ul>
+                    </div>
+                  </li>
+                <%end%>
+                <li class="menu-item">
+                  <%=link_to "Outstation Requests", "javascript:void(0);" , :title=>"OutStation Requests" ,:class=>"", :id=>"lnk_approve_requests", :onclick=>"leftNavigation(this.id,'div_outstation_request')"%>
+                  <div id ="div_outstation_request" style="display:none;">
+                    <ul>
+                      <% if  session[:current_role] == DISP_USER_ROLE_DEPT_ADMIN  %>
+                        <li>
+                          <% support_count = Outstation.where(:status=>"New").count  %>
+                          <span class="notifiNo"><%=  support_count > 0 ? support_count : ''%> </span>
+                          <%=link_to "Verify Request", approve_request_outstations_path%>
+                        </li>
+                      <%end%>
+                    </ul>
+                  </div>
+                </li>
+                <li><a href="javascript:void(0);" title="<%= t('left_nav.news_letter')%>"><%= t('left_nav.news_letter')%></a></li>
+                <li><a href="javascript:void(0);" title="<%= t('left_nav.email_temp')%>"><%= t('left_nav.email_temp')%></a></li>
+                <li><a href="javascript:void(0);" title="<%= t('left_nav.events')%>"><%= t('left_nav.events')%></a></li>
+                <li><a href="javascript:void(0);" title="<%= t('left_nav.advertisement')%>"><%= t('left_nav.advertisement')%></a></li>
+                <li><a href="javascript:void(0);" title="<%= t('left_nav.archives')%>"><%= t('left_nav.archives')%></a></li>
+                <li><a href="javascript:void(0);" title="<%= t('left_nav.site_analytics')%>"><%= t('left_nav.site_analytics')%></a></li>
+              <%end%>
+            </ul>
+          <%else%>
+            <h2>Department Info</h2>
+            <ul>
+              <%if current_user && (session[:current_role] == DISP_USER_ROLE_DEPT_ADMIN || session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN || session[:current_role]==DISP_USER_ROLE_DEPT_USER)%>
+                <li class="menu-item">
+                  <%=link_to "ICT Equipment Booking", "javascript:void(0);" , :title=>"ICT Equipment Booking" ,:class=>"", :id=>"lnk_resource_ict_bookings" ,:onclick=>"leftNavigation(this.id,'div_resource_ict_bookings')"%>
+                  <div id ="div_resource_ict_bookings" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_resource_ict_equipment_booking_path %></li>
+                      <li><%=link_to t('left_nav.list'), resource_ict_equipment_bookings_path %></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to "Room Booking", "javascript:void(0);" , :title=>"Room Booking" ,:class=>"", :id=>"lnk_resource_room_booking" ,:onclick=>"leftNavigation(this.id,'div_resource_room_booking')"%>
+                  <div id ="div_resource_room_booking" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_resource_room_booking_path %></li>
+                      <li><%=link_to t('left_nav.list'), resource_room_bookings_path %></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to "Transport Booking", "javascript:void(0);" , :title=>"Transport Booking" ,:class=>"", :id=>"lnk_resource_transport_booking" ,:onclick=>"leftNavigation(this.id,'div_resource_transport_booking')"%>
+                  <div id ="div_resource_transport_booking" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_resource_transportation_booking_path %></li>
+                      <li><%=link_to t('left_nav.list'), resource_transportation_bookings_path %></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to "Other Resource Booking", "javascript:void(0);" , :title=>"Resource Booking" ,:class=>"", :id=>"lnk_resource_bookings" ,:onclick=>"leftNavigation(this.id,'div_resource_bookings')"%>
+                  <div id ="div_resource_bookings" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), new_resource_booking_path%></li>
+                      <li><%=link_to t('left_nav.list'), resource_bookings_path%></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to "ICT Requisition", "javascript:void(0);" , :title=>"ICT Requisition" ,:class=>"", :id=>"lnk_requisition_network_point" ,:onclick=>"leftNavigation(this.id,'div_requisition_network_point')"%>
+                  <div id ="div_requisition_network_point" style="display:none;">
+                    <ul>
+                      <li><%=link_to t('left_nav.create'), list_to_select_ict_ict_network_points_path%></li>
+                      <li><%=link_to t('left_nav.list'), selected_list_ict_ict_network_points_path%></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to "Complaints / Issue Logs", "javascript:void(0);" , :title=>"Complaints for Building Asset" ,:class=>"", :id=>"lnk_complaints_building_asset" ,:onclick=>"leftNavigation(this.id,'div_complaints_building_asset')"%>
+                  <div id ="div_complaints_building_asset" style="display:none;">
+                    <ul>
+                      <li><%=link_to "Create Building Asset", new_complaint_building_asset_path%></li>
+                      <li><%=link_to "Create Computers", new_complaint_computer_path%></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to "Outstation Request", "javascript:void(0);" , :title=>"Outstation Request" ,:class=>"", :id=>"lnk_outstation_request" ,:onclick=>"leftNavigation(this.id,'div_outstation_request')"%>
+                  <div id ="div_outstation_request" style="display:none;">
+                    <ul>
+                      <li><%=link_to "Create Request", user_profile_users_path%></li>
+                      <%if !user_service.blank? && !declaration_property.blank? && !emergency_reference.blank? && !outstation.blank? %>
+                        <li><%=link_to "Show Request", user_path(:id=>current_user.id)%></li>
+                      <%end%>
+                    </ul>
+                  </div>
+                </li>
+                <%if (session[:current_role] == DISP_USER_ROLE_DEPT_USER)%>
+                  <% approver = Approver.find_by_department_id(current_user.departments)%>
+                  <% if approver.present? && approver.user_id == current_user.id %>
+                    <li>
+                      <span class="notifiNo"><%= resource_room_new_count %></span>
+                      <%= link_to "Approve Room Request", list_resource_booking_resource_room_bookings_path %>
+                    </li>
+                    <li>
+                      <span class="notifiNo"><%= resource_ict_new_count > 0 ? resource_ict_new_count : '' %></span>
+                      <%=link_to "ICT Equipment Request", requests_resource_ict_equipment_bookings_path %>
+                    </li>
+                    <li>
+                      <span class="notifiNo"><%= resource_transport_new_count > 0 ? resource_transport_new_count : '' %></span>
+                      <%=link_to "Transport List", approve_request_resource_transportation_bookings_path %>
+                    </li>
+                    <li>
+                      <span class="notifiNo"><%= resource_other_new_count > 0 ? resource_other_new_count : '' %></span>
+                      <%=link_to "Approve Others", list_resource_booking_resource_bookings_path %>
+                    </li>
+                  <%end%>
+                <%end%>
+                <% if session[:current_role] == DISP_USER_ROLE_RESOURCE_MANAGER %>
+                  <li class="menu-item">
+                    <%=link_to "Process Booking Request", "javascript:void(0);" , :title=>"Approve Booking Request" ,:class=>"", :id=>"lnk_approve_requests" ,:onclick=>"leftNavigation(this.id,'div_approve_requests')"%>
+                    <div id ="div_approve_requests" style="display:none;">
+                      <ul>
+                        <li>
+                          <span class="notifiNo">
+                            <% transport_count = generic_model_status_counts(ResourceTransportationBooking,'Approved','Declined') %>
+                            <%=  transport_count > 0 ? transport_count : ''%>
+                          </span>
+                          <%=link_to "Travel Request",approve_request_resource_transportation_bookings_path%>
+                        </li>
+                        <li>
+                          <span class="notifiNo">
+                            <% ict_resource_count = generic_model_status_counts(ResourceIctEquipmentBooking,'Approved','Declined') %>
+                            <%= ict_resource_count > 0 ? ict_resource_count : ''%>
+                          </span>
+                          <%=link_to "ICT Equipment Request", requests_resource_ict_equipment_bookings_path %>
+                        </li>
+                        <li>
+                          <% room_resource_count = generic_model_status_counts(ResourceRoomBooking,'Approved','Declined') %>
+                          <span class="notifiNo"><%=room_resource_count > 0 ? room_resource_count : ''%></span>
+                          <%=link_to "Room Request", list_resource_booking_resource_room_bookings_path %>
+                        </li>
+                        <li>
+                          <% room_resource_count = generic_model_status_counts(ResourceBooking,'Approved','Declined') %>
+                          <span class="notifiNo"><%=  room_resource_count >0 ? room_resource_count : '' %></span>
+                          <%=link_to "Other Request", list_resource_booking_resource_bookings_path %>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                <%end%>
+                <%if current_user && (session[:current_role] == DISP_USER_ROLE_DEPT_ADMIN || session[:current_role]==DISP_USER_ROLE_DEPT_USER)%>
+                  <li><a href="javascript:void(0);" title="Department details">Department details</a></li>
+                <%end%>
+                <%if current_user && (session[:current_role]==DISP_USER_ROLE_SUPER_ADMIN)%>
+                  <li><a href="javascript:void(0);" title="View Vendors">View Vendors</a></li>
+                  <li><a href="javascript:void(0);" title="Resources">Resources</a></li>
+                  <li><a href="javascript:void(0);" title="View Resources">View Resources</a></li>
+                <%end%>
+              <%end%>
+              <% if (session[:current_role]!=DISP_USER_ROLE_DEPT_USER) %>
+                <li class="menu-item">
+                  <%=link_to "Outstation: Country", "javascript:void(0);" , :title=>"OutStation Requests" ,:class=>"", :id=>"lnk_approve_requests", :onclick=>"leftNavigation(this.id,'div_outstation_request')"%>
+                  <div id ="div_outstation_request" style="display:none;">
+                    <ul>
+                      <% if (session[:current_role] == DISP_USER_ROLE_DATUK_SUK  || session[:current_role] == DISP_USER_ROLE_DEPT_ADMIN || session[:current_role] == DISP_USER_ROLE_SUK_DEPUTY) %>
+                        <li>
+                          <% support_count = Outstation.where(:status => "New").count  %>
+                          <span class="notifiNo"><%=  support_count > 0 ? support_count : ''%> </span>
+                          <%=link_to "Verify Request", approve_request_outstations_path%>
+                        </li>
+                      <%end%>
+                      <% if session[:current_role] == DISP_USER_ROLE_HUMAN_RESOURCE%>
+                        <li>
+                          <% review_count = Outstation.where(:status => "Verified").count  %>
+                          <span class="notifiNo"><%=  review_count > 0 ? review_count : ''%> </span>
+                          <%=link_to "Recommend Request", approve_request_outstations_path%>
+                        </li>
+                      <%end%>
+                      <% if (session[:current_role] == DISP_USER_ROLE_DATUK_SUK || session[:current_role] == DISP_USER_ROLE_CHIEF_MINISTER) %>
+                        <li>
+                          <% approve_count = Outstation.where(:status => "Recommended").count  %>
+                          <span class="notifiNo"><%=  approve_count > 0 ? approve_count : ''%> </span>
+                          <%=link_to "Approve Request", approve_request_outstations_path%>
+                        </li>
+                      <%end%>
+                    </ul>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <%=link_to "Outstation : State", "javascript:void(0);" , :title=>"OutStation Requests" ,:class=>"", :id=>"lnk_approve_requests_for_state", :onclick=>"leftNavigation(this.id,'div_outstation_request_for_state')"%>
+                  <div id ="div_outstation_request_for_state" style="display:none;">
+                    <ul>
+                      <% if (session[:current_role] == DISP_USER_ROLE_DATUK_SUK  || session[:current_role] == DISP_USER_ROLE_DEPT_ADMIN || session[:current_role] == DISP_USER_ROLE_SUK_DEPUTY) %>
+                        <li>
+                          <% support_count = Outstation.where("status = ? and out_of_state = ?","New",false).count  %>
+                          <span class="notifiNo"><%=  support_count>0 ? support_count : ''%> </span>
+                          <%=link_to "Verify Request", approve_request_for_state_outstations_path%>
+                        </li>
+                      <%end%>
+                      <% if session[:current_role] == DISP_USER_ROLE_HUMAN_RESOURCE%>
+                        <li>
+                          <% review_count = Outstation.where("status = ? and out_of_state = ?","Verified",false).count  %>
+                          <span class="notifiNo"><%=  review_count>0 ? review_count : ''%> </span>
+                          <%=link_to "Recommend Request", approve_request_for_state_outstations_path%>
+                        </li>
+                      <%end%>
+                      <% if (session[:current_role] == DISP_USER_ROLE_DATUK_SUK || session[:current_role] == DISP_USER_ROLE_CHIEF_MINISTER) %>
+                        <li>
+                          <% approve_count = Outstation.where("status = ? and out_of_state = ?","Reviewed",false).count  %>
+                          <span class="notifiNo"><%=  approve_count>0 ? approve_count : ''%> </span>
+                          <%=link_to "Approve Request", approve_request_for_state_outstations_path%>
+                        </li>
+                      <%end%>
+                    </ul>
+                  </div>
+                </li>
+              <%end%>
+              <li><a href="javascript:void(0);" title="My Newsletter">My Newsletter</a></li>
+              <li><a href="javascript:void(0);" title="Email Template">Email Template</a></li>
+              <li><a href="javascript:void(0);" title="View Events">View Events</a></li>
+            </ul>
+          <%end%>
+        </div>
+      <%end%>
+    </div>

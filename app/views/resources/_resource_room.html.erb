@@ -1,0 +1,51 @@
+<%= form_for(@resource) do |f| %>
+
+
+  <div class="form-sec-row">
+    <label class="text">Resource Sub Category <span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.select(:sub_category_id,  SubCategory.where("category_id = 6").active.collect {|category| [category.name, category.id]},:prompt=>"SELECT A SUB CATEGORY") %>
+    </span>
+  </div>
+
+  <%= hidden_field_tag :resource_type, ("room_booking") %>
+
+  <div class="form-sec-row">
+    <label class="text">Extension No<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :resource_no, :size => 10%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Location<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :location%>
+    </span>
+  </div>
+  <div class="form-sec-row">
+    <label class="text">Capacity<span style=color:red>*</span></label>
+    <span class="in-box">
+      <%= f.text_field :capacity%>
+    </span>
+  </div>
+  <%#*<div class="form-sec-row">%>
+    <%#*<label class="text">Is Returnable</label>%>
+    <%#*<span class="in-box">%>
+      <%#= f.check_box :is_returnable%>
+    <%#*</span>%>
+  <%#*</div>%>
+  <%#*<div class="form-sec-row">%>
+    <%#*<label class="text">Avail facility as a resource</label>%>
+    <%#*<span class="in-box">%>
+      <%#= f.check_box :is_facilty_avail%>
+    <%#*</span>%>
+  <%#*</div>%>
+
+
+  <div class="form-sec-row">
+    <label class="text">&nbsp;</label>
+    <span class="in-box">
+      <%= f.submit :class=>"btn2", :id=>"resource_room_submit", :value=>'Create'%>
+    </span>
+  </div>
+<%end%>

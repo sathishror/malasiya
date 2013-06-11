@@ -1,0 +1,172 @@
+<%if !request.xhr?%>
+  <div class="CenterNav">
+    <h2 class="b-head">Complaint / Issue Log - Building Asset</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+    <div class="create-user">
+      <div class="cu-c1"><a href="/complaint_building_assets/new" title="Complaint Building Asset"><img src="../images/add_user.jpg" width="17" height="16" alt="img" /> Complaint Building Asset</a></div>
+
+    </div>
+  <%end%>
+  <div id="div_ajax" >
+    <%if @complaint_building_asset && !@complaint_building_asset.empty?%>
+      <%@complaint_building_asset.each do |complaint_building_asset|%>
+        <div class="manage-user box">
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>User Name</b>
+            </div>
+            <div class="m-c2">
+              <% @category_name = BuildingAssetType.find_by_id(complaint_building_asset.building_asset_type_id) if complaint_building_asset.building_asset_type_id %>
+              <% @type_name = BuildingAssetType.find_by_id(complaint_building_asset.type_id)%>
+              <% @item_name = BuildingAssetType.find_by_id(complaint_building_asset.item_id)%>
+              <% @user = User.find_by_id(complaint_building_asset.user_id) %>
+              <%= @user.username%>
+            </div>
+            <div class="m-c3">
+              <% if complaint_building_asset.status == "New"%><b><font color='#FFA500'><%= "#{complaint_building_asset.status}" %></font></b><% elsif complaint_building_asset.status == "Approved" || complaint_building_asset.status == "Processed"  %>  <b><font color='#329C20'><%= "#{complaint_building_asset.status}" %> </font></b><% elsif complaint_building_asset.status == "Declined" || complaint_building_asset.status == "Returned"  %>  <b><font color='red'><%= "#{complaint_building_asset.status}" %> </font></b><% end %>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Category</b>
+            </div>
+            <div class="m-c2">
+              <%= @category_name.name if !@category_name.nil?%>
+            </div>
+          
+
+            <% time = Setting.find_by_id(1) %>
+            <%if time.present?%>
+              <% temp = time.timeline.strftime("%H:%M:%S")%>
+              <%dt = DateTime.parse(temp)%>
+              <% seconds = dt.hour * 3600 + dt.min * 60 %>
+
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id && complaint_building_asset.created_at > (Time.now-seconds) %>
+                  <span class="in-box">
+                    <% if complaint_building_asset.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_complaint_building_assets_path(:id => complaint_building_asset.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id && complaint_building_asset.created_at > (Time.now-2*seconds)%>
+                  <span class="in-box">
+                    <% if complaint_building_asset.status == "New" %>
+                      <% val = (complaint_building_asset.created_at > (Time.now-seconds))  %>
+                      <% if !val.present? %>
+                        <b><font color="#336699"><%= link_to "Approve",approval_complaint_building_assets_path(:id => complaint_building_asset.id), :class=>"btn2 in-btn2"%></b>
+                      <%end%>
+                    <%end%>
+                  </span>
+                <% elsif complaint_building_asset.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve",approval_complaint_building_assets_path(:id => complaint_building_asset.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if complaint_building_asset.status == "Approved" && complaint_building_asset.forward_to == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process",approval_complaint_building_assets_path(:id => complaint_building_asset.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%else%>
+              <div class="m-c3">
+                <% if @approve.present?  && @approve.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if complaint_building_asset.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_complaint_building_assets_path(:id => complaint_building_asset.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif @approver_second.present?  && @approver_second.user_id == current_user.id %>
+                  <span class="in-box">
+                    <% if complaint_building_asset.status == "New" %>
+                      <b><font color="#336699"><%= link_to "Approve",approval_complaint_building_assets_path(:id => complaint_building_asset.id), :class=>"btn2 in-btn2"%></b>
+                    <%end%>
+                  </span>
+                <% elsif complaint_building_asset.status == "New" && current_user.is_department_admin? &&  !@approve.present?%>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Approve",approval_complaint_building_assets_path(:id => complaint_building_asset.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+                <%if complaint_building_asset.status == "Approved" && complaint_building_asset.forward_to == current_user.id %>
+                  <span class="in-box">
+                    <b><font color="#336699"><%= link_to "Process",approval_complaint_building_assets_path(:id => complaint_building_asset.id), :method=>:get, :class=>"btn2 in-btn2"%></font></b>
+                  </span>
+                <%end%>
+              </div>
+            <%end%>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Type</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= @type_name.name%>
+            </div>
+            <div class="m-c3">
+              <b><font color="#336699"><%= link_to "Show Info", complaint_building_asset_path(:id => complaint_building_asset.id), :method=>:get%></font></b>
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Item</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= @item_name.name%>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Ticket No</b>
+            </div>
+            <div class="m-c2">
+              <font color="red" size="3"><b>&nbsp;<%= complaint_building_asset.id %>/<%=Time.now.year%></b></font>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Date of Application</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= complaint_building_asset.created_at.strftime("%a %d %b %Y %I:%M %p")%></font>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+
+          <div class="manage-user-rows box">
+            <div class="m-c1"><b>Serial No</b>
+            </div>
+            <div class="m-c2">
+              &nbsp;<%= complaint_building_asset.serial_no%>
+            </div>
+            <div class="m-c3">
+
+            </div>
+          </div>
+          <div class="clear"></div>
+        </div>
+        <h2 class="b-head"></h2>
+
+      <%end%> <div class="manage-user-rows box"><br/><br/>
+        <%= paginate @complaint_building_asset %></div>
+      <%else%>
+     No Complaints Available
+    <%end%>
+  </div>
+</div>

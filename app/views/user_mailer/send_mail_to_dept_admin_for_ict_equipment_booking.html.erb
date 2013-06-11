@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Intranet Portal Melaka State Government</title>
+  </head>
+  <% @sub_cat_type = SubCategory.find_by_id(@requisition.sub_category_id)%>
+  <%@user_name = User.find_by_id(@requisition.user_id)%>
+
+  <body style="background:#ccc; padding:0; margin:10px;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="background:#fff;">
+      <tr>
+        <td>
+          <%= image_tag("#{APP_URL}/images/nl_header.png", :height => "94",:width=>"650", :alt => "Logo", :style=>"display:block;") %>
+        </td>
+      </tr>
+      <tr>
+        <td><table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tr>
+              <td>
+                <h1 style=" font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#0e385f; margin:0; padding:10px 0 0px 0;">Hi&nbsp;&nbsp;<%=@user.username%>,</h1>
+              </td>
+            </tr>
+
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;"><%=@user_name.username%> has been requested for Room - <%=  @sub_cat_type.name %> Booking...</td>
+            </tr>
+
+            <tr>
+              <td><br/><br/></td>
+            </tr>
+            <tr>
+              <td style=" font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333; border-bottom:1px solid #CCC;border-top:1px solid #CCC; padding:10px 0;">
+                <table width="750" border="2" cellspacing="3" cellpadding="3" align="center"><h3><font color="red"><center><u>Requisition ICT - <%=  @sub_cat_type.name %> Booking Details</u></center></font></h3><br/>
+                  <tr>
+                    <td>
+                      <font color="#369"><b><u>Application Details:-</u></b></font>
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Purpose</b>
+                    </td>
+                    <td>&nbsp;<%= @requisition.purpose %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Sub Category Type</b>
+                    </td><td>&nbsp;<%= @sub_cat_type.name %></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Requested From Date</b>
+                    </td>
+                    <td>&nbsp;<%= @requisition.requested_from_date.to_datetime.strftime("%d-%m-%Y %H:%M %p")%>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Requested From Date</b>
+                    </td>
+                    <td>&nbsp;<%= @requisition.requested_to_date.to_datetime.strftime("%d-%m-%Y %H:%M %p")%>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Officer Need</b>
+                    </td>
+                    <td>&nbsp;<%= @requisition.need_officer%>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Requested From Date</b>
+                    </td>
+                    <td>&nbsp;<%= @requisition.meeting_start_time.to_datetime.strftime("%d-%m-%Y %H:%M %p")%>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Requested From Date</b>
+                    </td>
+                    <td>&nbsp;<%= @requisition.meeting_end_time.to_datetime.strftime("%d-%m-%Y %H:%M %p")%>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Notes</b>
+                    </td>
+                    <td>&nbsp;<%= @requisition.notes %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Booking Status</b></td>
+                    <td>&nbsp;<% if @requisition.status == "New"%><b><font color='#FFA500'><%= @requisition.status %></font></b><% elsif @requisition.status == "Approved" || @requisition.status == "Processed"  %>  <b><font color='#329C20'><%= @requisition.status %> </font></b><% elsif @requisition.status == "Declined" || @requisition.status == "Returned"  %>  <b><font color='red'><%= @requisition.status %> </font></b><% end %>
+                    </td>
+                  </tr>
+                  
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <%= image_tag("#{APP_URL}/images/nl_footer.png", :alt => "footer", :style=>"display:block;") %>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>

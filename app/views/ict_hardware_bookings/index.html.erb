@@ -1,0 +1,101 @@
+<div class="CenterNav">
+  <h2 class="b-head">List Facility ICT Hardware</h2>
+  <div class="manage-user box">
+    <%if !@ict_hardware_bookings.nil?%>
+      <%@ict_hardware_bookings.each do |booking|%>
+        <div class="manage-user-row box">
+          <div class="form-sec-row">
+            <label class="text">Name</label>
+            <span class="in-box">
+              <%= booking.booker.full_name%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">IC Number</label>
+            <span class="in-box">
+              <%= booking.booker.ic_number%>
+            </span>
+          </div>
+          <%department=Department.find(@current_department)  if @current_department%>
+          <%if department%>
+            <div class="form-sec-row">
+              <label class="text">Agency</label>
+              <span class="in-box">
+                <%= department.agency.name%>
+              </span>
+            </div>
+            <div class="form-sec-row">
+              <label class="text">Department</label>
+              <span class="in-box">
+                <%= department.name%>
+              </span>
+            </div>
+          <%end%>
+          <div class="form-sec-row">
+            <label class="text">Facility Type</label>
+            <span class="in-box">
+              <%= booking.facility_ict.name%>
+            </span>
+          </div>
+          <div class="form-sec-row">
+            <label class="text">Ticket No</label>
+            <span class="in-box">
+              <%=booking.id%>/<%=Time.now.year%>
+            </span>
+          </div>
+          <%booking.ict_hardware_booked_users.each do |requested_user|%>
+            <h2 class="b-head"></h2>
+            <div class="form-sec-row">
+              <label class="text">Name</label>
+              <span class="in-box">
+                <%=requested_user.user.full_name%>
+              </span>
+            </div>
+            <div class="form-sec-row">
+              <label class="text">Department</label>
+              <span class="in-box">
+                <%=requested_user.user.departments.first.name%>
+              </span>
+            </div>
+            <div class="form-sec-row">
+              <label class="text">Requested Type</label>
+              <span class="in-box">
+                <%=requested_user.is_replacement? ? "Replacement" : "New"%>
+              </span>
+            </div>
+            <div class="form-sec-row">
+              <label class="text">PC</label>
+              <span class="in-box">
+                <%=requested_user.pc ? "Yes" : "No"%>
+              </span>
+            </div>
+            <div class="form-sec-row">
+              <label class="text">Printer</label>
+              <span class="in-box">
+                <%=requested_user.printer ? "Yes" : "No"%>
+              </span>
+            </div>
+            <div class="form-sec-row">
+              <label class="text">Scanner</label>
+              <span class="in-box">
+                <%=requested_user.scanner? ? "Yes" : "No"%>
+              </span>
+            </div>
+            <div class="form-sec-row">
+              <label class="text">Status</label>
+              <span class="in-box">
+                <b style="color : <%=requested_user.status=='New' ? '#FFA500' : (requested_user.status == "Approved" || requested_user.status == "Processed" ? '#329C20' : 'red')%>"><%= requested_user.status%></b>
+              </span>
+            </div>
+          <%end%>
+        </div>
+        <div class="clear"></div>
+      <%end%>
+      <div class="manage-user-rows box"><br/><br/>
+        <%= paginate @ict_hardware_bookings %>
+      </div>
+        <%else%>
+        No Resource Found
+    <%end%>
+  </div>
+</div>

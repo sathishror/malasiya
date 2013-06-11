@@ -1,0 +1,115 @@
+<% if request.xhr? %>
+  <%#= javascript_include_tag 'application' %>
+<%end%>
+
+<div class="wallPost-con">
+  <div class="selectRole">
+    <ul class="box">
+      <li>
+        <span>Change Role: </span> <a href="#" title="Super Admin">Super Admin</a>
+      </li>
+    </ul>
+  </div>
+  <div class="clear"></div>
+  <div class="wallPost">
+    <h4 class="f-left">Post a note</h4>
+    <div class="clear"></div>
+    <div class="tArea">
+      <span class="arrow"></span>
+      <p class="formRow">
+        <label for="msg" class="ui-watermark-label-pass"></label>
+        <textarea name="msg" id="msg" rows="" cols=""></textarea>
+      </p>
+    </div>
+
+    <% if current_user && current_user.is_super_admin? %>
+      <div class="form-sec-row">
+        <span class="in-box">
+          <%= select_tag :message_user_select,"<option>Please Select</option><option>All Users</option><option>All Admins</option><option>Select Agency</option><option>Select Department</option><option>Select Dept Admin</option>".html_safe %>
+        </span>
+      </div>
+    <%elsif current_user && current_user.is_department_admin? %>
+      <%= 'The Message will be posted to all the users in this Department' %>
+    <%end%>
+
+    <div id ="user_type_select_div">
+    </div>
+    <div class="botRow box">
+      <input type="submit" id="post_message" class="btn2 in-btn2" value="Post" title="Post" name="post" />
+      <ul class="selectUserType">
+        <li class="allUser f-left">
+          <a href="#" title="All Users"><img src="images/arrow_d2.png" alt="Image" width="7" height="7" /> All Users</a>
+        </li>
+        <!--<li class="upload-file">
+          <a href="#" title="Upload Files">Upload Files</a>
+        </li>
+        <li class="url-link">
+          <a href="#" title="Link URL"> Link URL</a>
+        </li>-->
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="postedMsg-con">
+  <!--<div class="sortRow box">
+  </div>-->
+
+  <% if @messages && !@messages.empty? %>
+    <% @messages.each do |message| %>
+
+      <div id="post_message_<%= message.id %>" class="postedMsg-row box">
+        <div class="postedMsg-img">
+          <a href="#" title="Social Welfare Department of Melaka"><img src="images/img_user2.jpg" alt="Image" width="60" height="60" /></a>
+        </div>
+        <div class="postedMsg-txt">
+          <p class="head1"><a href="#" title="Social Welfare Department of Melaka"><b><%= message.message %> </b></a> <br /> </p>
+          <div class=""></div>
+          <div id="message_field_<%= message.id %>" ><%#= text_field_tag('version',:cols => 20,:onsubmit => "changeIfValid(this);")%></div>
+
+          <p class="PM-des">
+            by  <%= message.user.first_name %> &nbsp; - &nbsp; <%= time_ago_in_words(message.created_at) %> ago
+            <% if message.message_comments.count == 0 %>
+              &nbsp; - &nbsp;
+              <a value="<%= message.id %>" id ="message_<%= message.id %>" title="Comment" onclick= "insert_text_field(id)">Comment    </a>
+            <%end%>
+          </p>
+
+
+          <div id ="comments_section_message_<%= message.id %>">
+
+          </div>
+
+          <% if message.message_comments.count > 0 %>
+            <div class="PM-cmts box">
+
+              <h4>Comments</h4>
+              <% message.message_comments.each do |comment| %>
+                <div class="clear"></div>
+                <div class="PM-cmts-row box">
+                  <div class="PM-cmts-img">
+                    <a href="#" title="Melaka"><img src="images/img_user3.jpg" alt="Image" width="30" height="30" /></a>
+                  </div>
+                  <div class="PM-cmts-txt">
+                    <p><%= comment.comments %></p>
+                    <p class="PM-des">by <a href="#" title="Melaka "> <%= comment.user.first_name %> </a> &nbsp; - &nbsp; <%= time_ago_in_words(comment.created_at) %> ago</p>
+                  </div>
+                </div>
+              <%end%>
+              <div class="clear"></div>
+              <div class="PM-cmts-post">
+                <p class="formRow">
+                  <label for="cmts" class="ui-watermark-label-pass"></label>
+                  <textarea name="cmts" id="post_comment_<%= message.id %>" rows="" cols=""></textarea>
+                </p>
+                <input type="submit" id="post_comment" onclick='submit_post_comment(<%=message.id%>)' class="btn2 in-btn2" value="Post" title="Post" name="post" />
+              </div>
+            </div>
+          <%end%>
+        </div>
+      </div>
+    <%end%>
+  <%end%>
+
+
+</div>
+<div class="olderRow"><a href="#" title="Old Updates">Old Updates</a></div>

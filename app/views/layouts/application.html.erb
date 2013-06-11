@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Intranet Portal Melaka State Government</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico"/>
+<%#= javascript_include_tag :defaults %>
+    <%= stylesheet_link_tag 'style' %>
+    <%= stylesheet_link_tag 'reset' %>
+    <!--[if IE 7]><%= stylesheet_link_tag 'ie7' %><![endif]-->
+     <!--[if IE 8]><%= stylesheet_link_tag 'ie8' %><![endif]-->
+    <!--BANNER SLIDESHOW-->
+    <%= stylesheet_link_tag 'global' %>
+    <%= javascript_include_tag 'jquery.min' %>
+    <%if controller_name.to_s!="sessions"%>
+      <%= javascript_include_tag 'jquery_ui.js'%>
+      <%= stylesheet_link_tag 'jquery-ui' %>
+      <%#= javascript_include_tag 'tabber.js'%>
+      <%#= stylesheet_link_tag 'tab.css' %>
+    <!-- Tab -->
+
+    <%end%>
+    <%= javascript_include_tag 'rails' %>
+    <%= javascript_include_tag 'slides.min.jquery' %>
+    <%= javascript_include_tag 'slide' %>
+    <%= javascript_include_tag 'prayTimes' %>
+<%#*<script type="text/javascript" src="jquery-1.3.2.min.js"></script>%>
+    <%if controller_name.to_s=="resource_bookings" || controller_name.to_s=="resource_transportation_bookings" ||  controller_name.to_s=="ict_vpns" || controller_name.to_s=="resource_requisitions"  || controller_name.to_s=="resource_room_bookings" || controller_name.to_s=="resource_ict_equipment_bookings" || controller_name.to_s=="ict_network_points" || controller_name.to_s=="ict_firewalls" || controller_name.to_s == "user_services" || controller_name.to_s=="users" || controller_name.to_s=="complaint_building_assets" || controller_name.to_s=="complaint_computers"%>
+      <%= javascript_include_tag 'time_tracker_add_on' %>
+  <%#= javascript_include_tag 'jquery-ui-sliderAccess'%>
+  <%#= javascript_include_tag 'jquery.ui.datepicker' %>
+  <%#= stylesheet_link_tag 'jquery.ui.datepicker' %>
+      <%= stylesheet_link_tag 'datetime_picker' %>
+      <script type="text/javascript">
+        $().ready(function(){
+          $("#ict_vpn_to_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'hh:mm:ss'
+          });
+          $("#ict_vpn_from_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'hh:mm:ss'
+          });
+
+          $("#resource_requisition_vpn_to_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'hh:mm:ss'
+          });
+          $("#resource_requisition_vpn_from_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'hh:mm:ss'
+          });
+          $("#resource_booking_requested_to_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $("#resource_booking_requested_from_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $("#resource_transportation_booking_requested_to_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $("#resource_transportation_booking_requested_from_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $("#resource_ict_equipment_booking_requested_from_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $('#resource_ict_equipment_booking_requested_to_date').datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $("#resource_ict_equipment_booking_meeting_start_time").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $('#resource_ict_equipment_booking_meeting_end_time').datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $('#resource_room_booking_requested_to_date').datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $('#resource_room_booking_requested_from_date').datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $('#ict_firewall_requested_from_date').datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $('#ict_firewall_requested_to_date').datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+          $('#user_date_of_birth').datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'HH:mm:ss'
+          });
+         $("#complaint_building_asset_given_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'hh:mm:ss'
+          });
+
+          $("#complaint_building_asset_receipt_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'hh:mm:ss'
+          });
+
+
+          $("#complaint_computer_given_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'hh:mm:ss'
+          });
+
+          $("#complaint_computer_receipt_date").datetimepicker({
+            controlType: 'select',
+            dateFormat: "D MM d, yy",
+            timeFormat: 'hh:mm:ss'
+          });
+        });
+      </script>
+    <%end%>
+
+
+    <%if controller_name.to_s=="user_services" || controller_name.to_s == "outstations" %>
+      <%= javascript_include_tag 'jquery.ui.datepicker' %>
+      <%= stylesheet_link_tag 'jquery.ui.datepicker' %>
+      <script type="text/javascript">
+        $().ready(function(){
+          $("#user_service_first_appointment_to_public_service").datepicker();
+          $("#user_service_first_appointment_to_present_position").datepicker();
+          $("#user_service_promotion_to_present_grade").datepicker();
+          $("#user_service_confirmation_date").datepicker();
+          $("#outstation_from_date").datepicker();
+          $("#outstation_to_date").datepicker();
+        });
+      </script>
+    <%end%>
+
+
+    <!--WATERMARK--> <%= init_tinymce_hammer_if_required %>
+    <%= javascript_include_tag 'ui.core' %>
+    <%= javascript_include_tag 'ui.watermark' %>
+    <!--HEADER DROPDOWN-->
+    <%= javascript_include_tag 'jquery.dropdownPlain' %>
+    <%= stylesheet_link_tag 'style_dropdown' ,:media=>"screen, projection" %>
+    <%= javascript_include_tag 'application' %>
+    <!--Messages--> <%= javascript_include_tag 'message' %>
+    <%if controller_name.to_s != 'sessions'  %>
+      <!--SIDE PANEL-->
+      <%= stylesheet_link_tag 'side_panel'%>
+      <%= javascript_include_tag 'easing' %>
+      <script type="text/javascript">
+        $().ready(function(){
+          $("a#controlbtn").click(function(e) {
+            e.preventDefault();
+            var slidepx=$("div#linkblock").width() + 0;
+            if ( !$("div#maincontent").is(':animated') ) {
+              if (parseInt($("div#maincontent").css('marginLeft'), 10) < slidepx) {
+                $(this).removeClass('close').html('Side Panel');
+                $('.pageContainer').removeClass('bg2');
+                $('.leftNav').removeClass('toIE7');
+                margin = "+=" + slidepx;
+              } else {
+                $(this).addClass('close').html('Side Panel');
+                margin = "-=" + slidepx;
+                $('.pageContainer').addClass('bg2');
+                $('.leftNav').addClass('toIE7');
+              }
+              $("div#maincontent").animate({
+                marginLeft: margin
+              }, {
+                duration: 'slow',
+                easing: 'easeOutQuint'
+              });
+            }
+          });
+        });
+      </script>
+    <%end%>
+    <%= csrf_meta_tag %>
+  </head>
+  <body>
+    <!--BODY START-->
+    <%=render :partial=>'shared/header'%>
+    <%if  current_user && !current_user.blank? %>
+      <%=render :partial=>'shared/right_navigation'%>
+      <%=render :partial=>'shared/left_navigation'%>
+      <%if flash[:alert]%>
+        <div class="error"><%= flash[:alert]%></div>
+      <%end%>
+      <% if notice %>
+        <div class="success"><%= flash[:notice] %></div>
+      <%end%>
+
+    <%end%>
+    <%= yield %>
+    <%=render :partial=>'shared/footer'%>
+  </body>
+</html>

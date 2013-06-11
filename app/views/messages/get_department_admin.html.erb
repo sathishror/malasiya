@@ -1,0 +1,16 @@
+<div class="form-sec-row">
+  <span class="in-box">
+    <%= select(:std,:agency, Agency.where(:deleted => false).collect {|p| [ p.name, p.id ] },:selected=>@agency.id,:prompt => "SELECT A AGENCY") %>
+  </span>
+</div>
+<div class="form-sec-row">
+  <span class="in-box">
+    <%= select(:std,:departments, Department.active.where(:agency_id => "#{@agency.id}").collect {|p| [ p.name, p.id ] },:selected=>@dept.id,:prompt => "SELECT A DEPARTMENT") %>
+  </span>
+</div>
+<% if @dept_admin && !@dept_admin.blank? %>
+  <%= @dept_admin.full_name %>
+<%else%>
+  <%= "Department Admin is not available" %>
+  <%= hidden_field_tag :dept_admin_not_available,'1' %>
+<%end%>

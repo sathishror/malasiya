@@ -1,0 +1,26 @@
+<%= form_for(@category) do |f| %>
+  <%=f.error_messages%>
+  <div class="clearfix">&nbsp;</div>
+  <div class="form-sec">
+    <%= hidden_field_tag  :created_by, (current_user.id)%>
+    <div class="form-sec-row">
+      <label class="text">Category Name <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_field :name%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Is Active</label>
+      <span class="in-box">
+        <%= f.check_box :is_active%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :value=>@category.new_record? ? "Create" : "Update",:class=>"btn2"%>
+      </span>
+    </div>
+  </div>
+
+<%end%>

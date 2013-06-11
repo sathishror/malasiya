@@ -1,0 +1,100 @@
+<%= form_for(@resource_ict_equipment_booking) do |f| %>
+  <div class="form-sec">
+    <%=f.error_messages%>
+    <div class="clearfix">&nbsp;</div>
+    <div class="form-sec-row">
+      <label class="text">Agency<span style=color:red></span></label>
+      <span class="in-box">
+        <b><%= current_user.departments.first.agency.name.upcase %></b>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Department<span style=color:red></span></label>
+      <span class="in-box">
+        <b><%= current_user.departments.first.name %></b>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Sub Category <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.select(:sub_category_id,  SubCategory.where(:category_id => @category).active.collect {|category| [category.name, category.id]},:prompt=>"SELECT A SUB CATEGORY") %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text" id="lb_resource">Resource <span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.select(:resource_id,  options_from_collection_for_select(Resource.where(:category_id => @category), 'id','name',@resource ),{:prompt=>"SELECT A RESOURCE",:onchange=>"alert('testq')"}) %>
+        <%#=link_to "search in other agency",search_other_resource_resource_ict_equipment_bookings_path%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Serial No<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.select(:agency_store_id, options_from_collection_for_select(AgencyStore.all, 'id','serial_no' ),:prompt=>"SELECT A EQUIPMENT CATEGORY TYPE") %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Purpose<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_field :purpose, :value=>@resource_ict_equipment_booking.purpose,:rows=>2, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Location<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%= f.text_area :location,:value=>@resource_ict_equipment_booking.location, :rows=>4, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Request From Date<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%=f.text_field :requested_from_date, :value=>@resource_ict_equipment_booking.requested_from_date!=nil ? @resource_ict_equipment_booking.requested_from_date.strftime("%a %B %d, %Y %I:%M:%S ") : nil, :readonly=>true %>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Request To Date<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%=f.text_field :requested_to_date, :value=>@resource_ict_equipment_booking.requested_to_date!=nil ? @resource_ict_equipment_booking.requested_to_date.strftime("%a %B %d, %Y %I:%M:%S ") : nil, :readonly=>true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Need Officer<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%if @resource_ict_equipment_booking.need_officer %>
+          Yes <%= f.radio_button :need_officer,1,:checked=>true %>
+          No <%= f.radio_button :need_officer,0 %>
+        <%else%>
+          Yes <%= f.radio_button :need_officer,1%>
+          No <%= f.radio_button :need_officer,0,:checked=>true  %>
+        <%end%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Meeting From Date<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%=f.text_field :meeting_start_time, :value=>@resource_ict_equipment_booking.meeting_start_time!=nil ? @resource_ict_equipment_booking.meeting_start_time.strftime("%a %B %d, %Y %I:%M:%S ") : nil, :readonly=>true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">Meeting To Date<span style=color:red>*</span></label>
+      <span class="in-box">
+        <%=f.text_field :meeting_end_time, :value=>@resource_ict_equipment_booking.meeting_end_time!=nil ? @resource_ict_equipment_booking.meeting_end_time.strftime("%a %B %d, %Y %I:%M:%S ") : nil, :readonly=>true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <%= f.label :notes,raw("Notes"), :class=>"text"%>
+      <span class="in-box">
+        <%= f.text_area :notes,:value=>@resource_ict_equipment_booking.notes, :rows=>2, :autofocus => true%>
+      </span>
+    </div>
+    <div class="form-sec-row">
+      <label class="text">&nbsp;</label>
+      <span class="in-box">
+        <%= f.submit :class=>"btn2", :value=>@resource_ict_equipment_booking.new_record? ? "Create" : "Update"%>
+      </span>
+    </div>
+  </div>
+  <div class="clear"></div>
+<%end%>
+
+

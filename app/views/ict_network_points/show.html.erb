@@ -1,0 +1,182 @@
+<%= form_for(@ict_network, :url=>update_approval_network_point_ict_network_points_path) do |f| %>
+  <%= f. error_messages%>
+  <div class="clearfix"></div>
+  <div class="CenterNav">
+    <div class="form-sec">
+      <h2 class="b-head">Approval for Network Point</h2>
+      <div class="form-sec">
+
+        <%= hidden_field_tag :id, (@ict_network.id) %>
+        <font color="#369" size="3"><br/><b><u>User Details :-</u><br/><br/></b></font>
+        <% @dept = IctNetworkPoint.find_by_department_id(@ict_network.department_id) %>
+        <% @dept_name = Department.find(@dept.department_id)%>
+        <% @agency = Agency.find(@dept_name.agency_id) %>
+        <% @user = IctNetworkPoint.find_by_user_id(@ict_network.user_id) %>
+        <% @user_name = User.find(@user.user_id) %>
+
+        <div class="form-sec-row">
+          <label class="text">Agency Name</label>
+          <span class="in-box"><%= @agency.name  %></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Department Name</label>
+          <span class="in-box">
+            <%= @dept_name.name  %></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">First Name</label>
+          <span class="in-box">
+            <%= @user_name.first_name %></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Last Name</label>
+          <span class="in-box"><%= @user_name.last_name %></span>
+        </div>
+        <div class="form-sec-row">
+          <label class="text">Contact Mobile</label>
+          <span class="in-box"><%= @user_name.contact_mobile  %></span>
+        </div>
+
+        <div class="form-sec-row">
+          <label class="text">IC Number</label>
+          <span class="in-box">
+            <%= @user_name.ic_number %></span>
+        </div>
+
+        <div class="form-sec-row">
+          <label class="text">E - Mail</label>
+          <span class="in-box">
+            <%= @user_name.email %></span>
+        </div>
+
+        <h2 class="b-head"></h2>
+        <div class="form-sec-row">
+          <label class="text">Ticket No</label>
+          <span class="in-box"><font color="red"><b>&nbsp;<%= @ict_network.id %>/<%=Time.now.year%></span>
+                </div>
+
+                <div class="form-sec-row">
+                  <label class="text">Date of Application</label>
+                  <span class="in-box"><%= @ict_network.created_at.strftime("%a %d %b %Y %I:%M %p")%></span>
+                </div>
+                </div>
+
+                <h2 class="b-head"></h2>
+
+                <div class="form-sec-row">
+                  <label class="text">Type of Facility</label>
+                  <span class="in-box">
+                    <%= @type_name.name %>
+                  </span>
+                </div>
+
+                <div class="form-sec-row">
+                  <% if @ict_network.ict_network_attachment.present? %>
+                    <label class="text">Attachment</label>
+                    <% image = @ict_network.ict_network_attachment.url(:profile).split(".").last %>
+                    <% if image == "gif" || image == "jpg" || image == "jpeg" || image == "png" %>
+                      <span class="in-box">
+                        <%=image_tag(@ict_network.ict_network_attachment.url(:profile),:title=>@ict_network.ict_network_attachment)%>
+                      <%else%>
+                        <% file = (@ict_network.ict_network_attachment).url(:profile).split("/").last %>
+                        <b>&nbsp;<%= file %></b>
+                      </span>
+                    <%end%>
+                  <%end%>
+                </div>
+
+                <div class="form-sec-row">
+                  <label class="text">Justification</label>
+                  <span class="in-box">
+                    <%= @ict_network.justification %>
+                  </span>
+                </div>
+
+                <div class="form-sec-row">
+                  <label class="text">Location</label>
+                  <span class="in-box">
+                    <%= @ict_network.location %>
+                  </span>
+                </div>
+
+                <div class="form-sec-row">
+                  <label class="text">Quantity</label>
+                  <span class="in-box">
+                    <%= @ict_network.quantity %>
+                  </span>
+                </div>
+
+                <% if @ict_network.status == "Approved" || @ict_network.status == "Processed" || @ict_network.status == "Declined"%>
+                  <h2 class="b-head"></h2>
+                  <font color="#369" size="2"><br/><b><u>Approval Information :-</u><br/><br/></b></font>
+
+                  <% name = User.find_by_id(@ict_network.person_incharge) %>
+                  <div class="form-sec-row">
+                    <label class="text">Person Incharge</label>
+                    <span class="in-box">
+                      <%= name.username %>
+                    </span>
+                  </div>
+
+                  <div class="form-sec-row">
+                    <label class="text">Recommendation type</label>
+                    <span class="in-box">
+                      <%= @ict_network.recommendation_type %>
+                    </span>
+                  </div>
+
+                  <% hardware = FacilityIctHardware.find_by_id(@ict_network.hardware_id) %>
+                  <div class="form-sec-row">
+                    <label class="text">Hardware</label>
+                    <span class="in-box">
+                      <%= hardware.name %>
+                    </span>
+                  </div>
+
+                  <div class="form-sec-row">
+                    <label class="text">Hardware Quantity</label>
+                    <span class="in-box">
+                      <%= @ict_network.hardware_quantity %>
+                    </span>
+                  </div>
+
+                  <% state = State.find_by_id(@ict_network.center_id) %>
+                  <div class="form-sec-row">
+                    <label class="text">State</label>
+                    <span class="in-box">
+                      <%= state.name %>
+                    </span>
+                  </div>
+
+                  <div class="form-sec-row">
+                    <label class="text">Remarks</label>
+                    <span class="in-box">
+                      <%= @ict_network.remarks %>
+                    </span>
+                  </div>
+
+                  <div class="form-sec-row">
+                    <label class="text">Notes</label>
+                    <span class="in-box">
+                      <%= @ict_network.notes %>
+                    </span>
+                  </div>
+
+                  <div class="form-sec-row">
+                    <label class="text">Status</label>
+                    <span class="in-box">
+                      <%= @ict_network.status %>
+                    </span>
+                  </div>
+                <%end%>
+
+                <h2 class="b-head"></h2>
+                <div class="form-sec-row2">
+                  <label class="text">&nbsp;</label>
+                  <span class="in-box2">
+                    <%= link_to "Back", :back, :class=>"btn1 mr2"%>
+                  </span>
+                </div>
+                </div>
+                </div>
+              <%end%>
